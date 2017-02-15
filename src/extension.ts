@@ -56,6 +56,7 @@ const completionProvider = {
                                     item.insertText = new SnippetString(cd['insert']);
                                 }
                                 if (range) {
+                                    // HACK: Unrecognized property
                                     item['range'] = range;
                                 }
                                 item.detail = cd['kind'];

@@ -13,7 +13,7 @@ post '/suggest' do
   content_type :json
   begin
     map = Solargraph::CodeMap.new(params['script'], api_map: api_map)
-    sugg = map.suggest_at(params['index'].to_i)
+    sugg = map.suggest_at(params['index'].to_i, with_snippets: true, filtered: true)
     result = { "status" => "ok", "suggestions" => sugg }
     result.to_json
   rescue Exception => e
