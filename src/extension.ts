@@ -2,14 +2,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-
-let child_process = require('child_process');
-let request = require('request');
+import * as path from 'path';
+import * as child_process from 'child_process';
+import * as request from 'request';
+import * as fs from 'fs';
 
 let solargraphProcess = null;
 
 const completionProvider = {
-    provideCompletionItems: function completionProvider(document, position) {
+    provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
         return new Promise((resolve, reject) => {
             const kinds = {
                 "Class": vscode.CompletionItemKind.Class,
@@ -20,14 +21,14 @@ const completionProvider = {
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
             console.log('Posting');
-            request.post({ url: 'http://localhost:56527/suggest', form: { script: document.getText(), index: document.offsetAt(position) }}, function(error, response, body) {
+            request.post({ url: 'http://localhost:56527/suggest', form: { filename: document.fileName, text: document.getText(), index: document.offsetAt(position) }}, function(error, response, body) {
                 // HACK: Tricking the type system to avoid an invalid error
                 var SnippetString = vscode['SnippetString'];
                 if (!error && response.statusCode == 200) {
                     if (body == "") {
                         return resolve([]);
                     } else {
-                        console.log(body);
+                        //console.log(body);
                         let result = JSON.parse(body);
                         let items = [];
                         if (result.status == "ok") {
@@ -82,9 +83,16 @@ export function activate(context: vscode.ExtensionContext) {
             'ruby', completionProvider, "."
         )
     );
-    solargraphProcess = child_process.spawn('ruby', [context.extensionPath + '/src/server.rb']);
+    console.log("Starting server: " + context.asAbsolutePath(path.join('src', 'server.rb')));
+    console.log(vscode.workspace.rootPath);
+    solargraphProcess = child_process.spawn('ruby', [context.asAbsolutePath(path.join('src', 'server.rb'))]);
+    //solargraphProcess = child_process.spawn('solargraph', ['serve'], { cwd: '' });
     solargraphProcess.stderr.on('data', (data) => {
         console.log('[stderr from Solargraph server] ' + data);
+    });
+    solargraphProcess.stdout.on('data', (data) => {
+        console.log('[stdout from Solargraph server] ' + data);
+        // TODO This is where we'll have some kind of mechanism for setting up the environment.
     });
     console.log('Solargraph extension activated.');
 }

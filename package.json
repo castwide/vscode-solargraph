@@ -3,7 +3,7 @@
     "displayName": "Solargraph",
     "description": "Ruby tools",
     "version": "0.0.1",
-    "publisher": "Castwide",
+    "publisher": "castwide",
     "engines": {
         "vscode": "^1.5.0"
     },
