@@ -20,7 +20,35 @@ const completionProvider = {
                 "Variable": vscode.CompletionItemKind.Variable,
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
-            console.log('Posting');
+            var cmd = ['solargraph', 'suggest'];
+            var cwd = path.dirname(document.fileName);
+            var result = '';
+            if (vscode.workspace.rootPath) {
+                // TODO: Check for a gemfile
+                cmd.unshift('C:\\Ruby23-x64\\bin\\bundle.bat', 'exec');
+                cwd = vscode.workspace.rootPath;
+            }
+            console.log(cmd.join(' '));
+            console.log('Workding dir: ' + cwd);
+            var process = child_process.spawn('bundle', ['exec', 'solargraph', 'suggest'], {cwd: cwd});
+            process.stdout.on('data', (data) => {
+                result += data;
+            });
+            process.stderr.on('data', (data) => {
+                console.log(data);
+            });
+            process.stdout.on('close', () => {
+                console.log(' I received ' + result);
+            });
+            var inpObject = {
+                filename: document.fileName, text: document.getText, position: document.offsetAt(position)
+            };
+            var inpString = JSON.stringify(inpObject);
+            console.log('Sending ' + inpString);
+            //process.stdin.end(inpString);
+            //process.send(inpString);
+            return resolve([]);
+            /*console.log('Posting');
             request.post({ url: 'http://localhost:56527/suggest', form: { filename: document.fileName, text: document.getText(), index: document.offsetAt(position) }}, function(error, response, body) {
                 // HACK: Tricking the type system to avoid an invalid error
                 var SnippetString = vscode['SnippetString'];
@@ -70,7 +98,7 @@ const completionProvider = {
                         }
                     }
                 }
-            });
+            });*/
         });
     }
 }

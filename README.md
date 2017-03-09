@@ -12,6 +12,13 @@ You need to install the Ruby gem:
 
     gem install solargraph
 
+## Usage
+
+To get the most of out Solargraph, follow these tips:
+
+* Keep a Gemfile in the root folder of your project. The extension will use bundle exec to analyze your code in the bundled environment.
+* Add Solargraph to your Gemfile's development group. Example: gem 'solargraph' group: :development
+
 ## Extension Settings
 
 This extension contributes the following settings:
@@ -21,7 +28,7 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-It's missing a lot of features like linting and debugging.
+It's missing a lot of features like linting and debugging. (Might forego that stuff in favor of letting other extensions handle them instead.)
 
 ## Release Notes
 
