@@ -20,35 +20,80 @@ const completionProvider = {
                 "Variable": vscode.CompletionItemKind.Variable,
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
-            var cmd = ['solargraph', 'suggest'];
+            const getSuggestions = function(json:String) {
+                console.log('hi');
+            }
+            getSuggestions('hi');
+            /*var cmd = ['solargraph', 'suggest'];
             var cwd = path.dirname(document.fileName);
-            var result = '';
+            var output = '';
             if (vscode.workspace.rootPath) {
                 // TODO: Check for a gemfile
-                cmd.unshift('C:\\Ruby23-x64\\bin\\bundle.bat', 'exec');
+                //cmd.unshift('C:\\Ruby23-x64\\bin\\bundle.bat', 'exec');
+                cmd.unshift('powershell', 'bundle', 'exec');
                 cwd = vscode.workspace.rootPath;
             }
             console.log(cmd.join(' '));
             console.log('Workding dir: ' + cwd);
-            var process = child_process.spawn('bundle', ['exec', 'solargraph', 'suggest'], {cwd: cwd});
+            var process = child_process.spawn(cmd.shift(), cmd, {cwd: cwd});
             process.stdout.on('data', (data) => {
-                result += data;
+                output += data;
             });
             process.stderr.on('data', (data) => {
-                console.log(data);
+                console.log('[stderr]' + data);
             });
             process.stdout.on('close', () => {
-                console.log(' I received ' + result);
+                console.log(' I received \'' + output + "'");
+                var SnippetString = vscode['SnippetString'];
+                var result = JSON.parse(output);
+                let items = [];
+                if (result.status == "ok") {
+                    var range = document.getWordRangeAtPosition(position);
+                    if (range) {
+                        var repl = document.getText(range);
+                        if (range.start.character > 0) {
+                            if (repl.substr(0, 1) == ':') {
+                                var prevChar = document.getText(new vscode.Range(range.start.line, range.start.character - 1, range.start.line, range.start.character));
+                                if (prevChar == ':') {
+                                    // Replacement range starts with a colon, but there's
+                                    // a previous colon. That means we're in a namespace,
+                                    // not a symbol. Get rid of the colon in the namespace
+                                    // range.
+                                    range = new vscode.Range(range.start.line, range.start.character + 1, range.end.line, range.end.character);
+                                }
+                            }
+                        }
+                    }
+                    result.suggestions.forEach((cd) => {
+                        var item = new vscode.CompletionItem(cd['label'], kinds[cd['kind']]);
+                        // Treat instance variables slightly differently
+                        if (cd['insert'].substring(0, 1) == '@') {
+                            item.insertText = cd['insert'].substring(1);
+                        } else {
+                            item.insertText = new SnippetString(cd['insert']);
+                        }
+                        if (range) {
+                            // HACK: Unrecognized property
+                            item['range'] = range;
+                        }
+                        item.detail = cd['kind'];
+                        item.documentation = cd['detail'];
+                        items.push(item);
+                    });
+                    return resolve(items);
+                } else {
+                    return resolve([]);
+                }
             });
             var inpObject = {
-                filename: document.fileName, text: document.getText, position: document.offsetAt(position)
+                filename: document.fileName, text: document.getText(), position: document.offsetAt(position)
             };
             var inpString = JSON.stringify(inpObject);
             console.log('Sending ' + inpString);
-            //process.stdin.end(inpString);
+            process.stdin.end(inpString);
             //process.send(inpString);
-            return resolve([]);
-            /*console.log('Posting');
+            //return resolve([]);*/
+            console.log('Posting');
             request.post({ url: 'http://localhost:56527/suggest', form: { filename: document.fileName, text: document.getText(), index: document.offsetAt(position) }}, function(error, response, body) {
                 // HACK: Tricking the type system to avoid an invalid error
                 var SnippetString = vscode['SnippetString'];
@@ -98,7 +143,7 @@ const completionProvider = {
                         }
                     }
                 }
-            });*/
+            });
         });
     }
 }
@@ -111,10 +156,20 @@ export function activate(context: vscode.ExtensionContext) {
             'ruby', completionProvider, "."
         )
     );
-    console.log("Starting server: " + context.asAbsolutePath(path.join('src', 'server.rb')));
-    console.log(vscode.workspace.rootPath);
-    solargraphProcess = child_process.spawn('ruby', [context.asAbsolutePath(path.join('src', 'server.rb'))]);
-    //solargraphProcess = child_process.spawn('solargraph', ['serve'], { cwd: '' });
+    var cmd = ['solargraph', 'serve'];
+    var cwd = null;
+    var isWin = /^win/.test(process.platform);
+    if (vscode.workspace.rootPath) {
+        // TODO: Check for a gemfile
+        // TODO: Only use powershell for Windows, obviously
+        //cmd.unshift('C:\\Ruby23-x64\\bin\\bundle.bat', 'exec');
+        cmd.unshift('bundle', 'exec');
+        cwd = vscode.workspace.rootPath;
+    }
+    if (isWin) {
+        cmd.unshift('powershell');
+    }
+    solargraphProcess = child_process.spawn(cmd.shift(), cmd, { cwd: cwd });
     solargraphProcess.stderr.on('data', (data) => {
         console.log('[stderr from Solargraph server] ' + data);
     });
