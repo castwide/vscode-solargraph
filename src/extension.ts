@@ -20,10 +20,6 @@ const completionProvider = {
                 "Variable": vscode.CompletionItemKind.Variable,
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
-            const getSuggestions = function(json:String) {
-                console.log('hi');
-            }
-            getSuggestions('hi');
             /*var cmd = ['solargraph', 'suggest'];
             var cwd = path.dirname(document.fileName);
             var output = '';
@@ -177,6 +173,14 @@ export function activate(context: vscode.ExtensionContext) {
         console.log('[stdout from Solargraph server] ' + data);
         // TODO This is where we'll have some kind of mechanism for setting up the environment.
     });
+    cmd = ['yard', 'gems'];
+    if (vscode.workspace.rootPath) {
+        cmd.unshift('bundle', 'exec');        
+    }
+    if (isWin) {
+        cmd.unshift('powershell');
+    }
+    child_process.spawn(cmd.shift(), cmd, { cwd: cwd });
     console.log('Solargraph extension activated.');
 }
 
