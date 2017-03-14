@@ -17,7 +17,8 @@ You need to install the Ruby gem:
 To get the most of out Solargraph, follow these tips:
 
 * Keep a Gemfile in the root folder of your project. The extension will use bundle exec to analyze your code in the bundled environment.
-* Add Solargraph to your Gemfile's development group. Example: gem 'solargraph' group: :development
+* Add Solargraph to your Gemfile's development group. Example:
+      gem 'solargraph', group: :development
 
 ## Extension Settings
 
