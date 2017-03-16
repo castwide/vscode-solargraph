@@ -6,6 +6,7 @@ import * as request from 'request';
 import * as fs from 'fs';
 
 let solargraphProcess = null;
+let solargraphPort = null;
 
 const completionProvider = {
     provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
@@ -18,7 +19,10 @@ const completionProvider = {
                 "Variable": vscode.CompletionItemKind.Variable,
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
-            request.post({ url: 'http://localhost:56527/suggest', form: { filename: document.fileName, text: document.getText(), index: document.offsetAt(position) }}, function(error, response, body) {
+            if (!solargraphPort) {
+                return reject([]);
+            }
+            request.post({ url: 'http://localhost:' + solargraphPort + '/suggest', form: { filename: document.fileName, text: document.getText(), line: position.line, col: position.character }}, function(error, response, body) {
                 // HACK: Tricking the type system to avoid an invalid error
                 var SnippetString = vscode['SnippetString'];
                 if (!error && response.statusCode == 200) {
@@ -58,7 +62,7 @@ const completionProvider = {
                                     item['range'] = range;
                                 }
                                 item.detail = cd['kind'];
-                                item.documentation = cd['detail'];
+                                item.documentation = cd['documentation'];
                                 items.push(item);
                             });
                             return resolve(items);
@@ -82,7 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
     var isWin = /^win/.test(process.platform);
 
     // Start the Solargraph server
-    var cmd = ['solargraph', 'serve'];
+    var cmd = ['solargraph', 'server'];
     var cwd = null;
     if (vscode.workspace.rootPath) {
         // TODO: Check for a gemfile
@@ -95,10 +99,13 @@ export function activate(context: vscode.ExtensionContext) {
     solargraphProcess = child_process.spawn(cmd.shift(), cmd, { cwd: cwd });
     solargraphProcess.stderr.on('data', (data) => {
         console.log('[stderr from Solargraph server] ' + data);
+        var match = data.toString().match(/port=([0-9]*)/);
+        if (match) {
+            solargraphPort = match[1];
+        }
     });
     solargraphProcess.stdout.on('data', (data) => {
         console.log('[stdout from Solargraph server] ' + data);
-        // TODO: This is where we'll have some kind of mechanism for setting up the environment.
     });
 
     // Document gems
