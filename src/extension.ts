@@ -20,7 +20,7 @@ const completionProvider = {
                 "Snippet": vscode.CompletionItemKind.Snippet
             }
             if (!solargraphPort) {
-                return reject([]);
+                return resolve([]);
             }
             request.post({ url: 'http://localhost:' + solargraphPort + '/suggest', form: { filename: document.fileName, text: document.getText(), line: position.line, col: position.character }}, function(error, response, body) {
                 // HACK: Tricking the type system to avoid an invalid error
