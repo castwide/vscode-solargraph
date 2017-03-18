@@ -13,6 +13,39 @@
     "activationEvents": [
         "onLanguage:ruby"
     ],
+    "contributes": {
+        "configuration": {
+            "title": "Solargraph settings for Ruby",
+            "properties": {
+                "solargraph.pathToBundler": {
+                    "type": "string",
+                    "default": "bundle",
+                    "description": "An absolute path to the bundle executable or a relative path that is accessible on your environment PATH."
+                },
+                "ruby.solargraph": {
+                    "type": "object",
+                    "description": "Solargraph options",
+                    "default": {
+                        "commandPath": "solargraph",
+                        "useBundler": false
+                    },
+                    "properties": {
+                        "commandPath": {
+                            "type": "string",
+                            "default": "solargraph",
+                            "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
+                            "isExecutable": true
+                        },
+                        "useBundler": {
+                            "type": "boolean",
+                            "description": "Use `bundle exec` to run solargraph.",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        }
+    },
     "main": "./out/src/extension",
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
