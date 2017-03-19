@@ -12,6 +12,7 @@
         "Languages",
         "Snippets"
     ],
+    "preview": true,
     "engines": {
         "vscode": "^1.5.0"
     },
