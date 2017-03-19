@@ -8,12 +8,16 @@ import * as fs from 'fs';
 function solargraphCommand(args) {
 	let cmd = [];
 	if (process.platform === 'win32') cmd.push('cmd', '/c');
-	if (vscode.workspace.getConfiguration('ruby').solargraph.useBundler) {
+	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
 		// TODO: pathToBundler configuration
-		cmd.push('bundle', 'exec');
+		cmd.push('bundle', 'exec', 'solargraph');
+	} else {
+		cmd.push(vscode.workspace.getConfiguration('solargraph').commandPath);
 	}
-	cmd.push(vscode.workspace.getConfiguration('ruby').solargraph.commandPath);
-	return child_process.spawn(cmd.shift(), cmd.concat(args));
+	var env = {};
+	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
+	console.log(cmd.concat(args).join(' '));
+	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
 
 function yardCommand(args) {
@@ -24,12 +28,17 @@ function yardCommand(args) {
 		cmd.push('bundle', 'exec');
 	}
 	cmd.push('yard');
-	return child_process.spawn(cmd.shift(), cmd.concat(args));
+	console.log(cmd.concat(args).join(' '));
+	var env = {};
+	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
+	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
 
 const completionProvider = {
-    provideCompletionItems: function completionProvider(document, position) {
+    provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
         return new Promise((resolve, reject) => {
+			console.log('Running the completion provider line ' + position.line + ', column ' + position.character);
+			console.log('Workspace is ' + vscode.workspace.rootPath);
             const kinds = {
                 "Class": vscode.CompletionItemKind.Class,
                 "Keyword": vscode.CompletionItemKind.Keyword,
@@ -47,10 +56,14 @@ const completionProvider = {
 				'--filename=' + document.fileName
 			]);
 			let errbuf = [], outbuf = [];
-			child.stderr.on('data', (data) => errbuf.push(data));
+			child.stderr.on('data', (data) => {
+				console.log(data.toString());
+				errbuf.push(data);
+			});
 			child.stdout.on('data', (data) => outbuf.push(data));
 			child.on('exit', () => {
 				var data = outbuf.join('');
+				console.log(data);
 				if (data == "") {
 					return resolve([]);
 				} else {
@@ -85,7 +98,7 @@ const completionProvider = {
 								// HACK: Unrecognized property
 								item['range'] = range;
 							}
-							item.detail = cd['kind'];
+							item.detail = cd['detail'];
 							item.documentation = cd['documentation'];
 							items.push(item);
 						});
@@ -105,13 +118,26 @@ const completionProvider = {
     }
 }
 
+function updateSolargraph(saved: vscode.TextDocument) {
+	yardCommand([]);
+	solargraphCommand(['serialize', vscode.workspace.rootPath]);
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	const solargraphTest = solargraphCommand(['prepare']);
 	solargraphTest.on('exit', () => {
+		console.log('The Solargraph gem is installed and working.');
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.'));
 		yardCommand(['gems']);
+		if (vscode.workspace.rootPath) {
+			yardCommand([]);
+			solargraphCommand(['serialize', vscode.workspace.rootPath]);
+			context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateSolargraph));
+		}
 	});
-	solargraphTest.on('error', () => 0);
+	solargraphTest.on('error', () => {
+		console.log('The Solargraph gem is not available.');
+	});
 
     console.log('Solargraph extension activated.');
 }

@@ -8,7 +8,8 @@
         "vscode": "^1.5.0"
     },
     "categories": [
-        "Other"
+        "Languages",
+        "Snippets"
     ],
     "activationEvents": [
         "onLanguage:ruby"
@@ -17,31 +18,16 @@
         "configuration": {
             "title": "Solargraph settings for Ruby",
             "properties": {
-                "solargraph.pathToBundler": {
+                "solargraph.commandPath": {
                     "type": "string",
-                    "default": "bundle",
-                    "description": "An absolute path to the bundle executable or a relative path that is accessible on your environment PATH."
+                    "default": "solargraph",
+                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions. (This setting is ignored if solargraph.useBundler is true.)",
+                    "isExecutable": true
                 },
-                "ruby.solargraph": {
-                    "type": "object",
-                    "description": "Solargraph options",
-                    "default": {
-                        "commandPath": "solargraph",
-                        "useBundler": false
-                    },
-                    "properties": {
-                        "commandPath": {
-                            "type": "string",
-                            "default": "solargraph",
-                            "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
-                            "isExecutable": true
-                        },
-                        "useBundler": {
-                            "type": "boolean",
-                            "description": "Use `bundle exec` to run solargraph.",
-                            "default": false
-                        }
-                    }
+                "solargraph.useBundler": {
+                    "type": "boolean",
+                    "description": "Use `bundle exec` to run solargraph.",
+                    "default": false
                 }
             }
         }
