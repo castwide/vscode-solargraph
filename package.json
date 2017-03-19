@@ -1,16 +1,20 @@
 {
     "name": "solargraph",
     "displayName": "Solargraph",
-    "description": "Ruby tools",
+    "description": "Code completion and inline documentation for Ruby",
     "version": "0.0.1",
     "publisher": "castwide",
-    "engines": {
-        "vscode": "^1.5.0"
+    "author": {
+        "name": "Fred Snyder"
     },
+    "license": "MIT",
     "categories": [
         "Languages",
         "Snippets"
     ],
+    "engines": {
+        "vscode": "^1.5.0"
+    },
     "activationEvents": [
         "onLanguage:ruby"
     ],
@@ -21,12 +25,12 @@
                 "solargraph.commandPath": {
                     "type": "string",
                     "default": "solargraph",
-                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions. (This setting is ignored if solargraph.useBundler is true.)",
+                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
                     "isExecutable": true
                 },
                 "solargraph.useBundler": {
                     "type": "boolean",
-                    "description": "Use `bundle exec` to run solargraph.",
+                    "description": "Use `bundle exec` to run solargraph. (If this is true, the solargraph.commandPath setting is ignored.)",
                     "default": false
                 }
             }
