@@ -23,11 +23,11 @@ function solargraphCommand(args) {
 function yardCommand(args) {
 	let cmd = [];
 	if (process.platform === 'win32') cmd.push('cmd', '/c');
-	if (vscode.workspace.getConfiguration('ruby').solargraph.useBundler) {
-		// TODO: pathToBundler configuration
-		cmd.push('bundle', 'exec');
+	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
+		cmd.push('bundle', 'exec', 'yard');
+	} else {
+		cmd.push('yard');
 	}
-	cmd.push('yard');
 	console.log(cmd.concat(args).join(' '));
 	var env = {};
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
