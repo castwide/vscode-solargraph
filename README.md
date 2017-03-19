@@ -1,10 +1,12 @@
-# Solargraph
+# VS Code Solargraph Extension
 
-Solargraph provides...
+Solargraph provides code completion and inline documentation for Ruby.
 
 ## Features
 
-Ruby tools!
+* Context-aware suggestions and documentation for the Ruby core
+* Smart inference of variable values (e.g., `String.new.` returns String instance methods)
+* Identification of local, class, and instance variables within the current scope
 
 ## Requirements
 
@@ -14,29 +16,23 @@ You need to install the Ruby gem:
 
 ## Usage
 
-To get the most of out Solargraph, follow these tips:
+Open a Ruby file and start typing. Solargraph should start providing contextual code suggestions. To start a search manually, hit ctrl-space. Example:
 
-* Keep a Gemfile in the root folder of your project. The extension will use bundle exec to analyze your code in the bundled environment.
-* Add Solargraph to your Gemfile's development group. Example:
-      gem 'solargraph', group: :development
+    Stri # <- Hitting ctrl-space here will suggest String
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-* `solargraph.enable`: enable/disable this extension
-* `solargraph.thing`: set to `blah` to do something
+* `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions. (This setting is ignored if solargraph.useBundler is true.)
+* `solargraph.useBundler`: Use `bundle exec` to run solargraph.
 
 ## Known Issues
 
-It's missing a lot of features like linting and debugging. (Might forego that stuff in favor of letting other extensions handle them instead.)
+* Incomplete support for stdlib
 
 ## Release Notes
 
 ### 0.0.1
 
 Initial release
-
-### 0.0.2
-
-Fixed issue #.
