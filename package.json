@@ -1,16 +1,26 @@
 {
     "name": "solargraph",
     "displayName": "Solargraph",
-    "description": "Code completion and inline documentation for Ruby",
-    "version": "0.0.1",
+    "description": "Ruby code completion and inline documentation",
+    "version": "0.0.2",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/castwide/vscode-solargraph"
     },
     "license": "MIT",
     "categories": [
         "Languages",
         "Snippets"
+    ],
+    "keywords": [
+        "Ruby",
+        "code completion",
+        "intellisense",
+        "YARD"
     ],
     "preview": true,
     "engines": {

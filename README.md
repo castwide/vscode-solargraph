@@ -5,7 +5,7 @@ Solargraph provides code completion and inline documentation for Ruby.
 ## Features
 
 * Context-aware suggestions and documentation for the Ruby core
-* Smart inference of variable values (e.g., `String.new.` returns String instance methods)
+* Detection of variable type (e.g., `String.new.` returns String instance methods)
 * Identification of local, class, and instance variables within the current scope
 
 ## Requirements
@@ -24,15 +24,10 @@ Open a Ruby file and start typing. Solargraph should start providing contextual 
 
 This extension contributes the following settings:
 
-* `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions. (This setting is ignored if solargraph.useBundler is true.)
-* `solargraph.useBundler`: Use `bundle exec` to run solargraph.
+* `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.
+* `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 
 ## Known Issues
 
 * Incomplete support for stdlib
-
-## Release Notes
-
-### 0.0.1
-
-Initial release
+* Completion items should include method arguments
