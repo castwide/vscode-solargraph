@@ -30,4 +30,3 @@ This extension contributes the following settings:
 ## Known Issues
 
 * Incomplete support for stdlib
-* Completion items should include method arguments
