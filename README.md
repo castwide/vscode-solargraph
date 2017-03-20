@@ -5,7 +5,7 @@ Solargraph provides code completion and inline documentation for Ruby.
 ## Features
 
 * Context-aware suggestions and documentation for the Ruby core
-* Detection of variable type (e.g., `String.new.` returns String instance methods)
+* Detection of some variable types and method return values (e.g., `String.new.` returns String instance methods)
 * Identification of local, class, and instance variables within the current scope
 
 ## Requirements

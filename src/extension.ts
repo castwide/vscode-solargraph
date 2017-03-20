@@ -16,7 +16,6 @@ function solargraphCommand(args) {
 	}
 	var env = {};
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
-	console.log(cmd.concat(args).join(' '));
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
 
@@ -28,7 +27,19 @@ function yardCommand(args) {
 	} else {
 		cmd.push('yard');
 	}
-	console.log(cmd.concat(args).join(' '));
+	var env = {};
+	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
+	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
+}
+
+function gemCommand(args) {
+	let cmd = [];
+	if (process.platform === 'win32') cmd.push('cmd', '/c');
+	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
+		cmd.push('bundle', 'exec', 'gem');
+	} else {
+		cmd.push('gem');
+	}
 	var env = {};
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
@@ -117,27 +128,40 @@ const completionProvider = {
     }
 }
 
-function updateSolargraph(saved: vscode.TextDocument) {
+function updateCache(saved: vscode.TextDocument) {
 	yardCommand([]);
 	solargraphCommand(['serialize', vscode.workspace.rootPath]);
+}
+
+function checkGemVersion() {
+	let child = gemCommand(['outdated']);
+	let result = "\n";
+	child.stdout.on('data', (data:Buffer) => {
+		result += data.toString();
+	});
+	child.on('exit', () => {
+		if (result.match(/[\s]solargraph[\s]/)) {
+			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.');
+		}
+	});
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	const solargraphTest = solargraphCommand(['prepare']);
 	solargraphTest.on('exit', () => {
 		console.log('The Solargraph gem is installed and working.');
+		checkGemVersion();
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.'));
 		yardCommand(['gems']);
 		if (vscode.workspace.rootPath) {
 			yardCommand([]);
 			solargraphCommand(['serialize', vscode.workspace.rootPath]);
-			context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateSolargraph));
+			context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateCache));
 		}
 	});
 	solargraphTest.on('error', () => {
 		console.log('The Solargraph gem is not available.');
 	});
-
     console.log('Solargraph extension activated.');
 }
 

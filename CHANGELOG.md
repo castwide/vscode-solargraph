@@ -8,3 +8,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 - Updated README and package metadata (author, keywords, etc.)
 - Added icon
 - Reduced console output
+
+## 0.0.3
+- Check for Solargraph gem updates
