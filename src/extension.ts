@@ -63,7 +63,6 @@ const completionProvider = {
 			child.stdout.on('data', (data) => outbuf.push(data));
 			child.on('exit', () => {
 				var data = outbuf.join('');
-				console.log(data);
 				if (data == "") {
 					return resolve([]);
 				} else {

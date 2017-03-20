@@ -2,6 +2,7 @@
     "name": "solargraph",
     "displayName": "Solargraph",
     "description": "Ruby code completion and inline documentation",
+    "icon": "solargraph.png",
     "version": "0.0.2",
     "publisher": "castwide",
     "author": {
