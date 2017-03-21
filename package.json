@@ -3,7 +3,7 @@
     "displayName": "Solargraph",
     "description": "Ruby code completion and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -44,6 +44,16 @@
                     "type": "boolean",
                     "description": "Use `bundle exec` to run solargraph. (If this is true, the solargraph.commandPath setting is ignored.)",
                     "default": false
+                },
+                "solargraph.useServer": {
+                    "type": "boolean",
+                    "description": "Use a local server to run solargraph.",
+                    "default": true
+                },
+                "solargraph.serverPort": {
+                    "type": "number",
+                    "description": "The server port. 0 selects the first open port.",
+                    "default": 0
                 }
             }
         }
