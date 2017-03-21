@@ -100,7 +100,6 @@ let solargraphPort:String = null;
 const completionProvider = {
     provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
         return new Promise((resolve, reject) => {
-			console.log(solargraphServer + ', ' + solargraphPort);
 			if (solargraphServer && solargraphPort) {
 				request.post({url:'http://localhost:' + solargraphPort + '/suggest', form: {
 					text: document.getText(),
@@ -112,7 +111,6 @@ const completionProvider = {
 						console.log(err);
 					} else {
 						if (httpResponse.statusCode == 200) {
-							console.log(body);
 							return resolve(getCompletionItems(JSON.parse(body), document, position));
 						} else {
 							// TODO: Handle error
@@ -156,7 +154,7 @@ const completionProvider = {
 
 function updateCache(saved: vscode.TextDocument) {
 	yardCommand([]);
-	solargraphCommand(['serialize', vscode.workspace.rootPath]);
+	//solargraphCommand(['serialize', vscode.workspace.rootPath]);
 }
 
 function checkGemVersion() {
@@ -180,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.'));
 		yardCommand(['gems']);
 		yardCommand([]);
-		solargraphCommand(['serialize', vscode.workspace.rootPath]);
+		//solargraphCommand(['serialize', vscode.workspace.rootPath]);
 		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateCache));
 		if (vscode.workspace.getConfiguration("solargraph").useServer) {
 			console.log('Starting the server');
@@ -188,11 +186,15 @@ export function activate(context: vscode.ExtensionContext) {
 			solargraphServer.stderr.on('data', (data) => {
 				var out = data.toString();
 				console.log(out);
-				var match = out.match(/port=([0-9]*)/);
-				console.log(match);
-				if (match) {
-					solargraphPort = match[1];
+				if (!solargraphPort) {
+					var match = out.match(/port=([0-9]*)/);
+					if (match) {
+						solargraphPort = match[1];
+					}
 				}
+			});
+			solargraphServer.on('exit', () => {
+				solargraphPort = null;
 			});
 		}
 	});
