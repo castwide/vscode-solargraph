@@ -2,6 +2,8 @@
 
 Solargraph provides code completion and inline documentation for Ruby.
 
+![Screenshot](vscode-solargraph-0.1.1.gif)
+
 ## Features
 
 * Context-aware suggestions and documentation for the Ruby core
