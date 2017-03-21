@@ -34,3 +34,4 @@ This extension contributes the following settings:
 ## Known Issues
 
 * Incomplete support for stdlib
+* Incomplete support for Rails
