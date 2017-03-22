@@ -19,11 +19,11 @@
     ],
     "keywords": [
         "Ruby",
-        "code",
-        "completion",
         "autocomplete",
         "intellisense",
-        "YARD"
+        "YARD",
+        "code",
+        "completion"
     ],
     "preview": true,
     "engines": {
