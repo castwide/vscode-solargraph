@@ -19,7 +19,8 @@
     ],
     "keywords": [
         "Ruby",
-        "code completion",
+        "code",
+        "completion",
         "autocomplete",
         "intellisense",
         "YARD"
