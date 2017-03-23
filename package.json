@@ -22,8 +22,7 @@
         "autocomplete",
         "intellisense",
         "YARD",
-        "code",
-        "completion"
+        "code completion"
     ],
     "preview": true,
     "engines": {
