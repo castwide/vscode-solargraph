@@ -12,4 +12,7 @@ All notable changes to the "solargraph" extension will be documented in this fil
 ## 0.1.0
 - Check for Solargraph gem updates
 - Use server instead of command line for better performance
-- Serial files are no longer used.
+- Serial files are no longer used
+
+## 0.1.1
+- Minor documentation updates
