@@ -201,7 +201,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableSearch);
 
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
-		vscode.commands.executeCommand('vscode.previewHtml', vscode.Uri.parse(uriString), vscode.ViewColumn.Two);
+		var uri = vscode.Uri.parse(uriString);
+		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
+		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
 	});
 	context.subscriptions.push(disposableOpen);
 

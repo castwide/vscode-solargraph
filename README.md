@@ -4,6 +4,8 @@ Solargraph provides code completion and inline documentation for Ruby.
 
 ![Screenshot](vscode-solargraph-0.1.0.gif)
 
+*This project is still in early development.* Expect bugs and breaking changes.
+
 ## Features
 
 * Context-aware suggestions and documentation for the Ruby core
@@ -18,9 +20,19 @@ You need to install the Ruby gem:
 
 ## Usage
 
+### Code Completion
+
 Open a Ruby file and start typing. Solargraph should start providing contextual code suggestions. To start a search manually, hit ctrl-space. Example:
 
     Stri # <- Hitting ctrl-space here will suggest String
+
+### Documentation
+
+Solargraph provides access to searchable documentation directly from the IDE.
+
+* Hit ctrl-shift-p to open commands.
+* Find `Search Ruby Commands`.
+* Enter a keyword or path to search; e.g., `String` or `Array#split`.
 
 ## Extension Settings
 
