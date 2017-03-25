@@ -8,6 +8,9 @@
     "author": {
         "name": "Fred Snyder"
     },
+    "files": [
+        "views"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/castwide/vscode-solargraph"
@@ -57,7 +60,13 @@
                     "default": 0
                 }
             }
-        }
+        },
+        "commands": [
+            {
+                "command": "solargraph.search",
+                "title": "Search Ruby Documentation"
+            }
+        ]
     },
     "main": "./out/src/extension",
     "scripts": {

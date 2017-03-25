@@ -1,0 +1,7 @@
+<h1>
+    <%= params['query'] %>
+</h1>
+
+<% @objects.each do |object| %>
+    <%= htmlify object %>
+<% end %>
