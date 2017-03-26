@@ -28,11 +28,17 @@ Open a Ruby file and start typing. Solargraph should start providing contextual 
 
 ### Documentation
 
-Solargraph provides access to searchable documentation directly from the IDE.
+Solargraph provides a command to access searchable documentation directly from the IDE.
 
-* Hit ctrl-shift-p to open commands.
-* Find `Search Ruby Commands`.
+* Hit ctrl+shift+r (or hit ctrl+shift+p and find `Search Ruby Commands`).
 * Enter a keyword or path to search; e.g., `String` or `Array#split`.
+
+The documentation includes the Ruby core, bundled gems, and the current workspace.
+
+#### Documenting Your Code
+
+Using [YARD](http://www.rubydoc.info/gems/yard/file/docs/GettingStarted.md) for inline documentation is highly recommended.
+Solargraph will use YARD comments to provide the best code completion and API reference it can.
 
 ## Extension Settings
 

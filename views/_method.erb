@@ -1,0 +1,26 @@
+<h2>
+    Parameters:
+</h2>
+<% if object.parameters.empty? %>
+    None
+<% else %>
+    <ul>
+    <% object.parameters.each do |p| %>
+        <li>
+            <%= p[0] %>
+            <%= " = #{p[1]}" unless p[1].nil? %>
+        </li>
+    <% end %>
+    </ul>
+<% end %>
+<p>
+    <%= object.tags.join(',') %>!!!
+</p>
+<% unless object.docstring.nil? or object.docstring.tag(:return).nil? %>
+<h2>
+    Returns:
+</h2>
+<p>
+    <%= object.docstring.tag(:return).text %>
+</p>
+<% end %>

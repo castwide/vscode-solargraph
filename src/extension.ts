@@ -27,10 +27,9 @@ function yardCommand(args) {
 	let cmd = [];
 	if (process.platform === 'win32') cmd.push('cmd', '/c');
 	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
-		cmd.push('bundle', 'exec', 'yard');
-	} else {
-		cmd.push('yard');
+		cmd.push('bundle', 'exec');
 	}
+	cmd.push('yard');
 	var env = {};
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
@@ -40,10 +39,9 @@ function gemCommand(args) {
 	let cmd = [];
 	if (process.platform === 'win32') cmd.push('cmd', '/c');
 	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
-		cmd.push('bundle', 'exec', 'gem');
-	} else {
-		cmd.push('gem');
+		cmd.push('bundle', 'exec');
 	}
+	cmd.push('gem');
 	var env = {};
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);

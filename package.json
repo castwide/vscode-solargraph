@@ -66,6 +66,13 @@
                 "command": "solargraph.search",
                 "title": "Search Ruby Documentation"
             }
+        ],
+        "keybindings": [
+            {
+                "command": "solargraph.search",
+                "key": "ctrl+shift+r",
+                "mac": "cmd+shift+r"
+            }
         ]
     },
     "main": "./out/src/extension",
