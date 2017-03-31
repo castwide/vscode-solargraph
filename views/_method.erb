@@ -1,4 +1,10 @@
 <h2>
+    Namespace:
+</h2>
+<p>
+    <a href="command:solargraph._openDocument?<%= URI.escape "\"solargraph:/document?#{object.namespace}\"" %>"><%= object.namespace %></a>
+</p>
+<h2>
     Parameters:
 </h2>
 <% if object.parameters.empty? %>
@@ -13,14 +19,14 @@
     <% end %>
     </ul>
 <% end %>
-<p>
-    <%= object.tags.join(',') %>!!!
-</p>
-<% unless object.docstring.nil? or object.docstring.tag(:return).nil? %>
-<h2>
-    Returns:
-</h2>
-<p>
-    <%= object.docstring.tag(:return).text %>
-</p>
+<% unless object.tag(:return).nil? %>
+    <h2>
+        Returns:
+    </h2>
+    <p>
+        <%= object.tag(:return).types.join(', ') unless object.tag(:return).types.nil? or object.tag(:return).types.empty? %>
+    </p>
+    <p>
+        <%= object.tag(:return).text %>
+    </p>
 <% end %>
