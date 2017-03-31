@@ -8,7 +8,9 @@
     Parameters:
 </h2>
 <% if object.parameters.empty? %>
-    None
+    <p>
+        None
+    </p>
 <% else %>
     <ul>
     <% object.parameters.each do |p| %>
@@ -27,12 +29,19 @@
         Undefined/unknown
     </p>
 <% else %>
-    <p>
-        <% object.tag(:return).types.each do |r| %>
-            <a href="command:solargraph._openDocument?<%= URI.escape "\"solargraph:/document?#{r}\"" %>"><%= r %></a>
+    <% tag = object.tag(:return) %>
+    <% unless tag.types.nil? or tag.types.empty? %>
+    <ul>
+        <% tag.types.each do |r| %>
+            <li>
+                <a href="command:solargraph._openDocument?<%= URI.escape "\"solargraph:/document?#{r}\"" %>"><%= r %></a>
+            </li>
         <% end %>
-    </p>
-    <p>
-        <%= object.tag(:return).text %>
-    </p>
+    </ul>
+    <% end %>
+    <% unless tag.text.empty? %>
+        <p>
+            <%= tag.text %>
+        </p>
+    <% end %>
 <% end %>

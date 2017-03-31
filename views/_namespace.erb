@@ -1,5 +1,5 @@
 <ul>
-    <% object.meths.each do |meth| %>
+    <% object.meths.sort{|a, b| a.path <=> b.path}.each do |meth| %>
         <li>
             <% esc = URI.escape("\"solargraph:/document?#{meth.path}\"").gsub('%23', URI.escape('%23')) %>
             <a href="command:solargraph._openDocument?<%= esc %>"><%= meth.path %></a>
