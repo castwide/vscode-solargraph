@@ -31,7 +31,7 @@ Open a Ruby file and start typing. Solargraph should start providing contextual 
 Solargraph provides a command to access searchable documentation directly from the IDE.
 
 * Hit ctrl+shift+r (or hit ctrl+shift+p and find `Search Ruby Documentation`).
-* Enter a keyword or path to search; e.g., `String` or `Array#split`.
+* Enter a keyword or path to search; e.g., `String` or `Array#join`.
 
 The documentation includes the Ruby core, bundled gems, and the current workspace.
 
