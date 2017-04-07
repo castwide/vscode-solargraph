@@ -6,43 +6,41 @@ import * as request from 'request';
 import * as fs from 'fs';
 import YardContentProvider from './YardContentProvider'
 
-let solargraphServer:child_process.ChildProcess = null;
-let solargraphPort:string = null;
+var solargraphServer:child_process.ChildProcess = null;
+var solargraphPort:string = null;
+var solargraphPid:number = null;
 
 function solargraphCommand(args) {
 	let cmd = [];
-	if (process.platform === 'win32') cmd.push('cmd', '/c');
 	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
 		// TODO: pathToBundler configuration
 		cmd.push('bundle', 'exec', 'solargraph');
 	} else {
 		cmd.push(vscode.workspace.getConfiguration('solargraph').commandPath);
 	}
-	var env = {};
+	var env = { shell: true };
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
 
 function yardCommand(args) {
 	let cmd = [];
-	if (process.platform === 'win32') cmd.push('cmd', '/c');
 	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
 		cmd.push('bundle', 'exec');
 	}
 	cmd.push('yard');
-	var env = {};
+	var env = { shell: true };
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
 
 function gemCommand(args) {
 	let cmd = [];
-	if (process.platform === 'win32') cmd.push('cmd', '/c');
 	if (vscode.workspace.getConfiguration('solargraph').useBundler) {
 		cmd.push('bundle', 'exec');
 	}
 	cmd.push('gem');
-	var env = {};
+	var env = { shell: true };
 	if (vscode.workspace.rootPath) env['cwd'] = vscode.workspace.rootPath;
 	return child_process.spawn(cmd.shift(), cmd.concat(args), env);
 }
@@ -182,6 +180,10 @@ function startServer() {
 				solargraphPort = match[1];
 				vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphPort));
 			}
+			match = out.match(/pid=([0-9]*)/);
+			if (match) {
+				solargraphPid = parseInt(match[1]);
+			}
 		}
 	});
 	solargraphServer.on('exit', () => {
@@ -226,5 +228,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    console.log('Deactivating extension');
+	if (solargraphPid) process.kill(solargraphPid);
 }
