@@ -16,3 +16,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 
 ## 0.1.1
 - Minor documentation updates
+
+## 0.2.2
+- Kill Solargraph server process on deactivation
