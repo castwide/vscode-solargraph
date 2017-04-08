@@ -78,7 +78,10 @@ function getCompletionItems(data, document:vscode.TextDocument, position: vscode
 			var item = new vscode.CompletionItem(cd['label'], kinds[cd['kind']]);
 			// Treat instance variables slightly differently
 			if (cd['insert'].substring(0, 1) == '@') {
-				item.insertText = cd['insert'].substring(1);
+				item.insertText = new SnippetString(cd['insert'].substring(1));
+				item.filterText = cd['insert'].substring(1);
+				item.sortText = cd['insert'].substring(1);
+				item.label = cd['insert'].substring(1);
 			} else {
 				item.insertText = new SnippetString(cd['insert']);
 			}
@@ -211,7 +214,7 @@ export function activate(context: vscode.ExtensionContext) {
 	solargraphTest.on('exit', () => {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
-		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.'));
+		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.', '@'));
 		yardCommand(['gems']);
 		yardCommand([]);
 		if (vscode.workspace.getConfiguration("solargraph").useServer) {
