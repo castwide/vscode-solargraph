@@ -40,6 +40,13 @@ The documentation includes the Ruby core, bundled gems, and the current workspac
 Using [YARD](http://www.rubydoc.info/gems/yard/file/docs/GettingStarted.md) for inline documentation is highly recommended.
 Solargraph will use YARD comments to provide the best code completion and API reference it can.
 
+In addition to the standard YARD tags, Solargraph defines a `@type` tag for documenting variable types. It works with both
+local and instance variables. Example:
+
+    # @type [String]
+    my_variable = some_method_call
+    my_variable. # <= Hitting crtl-space here will suggest String instance methods
+
 ## Extension Settings
 
 This extension contributes the following settings:
