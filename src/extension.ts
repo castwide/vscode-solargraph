@@ -105,7 +105,8 @@ const completionProvider = {
 					text: document.getText(),
 					filename: document.fileName,
 					line: position.line,
-					column: position.character}
+					column: position.character,
+					workspace: vscode.workspace.rootPath}
 				}, function(err,httpResponse,body) {
 					if (err) {
 						console.log(err);
@@ -152,6 +153,9 @@ const completionProvider = {
 
 function updateYard(saved: vscode.TextDocument) {
 	yardCommand([]);
+	request.post({url:'http://localhost:' + solargraphPort + '/prepare', form: {
+		workspace: vscode.workspace.rootPath
+	}});
 }
 
 function checkGemVersion() {
