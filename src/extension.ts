@@ -99,6 +99,7 @@ function getCompletionItems(data, document:vscode.TextDocument, position: vscode
 
 const completionProvider = {
     provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
+		console.log('Snippet option: ' + vscode.workspace.getConfiguration('solargraph').withSnippets);
         return new Promise((resolve, reject) => {
 			if (solargraphServer && solargraphPort) {
 				request.post({url:'http://localhost:' + solargraphPort + '/suggest', form: {
@@ -106,7 +107,8 @@ const completionProvider = {
 					filename: document.fileName,
 					line: position.line,
 					column: position.character,
-					workspace: vscode.workspace.rootPath}
+					workspace: vscode.workspace.rootPath,
+					with_snippets: vscode.workspace.getConfiguration('solargraph').withSnippets ? 1 : null}
 				}, function(err,httpResponse,body) {
 					if (err) {
 						console.log(err);

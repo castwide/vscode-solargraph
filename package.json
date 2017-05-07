@@ -3,7 +3,7 @@
     "displayName": "Solargraph",
     "description": "Ruby code completion and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -58,6 +58,11 @@
                     "type": "number",
                     "description": "The server port. 0 selects the first open port.",
                     "default": 0
+                },
+                "solargraph.withSnippets": {
+                    "type": "boolean",
+                    "description": "Include snippets with completion suggestions.",
+                    "default": false
                 }
             }
         },

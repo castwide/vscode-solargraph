@@ -55,6 +55,7 @@ This extension contributes the following settings:
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 * `solargraph.useServer`: Run solargraph server for better performance. Defaults to true as of version 0.1.0.
 * `solargraph.serverPort`: The port where the server runs. Default is 7657. 0 selects the first available port.
+* `solargraph.withSnippets`: Include snippets in completion suggestions.
 
 ## Known Issues
 
