@@ -28,3 +28,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 
 ## 0.2.5
 - Solargraph server manages the workspace yardoc.
+
+## 0.2.6
+- Setting to choose whether the gem includes snippets in suggestions. Defaults to false.
