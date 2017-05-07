@@ -25,3 +25,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 
 ## 0.2.4
 - Trigger workspace refresh on file saves. (This eliminates the need for the server's constant_updates thread.)
+
+## 0.2.5
+- Solargraph server manages the workspace yardoc.

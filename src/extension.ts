@@ -152,10 +152,14 @@ const completionProvider = {
 }
 
 function updateYard(saved: vscode.TextDocument) {
-	yardCommand([]);
-	request.post({url:'http://localhost:' + solargraphPort + '/prepare', form: {
-		workspace: vscode.workspace.rootPath
-	}});
+	if (vscode.workspace.getConfiguration("solargraph").useServer) {
+		request.post({url:'http://localhost:' + solargraphPort + '/prepare', form: {
+			workspace: vscode.workspace.rootPath
+		}});
+	} else {
+		// Keep the yardoc up to date when a server isn't running
+		yardCommand([]);
+	}
 }
 
 function checkGemVersion() {
@@ -220,9 +224,10 @@ export function activate(context: vscode.ExtensionContext) {
 		checkGemVersion();
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.', '@'));
 		yardCommand(['gems']);
-		yardCommand([]);
 		if (vscode.workspace.getConfiguration("solargraph").useServer) {
 			startServer();
+		} else {
+			yardCommand([]); // Update the yardoc
 		}
 		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));
 	});
