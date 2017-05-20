@@ -31,3 +31,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 
 ## 0.2.6
 - Setting to choose whether the gem includes snippets in suggestions. Defaults to false.
+
+## 0.2.7
+- Only set CompletionItem.insertText to SnippetString if suggestion kind is Snippet.

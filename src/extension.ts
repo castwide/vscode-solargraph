@@ -78,12 +78,15 @@ function getCompletionItems(data, document:vscode.TextDocument, position: vscode
 			var item = new vscode.CompletionItem(cd['label'], kinds[cd['kind']]);
 			// Treat instance variables slightly differently
 			if (cd['insert'].substring(0, 1) == '@') {
-				item.insertText = new SnippetString(cd['insert'].substring(1));
+				item.insertText = cd['insert'].substring(1);
 				item.filterText = cd['insert'].substring(1);
 				item.sortText = cd['insert'].substring(1);
 				item.label = cd['insert'].substring(1);
-			} else {
+			}
+			if (cd['kind'] == 'Snippet') {
 				item.insertText = new SnippetString(cd['insert']);
+			} else {
+				item.insertText = cd['insert'];
 			}
 			if (range) {
 				// HACK: Unrecognized property
@@ -99,7 +102,6 @@ function getCompletionItems(data, document:vscode.TextDocument, position: vscode
 
 const completionProvider = {
     provideCompletionItems: function completionProvider(document: vscode.TextDocument, position: vscode.Position) {
-		console.log('Snippet option: ' + vscode.workspace.getConfiguration('solargraph').withSnippets);
         return new Promise((resolve, reject) => {
 			if (solargraphServer && solargraphPort) {
 				request.post({url:'http://localhost:' + solargraphPort + '/suggest', form: {
@@ -138,7 +140,7 @@ const completionProvider = {
 					if (data == "") {
 						return resolve([]);
 					} else {
-						let result = JSON.parse(data);
+						let result = JSON.bparse(data);
 						return resolve(getCompletionItems(result, document, position));
 					}
 				});
