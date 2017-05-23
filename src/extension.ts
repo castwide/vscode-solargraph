@@ -5,6 +5,7 @@ import * as child_process from 'child_process';
 import * as request from 'request';
 import * as fs from 'fs';
 import YardContentProvider from './YardContentProvider'
+import RubySignatureHelpProvider from './RubySignatureHelpProvider'
 
 var solargraphServer:child_process.ChildProcess = null;
 var solargraphPort:string = null;
@@ -227,6 +228,7 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', completionProvider, '.', '@'));
+		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(), '(', ')'));
 		yardCommand(['gems']);
 		if (vscode.workspace.getConfiguration("solargraph").useServer) {
 			startServer();
