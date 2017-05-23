@@ -140,7 +140,7 @@ const completionProvider = {
 					if (data == "") {
 						return resolve([]);
 					} else {
-						let result = JSON.bparse(data);
+						let result = JSON.parse(data);
 						return resolve(getCompletionItems(result, document, position));
 					}
 				});
