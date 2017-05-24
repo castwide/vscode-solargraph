@@ -66,6 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
+		vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
 		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));
 	});
 	solargraphTest.on('error', () => {
@@ -77,5 +78,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-	//if (solargraphServer.isRunning()) solargraphServer.stop();
+	if (solargraphServer.isRunning()) solargraphServer.stop();
 }
