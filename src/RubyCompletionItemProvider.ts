@@ -35,7 +35,8 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				});
 			} else {
                 // TODO: We might get rid of the process option altogether
-				let child = cmd.solargraphCommand([
+                return reject();
+				/*let child = cmd.solargraphCommand([
 					'suggest',
 					'--line=' + position.line,
 					'--column=' + position.character,
@@ -61,7 +62,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 						console.log(errbuf.join("\n"));
 					}
 				});
-				child.stdin.end(document.getText());
+				child.stdin.end(document.getText());*/
 			}
         });
     }
