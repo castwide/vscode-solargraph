@@ -23,7 +23,6 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 						console.log(err);
 					} else {
 						if (httpResponse.statusCode == 200) {
-                            console.log(data);
                             var data = JSON.parse(body);
                             if (data.suggestions.length > 0) {
                                 var c:string = '';
