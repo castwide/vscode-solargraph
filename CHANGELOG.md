@@ -34,3 +34,7 @@ All notable changes to the "solargraph" extension will be documented in this fil
 
 ## 0.2.7
 - Only set CompletionItem.insertText to SnippetString if suggestion kind is Snippet.
+
+## 0.3.0
+- Arguments removed from CompletionItem labels.
+- Signature help for method arguments.

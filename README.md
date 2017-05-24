@@ -26,6 +26,10 @@ Open a Ruby file and start typing. Solargraph should start providing contextual 
 
     Stri # <- Hitting ctrl-space here will suggest String
 
+Method arguments and documentation can be seen by starting parentheses after the method call. Example:
+
+    String.new.casecmp( # <- Displays arguments and documentation for String#casecmp
+
 ### Documentation
 
 Solargraph provides a command to access searchable documentation directly from the IDE.

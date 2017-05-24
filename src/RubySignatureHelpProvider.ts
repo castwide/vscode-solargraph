@@ -27,7 +27,7 @@ export default class RubySignatureHelpProvider implements vscode.SignatureHelpPr
                             var data = JSON.parse(body);
                             var help = new vscode.SignatureHelp();
                             data.suggestions.forEach((s) => {
-                                var info = new vscode.SignatureInformation(s.label + '(' + s.arguments.join(', ') + ')');
+                                var info = new vscode.SignatureInformation(s.label + '(' + s.arguments.join(', ') + ')', s.documentation);
                                 help.signatures.push(info);
                             });
                             if (help.signatures.length > 0) {
