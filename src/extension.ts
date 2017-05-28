@@ -16,9 +16,6 @@ const solargraphServer = new SolargraphServer();
 function updateYard(saved: vscode.TextDocument) {
 	if (solargraphServer.isRunning()) {
 		solargraphServer.prepare(vscode.workspace.rootPath);
-	} else {
-		// Keep the yardoc up to date when a server isn't running
-		cmd.yardCommand([]);
 	}
 }
 

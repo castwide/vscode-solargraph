@@ -29,9 +29,6 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 								var lastLabel = null;
 								for (var i = 0; i < data.suggestions.length; i++) {
 									var s = data.suggestions[i];
-									//if (s.label != lastLabel) {
-									//	c = c + s.label + "\n\n";
-									//}
 									c = c + s.label
 									if (s.arguments.length > 0) {
 										c = c + ' (' + s.arguments.join(', ') + ')';

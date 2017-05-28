@@ -4,13 +4,11 @@ import * as request from 'request';
 import SolargraphServer from './SolargraphServer';
 
 export default class YardContentProvider implements vscode.TextDocumentContentProvider {
-	//private port: string;
 	private server: SolargraphServer;
 	private _onDidChange: vscode.EventEmitter<vscode.Uri>;
 	private docs: {[uri: string]: string};
 
 	constructor(server:SolargraphServer) {
-		//this.port = port;
 		this.server = server;
 		this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
 		this.docs = {};

@@ -13,7 +13,6 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position):Promise<vscode.CompletionItem[]> {
 		var that = this;
 		return new Promise((resolve, reject) => {
-			//if (solargraphServer && solargraphPort) {
 			if (this.server.isRunning()) {
 				request.post({url:'http://localhost:' + this.server.getPort() + '/suggest', form: {
 					text: document.getText(),
@@ -34,35 +33,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					}
 				});
 			} else {
-				// TODO: We might get rid of the process option altogether
 				return reject();
-				/*let child = cmd.solargraphCommand([
-					'suggest',
-					'--line=' + position.line,
-					'--column=' + position.character,
-					'--filename=' + document.fileName
-				]);
-				let errbuf = [], outbuf = [];
-				child.stderr.on('data', (data) => {
-					console.log(data.toString());
-					errbuf.push(data);
-				});
-				child.stdout.on('data', (data) => outbuf.push(data));
-				child.on('exit', () => {
-					var data = outbuf.join('');
-					if (data == "") {
-						return resolve([]);
-					} else {
-						let result = JSON.parse(data);
-						return resolve(this.getCompletionItems(result, document, position));
-					}
-				});
-				child.on('error', () => {
-					if (errbuf.length) {
-						console.log(errbuf.join("\n"));
-					}
-				});
-				child.stdin.end(document.getText());*/
 			}
 		});
 	}
