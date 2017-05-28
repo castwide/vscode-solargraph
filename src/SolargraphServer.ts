@@ -1,6 +1,7 @@
 import * as child_process from 'child_process';
 import * as vscode from 'vscode';
 import * as cmd from './commands';
+import * as request from 'request';
 
 export default class SolargraphServer {
     private child:child_process.ChildProcess = null;
@@ -18,7 +19,8 @@ export default class SolargraphServer {
         return this.port;
     }
 
-    public start() {
+    public start(callback?:Function) {
+        var ranCallback = false;
         if (this.isRunning()) {
             console.warn('The server is already running.')
         } else {
@@ -41,6 +43,10 @@ export default class SolargraphServer {
                         this.pid = parseInt(match[1]);
                     }
                 }
+                if (this.isRunning() && callback && !ranCallback) {
+                    ranCallback = true;
+                    callback();
+                }
             });
             this.child.on('exit', () => {
                 this.port = null;
@@ -61,5 +67,11 @@ export default class SolargraphServer {
     public restart() {
         this.stop();
         this.start();
+    }
+
+    public prepare(workspace:string) {
+        request.post({url:'http://localhost:' + this.port + '/prepare', form: {
+            workspace: workspace
+        }});
     }
 }

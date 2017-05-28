@@ -15,9 +15,7 @@ const solargraphServer = new SolargraphServer();
 
 function updateYard(saved: vscode.TextDocument) {
 	if (solargraphServer.isRunning()) {
-		request.post({url:'http://localhost:' + solargraphServer.getPort() + '/prepare', form: {
-			workspace: vscode.workspace.rootPath
-		}});
+		solargraphServer.prepare(vscode.workspace.rootPath);
 	} else {
 		// Keep the yardoc up to date when a server isn't running
 		cmd.yardCommand([]);
@@ -53,13 +51,15 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposableOpen);
 
-	const solargraphTest = cmd.solargraphCommand(['prepare']);
+	var solargraphTest = cmd.solargraphCommand(['help']);
 	solargraphTest.on('exit', () => {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
 		cmd.yardCommand(['gems']);
 		if (vscode.workspace.getConfiguration("solargraph").useServer) {
-			solargraphServer.start();
+			solargraphServer.start(function() {
+				solargraphServer.prepare(vscode.workspace.rootPath);
+			});
 		} else {
 			cmd.yardCommand([]); // Update the yardoc
 		}
