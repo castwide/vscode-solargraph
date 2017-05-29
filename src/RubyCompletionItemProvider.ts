@@ -85,7 +85,11 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					// HACK: Unrecognized property
 					item['range'] = range;
 				}
-				item.detail = cd['detail'];
+				if (cd['kind'] == 'Method' && cd['arguments'].length > 0) {
+					item.detail = '(' + cd['arguments'].join(', ') + ') ' + cd['detail'];
+				} else {
+					item.detail = cd['detail'];
+				}
 				item.documentation = cd['documentation'];
 				items.push(item);
 			});

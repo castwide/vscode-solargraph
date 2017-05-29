@@ -30,6 +30,8 @@ Method arguments and documentation can be seen by starting parentheses after the
 
     String.new.casecmp( # <- Displays arguments and documentation for String#casecmp
 
+You can also hover over variables, constants, and method calls to see popup documentation.
+
 ### Documentation
 
 Solargraph provides a command to access searchable documentation directly from the IDE.
