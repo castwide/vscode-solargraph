@@ -57,7 +57,7 @@ This extension contributes the following settings:
 
 * `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
-* `solargraph.useServer`: Run solargraph server for better performance. Defaults to true as of version 0.1.0.
+* `solargraph.useServer`: Run solargraph server for better performance. (Required for code completion.)
 * `solargraph.serverPort`: The port where the server runs. Default is 0 (select the next available port).
 * `solargraph.withSnippets`: Include snippets in completion suggestions. Default is false.
 
