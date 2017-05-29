@@ -37,6 +37,6 @@ All notable changes to the "solargraph" extension will be documented in this fil
 - Arguments removed from CompletionItem labels.
 - Signature help for method arguments.
 - The extension requires the Solargraph server for the time being. Running processes for queries is too cumbersome.
-- Display popup documentation on hover.
+- Display popup documentation on hover with links to documentation.
 - Code completion detail includes arguments for methods.
 - Code analysis notifications in status bar.

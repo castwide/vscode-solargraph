@@ -33,9 +33,10 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 									if (s.arguments.length > 0) {
 										c = c + ' (' + s.arguments.join(', ') + ')';
 									}
-									if (s.label != s.path) {
-										c = c + "\n\n" + s.path;
-									}
+									var uri = 'solargraph:/document?' + s.path.replace('#', '%23');
+									var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+									var link = "\n\n[" + s.path + '](' + href + ')';
+									c = c + link;
 									c = c + "\n\n";
 									c = c + s.documentation + "\n\n";
 									lastLabel = s.label;

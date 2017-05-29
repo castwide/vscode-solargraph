@@ -30,8 +30,6 @@ Method arguments and documentation can be seen by starting parentheses after the
 
     String.new.casecmp( # <- Displays arguments and documentation for String#casecmp
 
-You can also hover over variables, constants, and method calls to see popup documentation.
-
 ### Documentation
 
 Solargraph provides a command to access searchable documentation directly from the IDE.
@@ -40,6 +38,8 @@ Solargraph provides a command to access searchable documentation directly from t
 * Enter a keyword or path to search; e.g., `String` or `Array#join`.
 
 The documentation includes the Ruby core, bundled gems, and the current workspace.
+
+You can also hover over variables, constants, and method calls to see popup information with links to more documentation.
 
 #### Documenting Your Code
 
@@ -67,3 +67,4 @@ This extension contributes the following settings:
 
 * Incomplete support for stdlib
 * Incomplete support for Rails
+* Documentation pages need better design/layout
