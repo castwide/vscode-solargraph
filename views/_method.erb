@@ -5,6 +5,10 @@
     <a href="command:solargraph._openDocument?<%= URI.escape "\"solargraph:/document?#{object.namespace}\"" %>"><%= object.namespace %></a>
 </p>
 <h2>
+    Overview:
+</h2>
+<%= htmlify object.docstring %>
+<h2>
     Parameters:
 </h2>
 <% if object.parameters.empty? %>
@@ -43,5 +47,14 @@
         <p>
             <%= tag.text %>
         </p>
+    <% end %>
+<% end %>
+<% examples = object.tags(:example) %>
+<% unless examples.nil? %>
+    <% examples.each do |example| %>
+        <h2>
+            Example: <%= example.name %>
+        </h2>
+        <%= ruby_to_html example.text.strip %>
     <% end %>
 <% end %>
