@@ -75,11 +75,12 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					item.filterText = cd['insert'].substring(1);
 					item.sortText = cd['insert'].substring(1);
 					item.label = cd['insert'].substring(1);
-				}
-				if (cd['kind'] == 'Snippet') {
-					item.insertText = new SnippetString(cd['insert']);
 				} else {
-					item.insertText = cd['insert'];
+					if (cd['kind'] == 'Snippet') {
+						item.insertText = new SnippetString(cd['insert']);
+					} else {
+						item.insertText = cd['insert'];
+					}
 				}
 				if (range) {
 					// HACK: Unrecognized property

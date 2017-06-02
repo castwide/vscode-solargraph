@@ -1,3 +1,6 @@
+## 0.3.1 - June 2, 2017
+- Fixed instance variable completion bug.
+
 ## 0.3.0 – May 24th, 2017
 - Only set CompletionItem.insertText to SnippetString if suggestion kind is Snippet.
 - Arguments removed from CompletionItem labels.
