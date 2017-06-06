@@ -1,3 +1,6 @@
+## 0.3.2 - June 6, 2017
+- Field and Property completion item kinds.
+
 ## 0.3.1 - June 2, 2017
 - Fixed instance variable completion bug.
 

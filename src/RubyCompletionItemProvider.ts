@@ -45,7 +45,9 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			"Module": vscode.CompletionItemKind.Module,
 			"Method": vscode.CompletionItemKind.Method,
 			"Variable": vscode.CompletionItemKind.Variable,
-			"Snippet": vscode.CompletionItemKind.Snippet
+			"Snippet": vscode.CompletionItemKind.Snippet,
+			"Field": vscode.CompletionItemKind.Field,
+			"Property": vscode.CompletionItemKind.Property
 		}
 		// HACK: Tricking the type system to avoid an invalid error
 		let SnippetString = vscode['SnippetString'];
