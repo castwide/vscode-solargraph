@@ -1,3 +1,7 @@
+## 0.3.3
+- Restart server command.
+- Commands activate extension.
+
 ## 0.3.2 - June 6, 2017
 - Field and Property completion item kinds.
 

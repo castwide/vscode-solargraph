@@ -35,11 +35,23 @@ function checkGemVersion() {
 export function activate(context: vscode.ExtensionContext) {
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
-			let uri = new vscode.Uri().with({scheme: 'solargraph', path: '/search', query: val});
-			vscode.commands.executeCommand('solargraph._openDocument', uri);
+			if (val) {
+				let uri = new vscode.Uri().with({scheme: 'solargraph', path: '/search', query: val});
+				vscode.commands.executeCommand('solargraph._openDocument', uri);
+			}
 		});
 	});
 	context.subscriptions.push(disposableSearch);
+
+	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
+		if (vscode.workspace.getConfiguration('solargraph').useServer) {
+			solargraphServer.restart();
+			vscode.window.showInformationMessage('Solargraph server restarted.');
+		} else {
+			vscode.window.showErrorMessage('The Solargraph server is disabled in your settings.');
+		}
+	});
+	context.subscriptions.push(disposableRestart);
 
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
 		console.log('String is ' + uriString);

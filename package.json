@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "Code completion and inline documentation for Ruby",
     "icon": "solargraph.png",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -32,7 +32,9 @@
         "vscode": "^1.5.0"
     },
     "activationEvents": [
-        "onLanguage:ruby"
+        "onLanguage:ruby",
+        "onCommand:solargraph.search",
+        "onCommand:solargraph.restart"
     ],
     "contributes": {
         "configuration": {
@@ -70,6 +72,10 @@
             {
                 "command": "solargraph.search",
                 "title": "Search Ruby Documentation"
+            },
+            {
+                "command": "solargraph.restart",
+                "title": "Restart Solargraph"
             }
         ],
         "keybindings": [
