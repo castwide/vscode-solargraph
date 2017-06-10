@@ -89,11 +89,18 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					item['range'] = range;
 				}
 				if (cd['kind'] == 'Method' && cd['arguments'].length > 0) {
-					item.detail = '(' + cd['arguments'].join(', ') + ') ' + cd['detail'];
+					item.detail = '(' + cd['arguments'].join(', ') + ') ' + (cd['return_type'] ? '=> ' + cd['return_type'] : '');
 				} else {
-					item.detail = cd['detail'];
+					item.detail = (cd['return_type'] ? '=> ' + cd['return_type'] : '');
 				}
-				item.documentation = cd['documentation'];
+				var documentation = '';
+				if (cd['path']) {
+					documentation += cd['path'] + "\n\n";
+				}
+				if (cd['documentation']) {
+					documentation += cd['documentation'];
+				}
+				item.documentation = documentation;
 				items.push(item);
 			});
 		}
