@@ -12,7 +12,7 @@ export default class SolargraphServer {
 	}
 
 	public isRunning():Boolean {
-		return (this.port != null && this.pid != null);
+		return (this.child != null && this.port != null && this.pid != null);
 	}
 
 	public getPort():string {
@@ -21,8 +21,8 @@ export default class SolargraphServer {
 
 	public start(callback?:Function) {
 		var ranCallback = false;
-		if (this.isRunning()) {
-			console.warn('The server is already running.')
+		if (this.child) {
+			console.warn('There is already a process running for the Solargraph server.');
 		} else {
 			console.log('Starting the server');
 			this.child = cmd.solargraphCommand([
@@ -55,12 +55,16 @@ export default class SolargraphServer {
 	}
 
 	public stop() {
-		if (!this.isRunning()) {
+		if (!this.child) {
 			console.warn('The server is not running.');
 		} else {
-			process.kill(this.pid);
+			this.child.kill();
+			if (this.pid) {
+				process.kill(this.pid);
+			}
 			this.pid = null;
 			this.port = null;
+			this.child = null;
 		}
 	}
 
