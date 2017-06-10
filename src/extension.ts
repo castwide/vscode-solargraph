@@ -44,12 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableSearch);
 
 	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
-		if (vscode.workspace.getConfiguration('solargraph').useServer) {
-			solargraphServer.restart();
-			vscode.window.showInformationMessage('Solargraph server restarted.');
-		} else {
-			vscode.window.showErrorMessage('The Solargraph server is disabled in your settings.');
-		}
+		solargraphServer.restart();
+		vscode.window.showInformationMessage('Solargraph server restarted.');
 	});
 	context.subscriptions.push(disposableRestart);
 
@@ -67,13 +63,9 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
 		cmd.yardCommand(['gems']);
-		if (vscode.workspace.getConfiguration("solargraph").useServer) {
-			solargraphServer.start(function() {
-				solargraphServer.prepare(vscode.workspace.rootPath);
-			});
-		} else {
-			cmd.yardCommand([]); // Update the yardoc
-		}
+		solargraphServer.start(function() {
+			solargraphServer.prepare(vscode.workspace.rootPath);
+		});
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));

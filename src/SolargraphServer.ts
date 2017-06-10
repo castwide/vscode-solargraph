@@ -27,7 +27,7 @@ export default class SolargraphServer {
 			console.log('Starting the server');
 			this.child = cmd.solargraphCommand([
 				'server',
-				'--port', vscode.workspace.getConfiguration("solargraph").serverPort,
+				'--port', '0',
 				'--views', vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
 			]);
 			this.child.stderr.on('data', (data) => {

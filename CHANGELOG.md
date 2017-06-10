@@ -1,6 +1,7 @@
-## 0.3.3
+## 0.4.0
 - Restart server command.
 - Commands activate extension.
+- Removed useServer configuration (extension always requires server for now).
 
 ## 0.3.2 - June 6, 2017
 - Field and Property completion item kinds.
