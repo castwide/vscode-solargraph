@@ -91,6 +91,7 @@
         "@types/mocha": "^2.2.32"
     },
     "dependencies": {
-        "request": "^2.79.0"
+        "request": "^2.79.0",
+        "html-to-text": "^3.3.0"
     }
 }

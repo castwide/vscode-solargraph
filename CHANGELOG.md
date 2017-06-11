@@ -3,6 +3,7 @@
 - Commands activate extension.
 - Removed useServer configuration (extension always requires server for now).
 - Completion items display arguments, return value, path, and documentation.
+- Convert HTML to plain text in documentation.
 
 ## 0.3.2 - June 6, 2017
 - Field and Property completion item kinds.

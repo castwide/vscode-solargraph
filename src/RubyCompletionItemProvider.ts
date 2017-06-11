@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import SolargraphServer from './SolargraphServer';
 import * as request from 'request';
 import * as cmd from './commands';
+import * as htmlToText from 'html-to-text';
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {
 	private server:SolargraphServer = null;
@@ -97,8 +98,16 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				if (cd['path']) {
 					documentation += cd['path'] + "\n\n";
 				}
-				if (cd['documentation']) {
-					documentation += cd['documentation'];
+				var doc = cd['documentation'];
+				if (doc) {
+					var pres = doc.match(/<pre>[\s\S]*?<\/pre>/gi);
+					if (pres) {
+						for (var j = 0; j < pres.length; j++) {
+							doc = doc.replace(pres[j], pres[j].replace(/\n/g, "<br/>\n"));
+						}
+					}
+					//c = c + htmlToText.fromString(doc) + "\n\n";
+					documentation += htmlToText.fromString(doc, {wordwrap: null});
 				}
 				item.documentation = documentation;
 				items.push(item);

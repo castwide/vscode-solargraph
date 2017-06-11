@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import SolargraphServer from './SolargraphServer';
 import * as request from 'request';
+import * as htmlToText from 'html-to-text';
 
 export default class RubyHoverProvider implements vscode.HoverProvider {
 	private server: SolargraphServer;
@@ -38,7 +39,16 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 									var link = "\n\n[" + s.path + '](' + href + ')';
 									c = c + link;
 									c = c + "\n\n";
-									c = c + s.documentation + "\n\n";
+									var doc = s.documentation;
+									if (doc) {
+										var pres = doc.match(/<pre>[\s\S]*?<\/pre>/gi);
+										if (pres) {
+											for (var j = 0; j < pres.length; j++) {
+												doc = doc.replace(pres[j], pres[j].replace(/\n/g, "<br/>\n"));
+											}
+										}
+										c = c + htmlToText.fromString(doc) + "\n\n";
+									}
 									lastLabel = s.label;
 								}
 								var hover = new vscode.Hover(c);
