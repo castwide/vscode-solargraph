@@ -1,4 +1,4 @@
-## 0.4.0
+## 0.4.0 - June 12, 2017
 - Restart server command.
 - Commands activate extension.
 - Removed useServer configuration (extension always requires server for now).
