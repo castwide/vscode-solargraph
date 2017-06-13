@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import SolargraphServer from './SolargraphServer';
 import * as request from 'request';
 import * as cmd from './commands';
-import * as htmlToText from 'html-to-text';
+const h2p = require('html2plaintext');
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {
 	private server:SolargraphServer = null;
@@ -107,7 +107,8 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 						}
 					}
 					//c = c + htmlToText.fromString(doc) + "\n\n";
-					documentation += htmlToText.fromString(doc, {wordwrap: null});
+					documentation += h2p(doc);
+					//documentation += doc;
 				}
 				item.documentation = documentation;
 				items.push(item);

@@ -1,3 +1,6 @@
+## 0.4.1
+- Use html2plaintext to convert documentation.
+
 ## 0.4.0 - June 12, 2017
 - Restart server command.
 - Commands activate extension.
