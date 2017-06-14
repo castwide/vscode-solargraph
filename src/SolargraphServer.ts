@@ -74,16 +74,20 @@ export default class SolargraphServer {
 	}
 
 	public prepare(workspace:string) {
-		let prepareStatus = vscode.window.setStatusBarMessage('Analyzing Ruby code in workspace...')
-		request.post({url:'http://localhost:' + this.port + '/prepare', form: {
-			workspace: workspace
-		}}, function(err, response, body) {
-			setTimeout(function() {
-			prepareStatus.dispose();
-				if (err) {
-					vscode.window.setStatusBarMessage('There was an error analyzing the Ruby code.', 3000);
-				}
-			}, 500);
-		});
+		if (workspace) {
+			let prepareStatus = vscode.window.setStatusBarMessage('Analyzing Ruby code in workspace ' + workspace);
+			request.post({url:'http://localhost:' + this.port + '/prepare', form: {
+				workspace: workspace
+			}}, function(err, response, body) {
+				setTimeout(function() {
+				prepareStatus.dispose();
+					if (err) {
+						vscode.window.setStatusBarMessage('There was an error analyzing the Ruby code.', 3000);
+					}
+				}, 500);
+			});
+		} else {
+			console.log('No workspace to prepare.');
+		}
 	}
 }

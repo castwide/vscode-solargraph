@@ -1,5 +1,6 @@
-## 0.4.1
+## 0.4.1 - June 14, 2017
 - Use html2plaintext to convert documentation.
+- Do not prepare workspace (i.e., run yardoc update) if root path is undefined.
 
 ## 0.4.0 - June 12, 2017
 - Restart server command.

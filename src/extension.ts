@@ -14,7 +14,7 @@ import SolargraphServer from './SolargraphServer';
 const solargraphServer = new SolargraphServer();
 
 function updateYard(saved: vscode.TextDocument) {
-	if (solargraphServer.isRunning()) {
+	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {
 		solargraphServer.prepare(vscode.workspace.rootPath);
 	}
 }
@@ -64,7 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
 		checkGemVersion();
 		cmd.yardCommand(['gems']);
 		solargraphServer.start(function() {
-			solargraphServer.prepare(vscode.workspace.rootPath);
+			if (vscode.workspace.rootPath) {
+				solargraphServer.prepare(vscode.workspace.rootPath);
+			}
 		});
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
