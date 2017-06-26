@@ -9,7 +9,7 @@ import YardContentProvider from './YardContentProvider';
 import RubyCompletionItemProvider from './RubyCompletionItemProvider';
 import RubySignatureHelpProvider from './RubySignatureHelpProvider';
 import RubyHoverProvider from './RubyHoverProvider';
-import SolargraphServer from './SolargraphServer';
+import SolargraphServer from 'solargraph-utils';
 
 const solargraphServer = new SolargraphServer();
 
@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
 		cmd.yardCommand(['gems']);
-		solargraphServer.start(function() {
+		solargraphServer.start().then(function() {
 			if (vscode.workspace.rootPath) {
 				solargraphServer.prepare(vscode.workspace.rootPath);
 			}

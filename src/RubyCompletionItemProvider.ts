@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import SolargraphServer from './SolargraphServer';
+import SolargraphServer from 'solargraph-utils';
 import * as request from 'request';
 import * as cmd from './commands';
 const h2p = require('html2plaintext');
@@ -14,28 +14,14 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position):Promise<vscode.CompletionItem[]> {
 		var that = this;
 		return new Promise((resolve, reject) => {
-			if (this.server.isRunning()) {
-				request.post({url:'http://localhost:' + this.server.getPort() + '/suggest', form: {
-					text: document.getText(),
-					filename: document.fileName,
-					line: position.line,
-					column: position.character,
-					workspace: vscode.workspace.rootPath,
-					with_snippets: vscode.workspace.getConfiguration('solargraph').withSnippets ? 1 : null}
-				}, function(err,httpResponse,body) {
-					if (err) {
-						console.log(err);
-					} else {
-						if (httpResponse.statusCode == 200) {
-							return resolve(that.getCompletionItems(JSON.parse(body), document, position));
-						} else {
-							// TODO: Handle error
-						}
-					}
-				});
-			} else {
-				return reject();
-			}
+			this.server.suggest(document.getText(), position.line, position.character, document.fileName, vscode.workspace.rootPath, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
+				if (response['status'] == 'ok') {
+					return resolve(that.getCompletionItems(response, document, position));
+				} else {
+					console.warn('Solargraph server returned an error: ' + response['message']);
+					return reject([]);
+				}
+			});
 		});
 	}
 

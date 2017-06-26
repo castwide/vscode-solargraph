@@ -1,7 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as request from 'request';
-import SolargraphServer from './SolargraphServer';
+import SolargraphServer from 'solargraph-utils';
 
 export default class YardContentProvider implements vscode.TextDocumentContentProvider {
 	private server: SolargraphServer;
