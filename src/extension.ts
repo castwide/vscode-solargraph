@@ -32,6 +32,15 @@ function checkGemVersion() {
 	});
 }
 
+function serverConfiguration() {
+	return {
+		commandPath: vscode.workspace.getConfiguration('solargraph').commandPath,
+		useBundler: vscode.workspace.getConfiguration('solargraph').useBundler,
+		views: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
+		workspace: vscode.workspace.rootPath
+	};
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
@@ -44,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableSearch);
 
 	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
-		solargraphServer.restart();
+		solargraphServer.restart(serverConfiguration());
 		vscode.window.showInformationMessage('Solargraph server restarted.');
 	});
 	context.subscriptions.push(disposableRestart);
@@ -63,6 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
 		cmd.yardCommand(['gems']);
+		solargraphServer.configure(serverConfiguration());
 		solargraphServer.start().then(function() {
 			if (vscode.workspace.rootPath) {
 				solargraphServer.prepare(vscode.workspace.rootPath);
