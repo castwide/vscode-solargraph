@@ -1,14 +1,14 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as request from 'request';
-import SolargraphServer from 'solargraph-utils';
+import * as solargraph from 'solargraph-utils';
 
 export default class YardContentProvider implements vscode.TextDocumentContentProvider {
-	private server: SolargraphServer;
+	private server:solargraph.Server;
 	private _onDidChange: vscode.EventEmitter<vscode.Uri>;
 	private docs: {[uri: string]: string};
 
-	constructor(server:SolargraphServer) {
+	constructor(server:solargraph.Server) {
 		this.server = server;
 		this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
 		this.docs = {};

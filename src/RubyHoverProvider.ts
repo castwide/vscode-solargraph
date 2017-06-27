@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import SolargraphServer from 'solargraph-utils';
+import * as solargraph from 'solargraph-utils';
 import * as request from 'request';
 const h2p = require('html2plaintext');
 
 export default class RubyHoverProvider implements vscode.HoverProvider {
-	private server: SolargraphServer;
+	private server:solargraph.Server;
 
-	constructor(server: SolargraphServer) {
+	constructor(server:solargraph.Server) {
 		this.server = server;
 	}
 

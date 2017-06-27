@@ -9,9 +9,9 @@ import YardContentProvider from './YardContentProvider';
 import RubyCompletionItemProvider from './RubyCompletionItemProvider';
 import RubySignatureHelpProvider from './RubySignatureHelpProvider';
 import RubyHoverProvider from './RubyHoverProvider';
-import SolargraphServer from 'solargraph-utils';
+import * as solargraph from 'solargraph-utils';
 
-const solargraphServer = new SolargraphServer();
+const solargraphServer = new solargraph.Server();
 
 function updateYard(saved: vscode.TextDocument) {
 	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {

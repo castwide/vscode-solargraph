@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import SolargraphServer from 'solargraph-utils';
+import * as solargraph from 'solargraph-utils';
 import * as request from 'request';
 
 export default class RubySignatureHelpProvider implements vscode.SignatureHelpProvider {
-    private server: SolargraphServer;
+    private server:solargraph.Server;
 
-    constructor(server: SolargraphServer) {
+    constructor(server:solargraph.Server) {
         this.server = server;
     }
 

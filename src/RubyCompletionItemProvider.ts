@@ -1,20 +1,26 @@
 import * as vscode from 'vscode';
-import SolargraphServer from 'solargraph-utils';
+import * as solargraph from 'solargraph-utils';
 import * as request from 'request';
 import * as cmd from './commands';
 const h2p = require('html2plaintext');
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {
-	private server:SolargraphServer = null;
+	private server:solargraph.Server = null;
 
-	constructor(server:SolargraphServer) {
+	constructor(server:solargraph.Server) {
 		this.server = server;
 	}
 
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position):Promise<vscode.CompletionItem[]> {
 		var that = this;
 		return new Promise((resolve, reject) => {
-			this.server.suggest(document.getText(), position.line, position.character, document.fileName, vscode.workspace.rootPath, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
+			// TODO: In a future version, it might be possible to use separate
+			// workspace configurations in subdirectories. For now, we always
+			// use the workspace root.
+			//var workspace = solargraph.nearestWorkspace(document.fileName, vscode.workspace.rootPath);
+			var workspace = vscode.workspace.rootPath;
+			console.log('Getting completion items using workspace ' + workspace);
+			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
 				if (response['status'] == 'ok') {
 					return resolve(that.getCompletionItems(response, document, position));
 				} else {
