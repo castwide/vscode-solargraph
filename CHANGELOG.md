@@ -1,3 +1,6 @@
+## 0.5.0
+- Use solargraph-utils for Solargraph gem integration.
+
 ## 0.4.1 - June 14, 2017
 - Use html2plaintext to convert documentation.
 - Do not prepare workspace (i.e., run yardoc update) if root path is undefined.
