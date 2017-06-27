@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import * as request from 'request';
 import * as cmd from './commands';
 const h2p = require('html2plaintext');
 
@@ -98,9 +97,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 							doc = doc.replace(pres[j], pres[j].replace(/\n/g, "<br/>\n"));
 						}
 					}
-					//c = c + htmlToText.fromString(doc) + "\n\n";
 					documentation += h2p(doc);
-					//documentation += doc;
 				}
 				item.documentation = documentation;
 				items.push(item);

@@ -1,9 +1,5 @@
 'use strict';
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as child_process from 'child_process';
-import * as request from 'request';
-import * as fs from 'fs';
 import * as cmd from './commands';
 import YardContentProvider from './YardContentProvider';
 import RubyCompletionItemProvider from './RubyCompletionItemProvider';
