@@ -23,7 +23,7 @@ export default class YardContentProvider implements vscode.TextDocumentContentPr
 
 	public update(uri: vscode.Uri) {
 		var that = this;
-		request.get({url:'http://localhost:' + this.server.getPort() + uri.path, form: {
+		request.get({url: this.server.url + uri.path, form: {
 			query: uri.query,
 			workspace: vscode.workspace.rootPath
 		}}, function(err, httpResponse, body) {

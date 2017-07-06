@@ -1,5 +1,6 @@
-## 0.5.0
+## 0.5.0 - July 5, 2017
 - Use solargraph-utils for Solargraph gem integration.
+- Addition HTML to plain text conversions.
 
 ## 0.4.1 - June 14, 2017
 - Use html2plaintext to convert documentation.

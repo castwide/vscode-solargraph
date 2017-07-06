@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as request from 'request';
-const h2p = require('html2plaintext');
+import * as format from './format';
 
 export default class RubyHoverProvider implements vscode.HoverProvider {
 	private server:solargraph.Server;
@@ -29,13 +29,7 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 						c = c + "\n\n";
 						var doc = s.documentation;
 						if (doc) {
-							var pres = doc.match(/<pre>[\s\S]*?<\/pre>/gi);
-							if (pres) {
-								for (var j = 0; j < pres.length; j++) {
-									doc = doc.replace(pres[j], pres[j].replace(/\n/g, "<br/>\n"));
-								}
-							}
-							c = c + h2p(doc) + "\n\n";
+							c = c + format.htmlToPlainText(doc) + "\n\n";
 						}
 						lastLabel = s.label;
 					}

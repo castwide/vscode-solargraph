@@ -9,10 +9,20 @@ import * as solargraph from 'solargraph-utils';
 
 const solargraphServer = new solargraph.Server();
 
-function updateYard(saved: vscode.TextDocument) {
+function prepareWorkspace() {
 	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {
-		solargraphServer.prepare(vscode.workspace.rootPath);
+		var prepareStatus = vscode.window.setStatusBarMessage('Analyzing Ruby code in workspace ' + vscode.workspace.rootPath);
+		solargraphServer.prepare(vscode.workspace.rootPath).then(function() {
+			prepareStatus.dispose();
+		}).catch(function() {
+			prepareStatus.dispose();
+			vscode.window.setStatusBarMessage('There was an error analyzing the Ruby code.', 3000);
+		});
 	}
+}
+
+function updateYard(saved: vscode.TextDocument) {
+	prepareWorkspace();
 }
 
 function checkGemVersion() {
@@ -70,9 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
 		cmd.yardCommand(['gems']);
 		solargraphServer.configure(serverConfiguration());
 		solargraphServer.start().then(function() {
-			if (vscode.workspace.rootPath) {
-				solargraphServer.prepare(vscode.workspace.rootPath);
-			}
+			prepareWorkspace();
 		});
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));

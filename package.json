@@ -93,6 +93,6 @@
     "dependencies": {
         "request": "^2.79.0",
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.0.1"
+        "solargraph-utils": "^0.1.0"
     }
 }

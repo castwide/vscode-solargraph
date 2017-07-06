@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as cmd from './commands';
-const h2p = require('html2plaintext');
+import * as format from './format';
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {
 	private server:solargraph.Server = null;
@@ -91,13 +91,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				}
 				var doc = cd['documentation'];
 				if (doc) {
-					var pres = doc.match(/<pre>[\s\S]*?<\/pre>/gi);
-					if (pres) {
-						for (var j = 0; j < pres.length; j++) {
-							doc = doc.replace(pres[j], pres[j].replace(/\n/g, "<br/>\n"));
-						}
-					}
-					documentation += h2p(doc);
+					documentation += format.htmlToPlainText(doc);
 				}
 				item.documentation = documentation;
 				items.push(item);
