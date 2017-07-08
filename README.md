@@ -53,6 +53,11 @@ local and instance variables. Example:
     my_variable = some_method_call
     my_variable. # <= Hitting crtl-space here will suggest String instance methods
 
+### Restarting Solargraph
+
+Some changes you make to a project, such as updating the Gemfile, might require you to restart the Solargraph server.
+Instead of reloading the VS Code window, you can run Restart Solargraph from the Command Palette.
+
 ## Extension Settings
 
 This extension contributes the following settings:
