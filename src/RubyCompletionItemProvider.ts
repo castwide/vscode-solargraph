@@ -90,10 +90,17 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					documentation += cd['path'] + "\n\n";
 				}
 				var doc = cd['documentation'];
+				if (cd['params'] && cd['params'].length > 0) {
+					doc += "<p>Params:<br/>";
+					for (var j = 0; j < cd['params'].length; j++) {
+						doc += "- " + cd['params'][j] + "<br/>";
+					}
+					doc += "</p>";
+				}
 				if (doc) {
 					documentation += format.htmlToPlainText(doc);
 				}
-				item.documentation = documentation;
+		item.documentation = documentation;
 				items.push(item);
 			});
 		}
