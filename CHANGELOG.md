@@ -1,5 +1,6 @@
 ## 0.5.1 - August 1, 2017
 - Display param tag info in method documentation.
+- Config file command.
 
 ## 0.5.0 - July 5, 2017
 - Use solargraph-utils for Solargraph gem integration.
