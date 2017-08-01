@@ -66,6 +66,10 @@
             {
                 "command": "solargraph.restart",
                 "title": "Restart Solargraph"
+            },
+            {
+                "command": "solargraph.config",
+                "title": "Create a Solargraph config file"
             }
         ],
         "keybindings": [

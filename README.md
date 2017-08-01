@@ -58,6 +58,22 @@ local and instance variables. Example:
 Some changes you make to a project, such as updating the Gemfile, might require you to restart the Solargraph server.
 Instead of reloading the VS Code window, you can run Restart Solargraph from the Command Palette.
 
+### Project Configuration
+
+Solargraph will use the .solargraph.yml file for configuration if it exists in the workspace root. The extension provides
+a command to `Create a Solargraph config file`, or you can do it from the command line:
+
+    solargraph config .
+
+The default file should look something like this:
+
+    include:
+      - ./**/*.rb
+    exclude:
+      - spec/**/*
+
+This configuration tells Solargraph to parse all .rb files in the workspace excluding the spec folder.
+
 ## Extension Settings
 
 This extension contributes the following settings:
