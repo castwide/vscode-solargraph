@@ -7,7 +7,8 @@ import RubySignatureHelpProvider from './RubySignatureHelpProvider';
 import RubyHoverProvider from './RubyHoverProvider';
 import * as solargraph from 'solargraph-utils';
 
-const solargraphServer = new solargraph.Server();
+const solargraphConfiguration = new solargraph.Configuration();
+const solargraphServer = new solargraph.Server(solargraphConfiguration);
 
 function prepareWorkspace() {
 	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {
@@ -26,28 +27,25 @@ function updateYard(saved: vscode.TextDocument) {
 }
 
 function checkGemVersion() {
-	let child = cmd.gemCommand(['outdated']);
-	let result = "\n";
-	child.stdout.on('data', (data:Buffer) => {
-		result += data.toString();
-	});
-	child.on('exit', () => {
-		if (result.match(/[\s]solargraph[\s]/)) {
-			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.');
-		}
+	console.log('Checking gem version');
+	solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
+		console.log('Solargraph gem version is current');
+	}).catch(() => {
+		vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.');
 	});
 }
 
-function serverConfiguration() {
-	return {
-		commandPath: vscode.workspace.getConfiguration('solargraph').commandPath,
-		useBundler: vscode.workspace.getConfiguration('solargraph').useBundler,
-		views: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
-		workspace: vscode.workspace.rootPath
-	};
+function applyConfiguration(config:solargraph.Configuration) {
+	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath;
+	config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler;
+	config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+	config.workspace = vscode.workspace.rootPath;
 }
 
 export function activate(context: vscode.ExtensionContext) {
+	applyConfiguration(solargraphConfiguration);
+
+	// Search command
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
 			if (val) {
@@ -58,12 +56,14 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposableSearch);
 
+	// Restart command
 	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
-		solargraphServer.restart(serverConfiguration());
+		solargraphServer.restart();
 		vscode.window.showInformationMessage('Solargraph server restarted.');
 	});
 	context.subscriptions.push(disposableRestart);
 
+	// Config command
 	var disposableConfig = vscode.commands.registerCommand('solargraph.config', () => {
 		var child = cmd.solargraphCommand(['config', '.']);
 		child.on('exit', () => {
@@ -75,6 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposableRestart);
 
+	// Open command (used internally for browsing documentation pages)
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
 		console.log('String is ' + uriString);
 		var uri = vscode.Uri.parse(uriString);
@@ -84,32 +85,23 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposableOpen);
 
-	var solargraphErrorCallback = function() {
+	solargraph.verifyGemIsInstalled(solargraphConfiguration).then(() => {
+		console.log('The Solargraph gem is installed and working.');
+		checkGemVersion();
+		cmd.yardCommand(['gems']);
+		solargraphServer.start().then(function() {
+			prepareWorkspace();
+		});
+		context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
+		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
+		context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
+		vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
+		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));	
+	}).catch(() => {
 		console.log('The Solargraph gem is not available.');
 		vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.');
-	}
-
-	var solargraphTest = cmd.solargraphCommand(['help']);
-	solargraphTest.on('exit', (code) => {
-		if (code == 0) {
-			console.log('Exit code: ' + code);
-			console.log('The Solargraph gem is installed and working.');
-			checkGemVersion();
-			cmd.yardCommand(['gems']);
-			solargraphServer.configure(serverConfiguration());
-			solargraphServer.start().then(function() {
-				prepareWorkspace();
-			});
-			context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
-			context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
-			context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
-			vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
-			context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));
-		} else {
-			solargraphErrorCallback();			
-		}
 	});
-
+		
     console.log('Solargraph extension activated.');
 }
 
