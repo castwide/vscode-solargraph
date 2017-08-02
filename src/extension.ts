@@ -25,6 +25,14 @@ function updateYard(saved: vscode.TextDocument) {
 	prepareWorkspace();
 }
 
+function updateConfiguration() {
+	applyConfiguration(solargraphConfiguration);
+	if (solargraphServer.isRunning()) {
+		vscode.window.setStatusBarMessage('Restarting the Solargraph server', 3000);
+		solargraphServer.restart();
+	}
+}
+
 function checkGemVersion() {
 	console.log('Checking gem version');
 	solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
@@ -94,7 +102,8 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
 		vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
-		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));	
+		context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));
+		context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(updateConfiguration));
 	}).catch(() => {
 		console.log('The Solargraph gem is not available.');
 		vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.');
