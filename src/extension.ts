@@ -36,9 +36,10 @@ function checkGemVersion() {
 }
 
 function applyConfiguration(config:solargraph.Configuration) {
-	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath;
-	config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler;
+	config.commandPath = vscode.workspace.getConfiguration('castwide.solargraph').commandPath;
+	config.useBundler = vscode.workspace.getConfiguration('castwide.solargraph').useBundler;
 	config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+	config.withSnippets = vscode.workspace.getConfiguration('castwide.solargraph').withSnippets;
 	config.workspace = vscode.workspace.rootPath;
 }
 
