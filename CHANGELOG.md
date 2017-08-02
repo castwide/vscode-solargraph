@@ -2,6 +2,7 @@
 - Display error message when gem test fails.
 - Updated solargraph-utils version.
 - Restart the server when the configuration changes.
+- Message actions for installing and updating the gem.
 
 ## 0.5.1 - August 1, 2017
 - Display param tag info in method documentation.
