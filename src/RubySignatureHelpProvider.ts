@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import * as request from 'request';
 import * as format from './format';
 
 export default class RubySignatureHelpProvider implements vscode.SignatureHelpProvider {
