@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import * as cmd from './commands';
 import * as format from './format';
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {

@@ -1,6 +1,5 @@
 'use strict';
 import * as vscode from 'vscode';
-import * as cmd from './commands';
 import YardContentProvider from './YardContentProvider';
 import RubyCompletionItemProvider from './RubyCompletionItemProvider';
 import RubySignatureHelpProvider from './RubySignatureHelpProvider';
@@ -87,7 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then(() => {
 		console.log('The Solargraph gem is installed and working.');
 		checkGemVersion();
-		cmd.yardCommand(['gems']);
+		solargraph.updateGemDocumentation(solargraphConfiguration);
 		solargraphServer.start().then(function() {
 			prepareWorkspace();
 		});
