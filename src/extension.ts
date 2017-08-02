@@ -66,11 +66,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Config command
 	var disposableConfig = vscode.commands.registerCommand('solargraph.config', () => {
-		var child = cmd.solargraphCommand(['config', '.']);
-		child.on('exit', () => {
+		solargraph.writeConfigFile(solargraphConfiguration).then(() => {
 			vscode.window.showInformationMessage('Created default .solargraph.yml file.');
-		});
-		child.on('error', () => {
+		}).catch(() => {
 			vscode.window.showErrorMessage('Error creating .solargraph.yml.');
 		});
 	});
