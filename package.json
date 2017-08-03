@@ -27,7 +27,6 @@
         "YARD",
         "code completion"
     ],
-    "preview": true,
     "engines": {
         "vscode": "^1.5.0"
     },
