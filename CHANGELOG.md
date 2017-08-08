@@ -1,5 +1,6 @@
-## 0.6.1
+## 0.7.0
 - Constant kind.
+- Detect class variables and infer types.
 
 ## 0.6.0 - August 7, 2017
 - Display error message when gem test fails.

@@ -65,10 +65,14 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				var item = new vscode.CompletionItem(cd['label'], kinds[cd['kind']]);
 				// Treat instance variables slightly differently
 				if (cd['insert'].substring(0, 1) == '@') {
-					item.insertText = cd['insert'].substring(1);
-					item.filterText = cd['insert'].substring(1);
-					item.sortText = cd['insert'].substring(1);
-					item.label = cd['insert'].substring(1);
+					var firstChar = 1;
+					if (cd['insert'].substring(1, 2) == '@') {
+						firstChar = 2;
+					}
+					item.insertText = cd['insert'].substring(firstChar);
+					item.filterText = cd['insert'].substring(firstChar);
+					item.sortText = cd['insert'].substring(firstChar);
+					item.label = cd['insert'].substring(firstChar);
 				} else {
 					if (cd['kind'] == 'Snippet') {
 						item.insertText = new SnippetString(cd['insert']);
