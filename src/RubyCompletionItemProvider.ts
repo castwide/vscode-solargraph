@@ -32,6 +32,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	private getCompletionItems(data, document:vscode.TextDocument, position: vscode.Position):Array<vscode.CompletionItem> {
 		const kinds = {
 			"Class": vscode.CompletionItemKind.Class,
+			"Constant": vscode.CompletionItemKind['Constant'],
 			"Keyword": vscode.CompletionItemKind.Keyword,
 			"Module": vscode.CompletionItemKind.Module,
 			"Method": vscode.CompletionItemKind.Method,
