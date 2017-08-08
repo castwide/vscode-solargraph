@@ -1,3 +1,6 @@
+## 0.6.1
+- Constant kind.
+
 ## 0.6.0 - August 7, 2017
 - Display error message when gem test fails.
 - Updated solargraph-utils version.
