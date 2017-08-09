@@ -1,6 +1,7 @@
-## 0.7.0
-- Constant kind.
+## 0.7.0 - August 9, 2017
+- Constant completion item kind.
 - Detect class variables and infer types.
+- Detect yield parameters in method blocks.
 
 ## 0.6.0 - August 7, 2017
 - Display error message when gem test fails.
