@@ -104,7 +104,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				if (doc) {
 					documentation += format.htmlToPlainText(doc);
 				}
-		item.documentation = documentation;
+				item.documentation = documentation;
 				items.push(item);
 			});
 		}

@@ -1,3 +1,6 @@
+## 0.7.1
+- solargraph.checkGemVersion setting
+
 ## 0.7.0 - August 9, 2017
 - Constant completion item kind.
 - Detect class variables and infer types.

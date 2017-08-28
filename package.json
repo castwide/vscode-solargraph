@@ -54,6 +54,11 @@
                     "type": "boolean",
                     "description": "Include snippets with completion suggestions.",
                     "default": false
+                },
+                "solargraph.checkGemVersion": {
+                    "type": "boolean",
+                    "description": "Check if a new version of the Solargraph gem is available.",
+                    "default": true
                 }
             }
         },
