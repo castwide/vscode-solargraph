@@ -74,6 +74,10 @@
             {
                 "command": "solargraph.config",
                 "title": "Create a Solargraph config file"
+            },
+            {
+                "command": "solargraph.checkGemVersion",
+                "title": "Check Solargraph gem version"
             }
         ],
         "keybindings": [

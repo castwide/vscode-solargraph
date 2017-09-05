@@ -38,18 +38,22 @@ function checkGemVersion() {
 	solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
 		console.log('Solargraph gem version is current');
 	}).catch(() => {
-		vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.', 'Update Now').then((item) => {
-			if (item == 'Update Now') {
-				solargraph.updateGem(solargraphConfiguration).then(() => {
-					vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
-					if (solargraphServer.isRunning()) {
-						solargraphServer.restart();
-					}
-				}).catch(() => {
-					vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
-				});
-			}
-		});
+		notifyGemUpdate();
+	});
+}
+
+function notifyGemUpdate() {
+	vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.', 'Update Now').then((item) => {
+		if (item == 'Update Now') {
+			solargraph.updateGem(solargraphConfiguration).then(() => {
+				vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
+				if (solargraphServer.isRunning()) {
+					solargraphServer.restart();
+				}
+			}).catch(() => {
+				vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
+			});
+		}
 	});
 }
 
@@ -114,6 +118,18 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
 	});
 	context.subscriptions.push(disposableOpen);
+
+	// Check gem version command
+	var disposableCheckGem = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
+		var checkStatus = vscode.window.setStatusBarMessage('Checking for Solargraph gem updates');
+		solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
+			checkStatus.dispose();
+			vscode.window.showInformationMessage('The Solargraph gem is up to date.');
+		}).catch(() => {
+			checkStatus.dispose();
+			notifyGemUpdate();
+		});
+	});
 
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then(() => {
 		console.log('The Solargraph gem is installed and working.');
