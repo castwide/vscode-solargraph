@@ -1,4 +1,4 @@
-## 0.7.1
+## 0.7.1 - September 5, 2017
 - solargraph.checkGemVersion setting
 - solargraph.checkGemVersion command
 
