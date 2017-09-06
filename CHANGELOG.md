@@ -1,3 +1,6 @@
+## 0.7.2
+- Show @ characters in class/instance variable labels
+
 ## 0.7.1 - September 5, 2017
 - solargraph.checkGemVersion setting
 - solargraph.checkGemVersion command
