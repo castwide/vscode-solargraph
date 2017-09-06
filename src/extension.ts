@@ -94,8 +94,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Restart command
 	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
-		solargraphServer.restart();
-		vscode.window.showInformationMessage('Solargraph server restarted.');
+		solargraphServer.restart().then(() => {
+			vscode.window.showInformationMessage('Solargraph server restarted.');
+			prepareWorkspace();
+		});
 	});
 	context.subscriptions.push(disposableRestart);
 
