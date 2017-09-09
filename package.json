@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "Code completion and inline documentation for Ruby",
     "icon": "solargraph.png",
-    "version": "0.7.2",
+    "version": "0.8.0",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -28,7 +28,7 @@
         "code completion"
     ],
     "engines": {
-        "vscode": "^1.5.0"
+        "vscode": "^1.16.0"
     },
     "activationEvents": [
         "onLanguage:ruby",

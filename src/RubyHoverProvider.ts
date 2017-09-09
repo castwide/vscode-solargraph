@@ -32,7 +32,9 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 						}
 						lastLabel = s.label;
 					}
-					var hover = new vscode.Hover(c);
+					var md = new vscode.MarkdownString(c);
+					md.isTrusted = true;
+					var hover = new vscode.Hover(md);
 					return resolve(hover);
 				} else {
 					return reject();
