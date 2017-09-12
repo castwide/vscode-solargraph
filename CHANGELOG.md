@@ -1,6 +1,7 @@
-## 0.7.2
-- Show @ characters in class/instance variable labels
+## 0.8.0 - September 12, 2017
+- Show @ characters in class/instance variable labels.
 - Prepare workspace on server restart.
+- Use MarkdownString for trusted command links.
 
 ## 0.7.1 - September 5, 2017
 - solargraph.checkGemVersion setting
