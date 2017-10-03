@@ -1,3 +1,8 @@
+## 0.9.0 - October 3, 2017
+- Update solargraph-utils
+- Quick file updates (single file vs. entire workspace)
+- Eliminated local yardoc dependency
+
 ## 0.8.0 - September 12, 2017
 - Show @ characters in class/instance variable labels.
 - Prepare workspace on server restart.

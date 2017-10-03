@@ -21,8 +21,8 @@ function prepareWorkspace() {
 	}
 }
 
-function updateYard(saved: vscode.TextDocument) {
-	prepareWorkspace();
+function updateFile(saved: vscode.TextDocument) {
+	solargraphServer.update(saved.fileName, vscode.workspace.rootPath);
 }
 
 function updateConfiguration() {
@@ -35,10 +35,14 @@ function updateConfiguration() {
 
 function checkGemVersion() {
 	console.log('Checking gem version');
-	solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
-		console.log('Solargraph gem version is current');
+	solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
+		if (result) {
+			console.log('Solargraph gem version is current');
+		} else {
+			notifyGemUpdate();	
+		}
 	}).catch(() => {
-		notifyGemUpdate();
+		console.log('An error occurred checking the Solargraph gem version.');
 	});
 }
 
@@ -74,7 +78,7 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 	context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
-	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateYard));
+	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateFile));
 	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(updateConfiguration));
 }
 
@@ -124,33 +128,39 @@ export function activate(context: vscode.ExtensionContext) {
 	// Check gem version command
 	var disposableCheckGem = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
 		var checkStatus = vscode.window.setStatusBarMessage('Checking for Solargraph gem updates');
-		solargraph.verifyGemIsCurrent(solargraphConfiguration).then(() => {
+		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
 			checkStatus.dispose();
-			vscode.window.showInformationMessage('The Solargraph gem is up to date.');
+			if (result) {
+				vscode.window.showInformationMessage('The Solargraph gem is up to date.');
+			} else {
+				notifyGemUpdate();
+			}
 		}).catch(() => {
 			checkStatus.dispose();
-			notifyGemUpdate();
+			console.log('There was an error checking the Solargraph gem version.');
 		});
 	});
 
-	solargraph.verifyGemIsInstalled(solargraphConfiguration).then(() => {
-		console.log('The Solargraph gem is installed and working.');
-		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-			checkGemVersion();
-		}
-		initializeAfterVerification(context);
-	}).catch(() => {
-		console.log('The Solargraph gem is not available.');
-		vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-			if (item == 'Install Now') {
-				solargraph.installGem(solargraphConfiguration).then(() => {
-					vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-					initializeAfterVerification(context);					
-				}).catch(() => {
-					vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-				});
+	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
+		if (result) {
+			console.log('The Solargraph gem is installed and working.');
+			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+				checkGemVersion();
 			}
-		});
+			initializeAfterVerification(context);
+		} else {
+			console.log('The Solargraph gem is not available.');
+			vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+				if (item == 'Install Now') {
+					solargraph.installGem(solargraphConfiguration).then(() => {
+						vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+						initializeAfterVerification(context);					
+					}).catch(() => {
+						vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+					});
+				}
+			});
+		}
 	});
 
     console.log('Solargraph extension activated.');
