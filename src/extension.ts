@@ -74,7 +74,7 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 	solargraphServer.start().then(function() {
 		prepareWorkspace();
 	});
-	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
 	context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 	context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));

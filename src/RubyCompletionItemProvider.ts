@@ -72,6 +72,10 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					item.insertText = cd['insert'].substring(firstChar);
 					item.filterText = cd['insert'].substring(firstChar);
 					item.sortText = cd['insert'].substring(firstChar);
+				} else if (cd['insert'].substring(0, 1) == '$') {
+					item.insertText = cd['insert'].substring(1);
+					item.filterText = cd['insert'].substring(1);
+					item.sortText = cd['insert'].substring(1);					
 				} else {
 					if (cd['kind'] == 'Snippet') {
 						item.insertText = new SnippetString(cd['insert']);
