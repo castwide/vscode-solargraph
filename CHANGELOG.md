@@ -1,3 +1,6 @@
+## 0.9.1 - October 30, 2017
+- Provide completion items for global variables
+
 ## 0.9.0 - October 4, 2017
 - Update solargraph-utils
 - Quick file updates (single file vs. entire workspace)
