@@ -1,3 +1,6 @@
+## 0.9.2
+- Update to solargraph-utils 0.3.1 to fix command shell in Linux
+
 ## 0.9.1 - October 30, 2017
 - Provide completion items for global variables
 
