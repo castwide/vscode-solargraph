@@ -29,6 +29,24 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		});
 	}
 
+	public resolveCompletionItem(item: vscode.CompletionItem, token: vscode.CancellationToken):Promise<vscode.CompletionItem> {
+		return new Promise((resolve, reject) => {
+			if (item.documentation && item.documentation != 'Loading...') {
+				resolve(item);
+			} else {
+				var workspace = vscode.workspace.rootPath;
+				this.server.detail(item['path'], workspace).then((result:any) => {
+					if (result.suggestions[0]) {
+						this.setDocumentation(item, result.suggestions[0]);
+					}
+					resolve(item);
+				}).catch((result) => {
+					reject(result);
+				});
+			}
+		});
+	}
+
 	private getCompletionItems(data, document:vscode.TextDocument, position: vscode.Position):Array<vscode.CompletionItem> {
 		const kinds = {
 			"Class": vscode.CompletionItemKind.Class,
@@ -92,25 +110,40 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				} else {
 					item.detail = (cd['return_type'] ? '=> ' + cd['return_type'] : '');
 				}
-				var documentation = '';
-				if (cd['path']) {
-					documentation += cd['path'] + "\n\n";
+				//this.setDocumentation(item, cd);
+				if (item.kind == vscode.CompletionItemKind.Method) {
+					item.documentation = 'Loading...'
+				} else {
+					item.documentation = cd['kind'];
 				}
-				var doc = cd['documentation'];
-				if (cd['params'] && cd['params'].length > 0) {
-					doc += "<p>Params:<br/>";
-					for (var j = 0; j < cd['params'].length; j++) {
-						doc += "- " + cd['params'][j] + "<br/>";
-					}
-					doc += "</p>";
-				}
-				if (doc) {
-					documentation += format.htmlToPlainText(doc);
-				}
-				item.documentation = documentation;
+				item['path'] = cd['path'];
 				items.push(item);
 			});
 		}
 		return items;
+	}
+
+	private setDocumentation(item: vscode.CompletionItem, cd:any) {
+		var documentation = '';
+		if (cd['path']) {
+			/*var uri = 'solargraph:/document?' + cd['path'].replace('#', '%23');
+			var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+			var link = "\n\n[" + cd['path'] + '](' + href + ')';
+			documentation += link + "\n\n";*/
+			documentation += cd['path'] + "\n\n";
+		}
+		var doc = cd['documentation'];
+		if (cd['params'] && cd['params'].length > 0) {
+			doc += "<p>Params:<br/>";
+			for (var j = 0; j < cd['params'].length; j++) {
+				doc += "- " + cd['params'][j] + "<br/>";
+			}
+			doc += "</p>";
+		}
+		if (doc) {
+			documentation += format.htmlToPlainText(doc);
+		}
+		item.documentation = documentation;
+		//item.documentation = new vscode.MarkdownString(documentation);
 	}
 }

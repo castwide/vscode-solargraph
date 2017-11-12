@@ -83,6 +83,10 @@ This extension contributes the following settings:
 * `solargraph.withSnippets`: Include snippets in completion suggestions. Default is false.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
 
+## Experimental Rails Extension
+
+The latest (unstable development) version of Solargraph has experimental support for Rails through an extension. See [solargraph-rails-ext](https://github.com/castwide/solargraph-rails-ext) on GitHub for more information.
+
 ## Known Issues
 
 * Incomplete support for stdlib

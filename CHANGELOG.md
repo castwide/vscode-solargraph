@@ -1,4 +1,5 @@
 ## 0.9.2
+- Resolve completion item detail separately
 - Update to solargraph-utils 0.3.1 to fix command shell in Linux
 
 ## 0.9.1 - October 30, 2017
