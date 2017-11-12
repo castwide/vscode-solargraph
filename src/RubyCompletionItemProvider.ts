@@ -34,7 +34,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				resolve(item);
 			} else {
 				var workspace = vscode.workspace.rootPath;
-				this.server.detail(item['original']['path'], workspace).then((result:any) => {
+				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
 					if (result.suggestions[0]) {
 						this.setDocumentation(item, result.suggestions[0]);
 					}
