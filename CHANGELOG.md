@@ -1,4 +1,6 @@
-## 0.9.2
+## 0.10.1
+- Update vscode engine
+- Support document links in CompletionItem documentation
 - Resolve completion item detail separately
 - Update to solargraph-utils 0.3.1 to fix command shell in Linux
 

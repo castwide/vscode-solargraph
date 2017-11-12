@@ -28,7 +28,7 @@
         "code completion"
     ],
     "engines": {
-        "vscode": "^1.16.0"
+        "vscode": "^1.18.0"
     },
     "activationEvents": [
         "onLanguage:ruby",

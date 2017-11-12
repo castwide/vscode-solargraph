@@ -89,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
 			if (val) {
-				let uri = new vscode.Uri().with({scheme: 'solargraph', path: '/search', query: val});
+				var uri = 'solargraph:/search?' + encodeURIComponent(val);
 				vscode.commands.executeCommand('solargraph._openDocument', uri);
 			}
 		});

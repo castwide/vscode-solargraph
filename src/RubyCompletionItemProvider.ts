@@ -35,7 +35,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				resolve(item);
 			} else {
 				var workspace = vscode.workspace.rootPath;
-				this.server.detail(item['path'], workspace).then((result:any) => {
+				this.server.detail(item['original']['path'], workspace).then((result:any) => {
 					if (result.suggestions[0]) {
 						this.setDocumentation(item, result.suggestions[0]);
 					}
@@ -116,7 +116,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				} else {
 					item.documentation = cd['kind'];
 				}
-				item['path'] = cd['path'];
+				item['original'] = cd;
 				items.push(item);
 			});
 		}
@@ -126,11 +126,10 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	private setDocumentation(item: vscode.CompletionItem, cd:any) {
 		var documentation = '';
 		if (cd['path']) {
-			/*var uri = 'solargraph:/document?' + cd['path'].replace('#', '%23');
+			var uri = 'solargraph:/document?' + cd['path'].replace('#', '%23');
 			var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
 			var link = "\n\n[" + cd['path'] + '](' + href + ')';
-			documentation += link + "\n\n";*/
-			documentation += cd['path'] + "\n\n";
+			documentation += link + "\n\n";
 		}
 		var doc = cd['documentation'];
 		if (cd['params'] && cd['params'].length > 0) {
@@ -143,7 +142,8 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		if (doc) {
 			documentation += format.htmlToPlainText(doc);
 		}
-		item.documentation = documentation;
-		//item.documentation = new vscode.MarkdownString(documentation);
+		var md = new vscode.MarkdownString(documentation);
+		md.isTrusted = true;
+		item.documentation = md;
 	}
 }
