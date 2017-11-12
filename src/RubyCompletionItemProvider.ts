@@ -17,7 +17,6 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			// use the workspace root.
 			//var workspace = solargraph.nearestWorkspace(document.fileName, vscode.workspace.rootPath);
 			var workspace = vscode.workspace.rootPath;
-			console.log('Getting completion items using workspace ' + workspace);
 			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
 				if (response['status'] == 'ok') {
 					return resolve(that.getCompletionItems(response, document, position));
@@ -111,10 +110,15 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					item.detail = (cd['return_type'] ? '=> ' + cd['return_type'] : '');
 				}
 				//this.setDocumentation(item, cd);
-				if (item.kind == vscode.CompletionItemKind.Method) {
+				/*if (item.kind == vscode.CompletionItemKind.Method) {
 					item.documentation = 'Loading...'
 				} else {
 					item.documentation = cd['kind'];
+				}*/
+				if (cd['documentation']) {
+					this.setDocumentation(item, cd);
+				} else {
+					item.documentation = 'Loading...'
 				}
 				item['original'] = cd;
 				items.push(item);
