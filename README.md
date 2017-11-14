@@ -11,6 +11,7 @@ Solargraph provides code completion and inline documentation for Ruby.
 * Context-aware suggestions and documentation for the Ruby core
 * Detection of some variable types and method return values (e.g., `String.new.` returns String instance methods)
 * Identification of local, class, and instance variables within the current scope
+* **(New in Solargraph gem v0.14.0)** Experimental support for the Ruby stdlib and Ruby on Rails
 
 ## Requirements
 
@@ -83,12 +84,8 @@ This extension contributes the following settings:
 * `solargraph.withSnippets`: Include snippets in completion suggestions. Default is false.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
 
-## Experimental Rails Extension
-
-The latest (unstable development) version of Solargraph has experimental support for Rails through an extension. See [solargraph-rails-ext](https://github.com/castwide/solargraph-rails-ext) on GitHub for more information.
-
 ## Known Issues
 
-* Incomplete support for stdlib
-* Incomplete support for Rails
+* Partial support for stdlib
+* Partial support for Rails
 * Documentation pages need better design/layout

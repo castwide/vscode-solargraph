@@ -1,8 +1,9 @@
-## 0.10.1
+## 0.10.0 - November 15, 2017
+- First version of Rails and stdlib support
 - Update vscode engine
 - Support document links in CompletionItem documentation
 - Resolve completion item detail separately
-- Update to solargraph-utils 0.3.1 to fix command shell in Linux
+- Update to solargraph-utils 0.3.2
 
 ## 0.9.1 - October 30, 2017
 - Provide completion items for global variables
