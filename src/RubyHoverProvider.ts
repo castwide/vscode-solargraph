@@ -14,23 +14,29 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 			this.server.hover(document.getText(), position.line, position.character, document.fileName, vscode.workspace.rootPath).then(function(data) {
 				if (data['suggestions'].length > 0) {
 					var c:string = '';
-					var lastLabel = null;
+					//var usedLabels: string[] = [];
+					var usedPaths: string[] = []
 					for (var i = 0; i < data['suggestions'].length; i++) {
 						var s = data['suggestions'][i];
-						c = c + s.label
-						if (s.arguments.length > 0) {
-							c = c + ' (' + s.arguments.join(', ') + ')';
+						/*if (usedLabels.indexOf(s.label) == -1) {
+							usedLabels.push(s.label);
+							c = c + s.label
+							if (s.arguments.length > 0) {
+								c = c + ' (' + s.arguments.join(', ') + ')';
+							}
+						}*/
+						if (usedPaths.indexOf(s.path) == -1) {
+							usedPaths.push(s.path);
+							var uri = 'solargraph:/document?' + s.path.replace('#', '%23');
+							var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+							var link = "\n\n[" + s.path + '](' + href + ')';
+							c = c + link;
 						}
-						var uri = 'solargraph:/document?' + s.path.replace('#', '%23');
-						var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
-						var link = "\n\n[" + s.path + '](' + href + ')';
-						c = c + link;
 						c = c + "\n\n";
 						var doc = s.documentation;
 						if (doc) {
 							c = c + format.htmlToPlainText(doc) + "\n\n";
 						}
-						lastLabel = s.label;
 					}
 					var md = new vscode.MarkdownString(c);
 					md.isTrusted = true;
