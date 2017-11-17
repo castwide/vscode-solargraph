@@ -4,7 +4,7 @@
 - Update vscode engine
 - Support document links in CompletionItem documentation
 - Resolve completion item detail separately
-- Update to solargraph-utils 0.3.2
+- Update to solargraph-utils 0.3.3
 
 ## 0.9.1 - October 30, 2017
 - Provide completion items for global variables
