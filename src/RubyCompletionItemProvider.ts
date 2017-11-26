@@ -32,11 +32,13 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		return new Promise((resolve, reject) => {
 			if (item.documentation && item.documentation != 'Loading...') {
 				resolve(item);
-			} else {
+			} else if (item.documentation == 'Loading...') {
 				var workspace = vscode.workspace.rootPath;
 				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
 					if (result.suggestions[0]) {
 						this.setDocumentation(item, result.suggestions[0]);
+					} else {
+						item.documentation = '';
 					}
 					resolve(item);
 				}).catch((result) => {

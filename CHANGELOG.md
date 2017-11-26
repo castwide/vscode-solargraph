@@ -1,3 +1,6 @@
+## 0.10.1 - November 26, 2017
+- Minor path resolution bugs
+
 ## 0.10.0 - November 26, 2017
 - Do not repeat paths in hovers.
 - First version of Rails and stdlib support
