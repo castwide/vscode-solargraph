@@ -1,4 +1,4 @@
-## 0.10.0 - November 17, 2017
+## 0.10.0 - November 26, 2017
 - Do not repeat paths in hovers.
 - First version of Rails and stdlib support
 - Update vscode engine
