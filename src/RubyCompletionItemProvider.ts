@@ -63,8 +63,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	}
 
 	private getCompletionItems(data, document:vscode.TextDocument, position: vscode.Position):Array<vscode.CompletionItem> {
-		// HACK: Tricking the type system to avoid an invalid error
-		let SnippetString = vscode['SnippetString'];
+		let SnippetString = vscode.SnippetString;
 		let items:Array<vscode.CompletionItem> = [];
 		if (data.status == "ok") {
 			var range = document.getWordRangeAtPosition(position);
