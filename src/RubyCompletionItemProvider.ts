@@ -44,6 +44,8 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				}).catch((result) => {
 					reject(result);
 				});
+			} else {
+				resolve(item);
 			}
 		});
 	}
