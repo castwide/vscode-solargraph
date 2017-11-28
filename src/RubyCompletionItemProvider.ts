@@ -47,11 +47,16 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			} else if (item.documentation == 'Loading...') {
 				var workspace = vscode.workspace.rootPath;
 				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
-					if (result.suggestions[0]) {
-						this.setDocumentation(item, result.suggestions[0]);
+					if (result.suggestions.length > 0) {
+						item.documentation = this.formatMultipleSuggestions(result.suggestions);
 					} else {
 						item.documentation = '';
 					}
+					/*if (result.suggestions[0]) {
+						this.setDocumentation(item, result.suggestions[0]);
+					} else {
+						item.documentation = '';
+					}*/
 					resolve(item);
 				}).catch((result) => {
 					reject(result);
@@ -124,7 +129,15 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		return items;
 	}
 
-	private setDocumentation(item: vscode.CompletionItem, cd:any) {
+	private formatMultipleSuggestions(cds: any[]) {
+		var doc = '';
+		cds.forEach((cd) => {
+			doc += '<div>' + cd.documentation + '</div>';
+		});
+		return this.formatDocumentation(doc);
+	}
+
+	private setDocumentation(item: vscode.CompletionItem, cd: any) {
 		var documentation = '';
 		if (cd['path']) {
 			var uri = 'solargraph:/document?' + cd['path'].replace('#', '%23');
@@ -140,11 +153,17 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			}
 			doc += "</p>";
 		}
-		if (doc) {
-			documentation += format.htmlToPlainText(doc);
-		}
-		var md = new vscode.MarkdownString(documentation);
-		md.isTrusted = true;
+		var md = this.formatDocumentation(doc);
 		item.documentation = md;
+	}
+
+	private formatDocumentation(doc: string): vscode.MarkdownString {
+		var result = '';
+		if (doc) {
+			result += format.htmlToPlainText(doc);
+		}
+		var md = new vscode.MarkdownString(result);
+		md.isTrusted = true;
+		return md;		
 	}
 }
