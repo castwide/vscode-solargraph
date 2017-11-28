@@ -9,6 +9,18 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		this.server = server;
 	}
 
+	static kinds = {
+		"Class": vscode.CompletionItemKind.Class,
+		"Constant": vscode.CompletionItemKind.Constant,
+		"Keyword": vscode.CompletionItemKind.Keyword,
+		"Module": vscode.CompletionItemKind.Module,
+		"Method": vscode.CompletionItemKind.Method,
+		"Variable": vscode.CompletionItemKind.Variable,
+		"Snippet": vscode.CompletionItemKind.Snippet,
+		"Field": vscode.CompletionItemKind.Field,
+		"Property": vscode.CompletionItemKind.Property
+	}
+
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position):Promise<vscode.CompletionItem[]> {
 		var that = this;
 		return new Promise((resolve, reject) => {
@@ -51,17 +63,6 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	}
 
 	private getCompletionItems(data, document:vscode.TextDocument, position: vscode.Position):Array<vscode.CompletionItem> {
-		const kinds = {
-			"Class": vscode.CompletionItemKind.Class,
-			"Constant": vscode.CompletionItemKind['Constant'],
-			"Keyword": vscode.CompletionItemKind.Keyword,
-			"Module": vscode.CompletionItemKind.Module,
-			"Method": vscode.CompletionItemKind.Method,
-			"Variable": vscode.CompletionItemKind.Variable,
-			"Snippet": vscode.CompletionItemKind.Snippet,
-			"Field": vscode.CompletionItemKind.Field,
-			"Property": vscode.CompletionItemKind.Property
-		}
 		// HACK: Tricking the type system to avoid an invalid error
 		let SnippetString = vscode['SnippetString'];
 		let items:Array<vscode.CompletionItem> = [];
@@ -83,7 +84,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				}
 			}
 			data.suggestions.forEach((cd) => {
-				var item = new vscode.CompletionItem(cd['label'], kinds[cd['kind']]);
+				var item = new vscode.CompletionItem(cd['label'], RubyCompletionItemProvider.kinds[cd['kind']]);
 				// Treat instance variables slightly differently
 				if (cd['insert'].substring(0, 1) == '@') {
 					var firstChar = 1;
