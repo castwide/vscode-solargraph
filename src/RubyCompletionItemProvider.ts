@@ -19,10 +19,10 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			var workspace = vscode.workspace.rootPath;
 			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
 				if (response['status'] == 'ok') {
-					return resolve(that.getCompletionItems(response, document, position));
+					resolve(that.getCompletionItems(response, document, position));
 				} else {
 					console.warn('Solargraph server returned an error: ' + response['message']);
-					return reject([]);
+					reject([]);
 				}
 			});
 		});
