@@ -1,3 +1,6 @@
+## 0.10.2
+- Reload documentation to keep it in sync with the workspace
+
 ## 0.10.1 - November 26, 2017
 - Minor path resolution bugs
 
