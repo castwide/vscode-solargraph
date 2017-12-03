@@ -8,6 +8,7 @@ import * as solargraph from 'solargraph-utils';
 
 const solargraphConfiguration = new solargraph.Configuration();
 const solargraphServer = new solargraph.Server(solargraphConfiguration);
+const solargraphContentProvider = new YardContentProvider(solargraphServer);
 
 function prepareWorkspace() {
 	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {
@@ -22,7 +23,15 @@ function prepareWorkspace() {
 }
 
 function updateFile(saved: vscode.TextDocument) {
-	solargraphServer.update(saved.fileName, vscode.workspace.rootPath);
+	solargraphServer.update(saved.fileName, vscode.workspace.rootPath).then(() => {
+		solargraphContentProvider.updateAll();
+	});
+}
+
+function closeDocument(closed: vscode.TextDocument) {
+	if (closed.uri.scheme == 'solargraph') {
+		solargraphContentProvider.remove(closed.uri);
+	}
 }
 
 function updateConfiguration() {
@@ -77,8 +86,9 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
 	context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 	context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
-	vscode.workspace.registerTextDocumentContentProvider('solargraph', new YardContentProvider(solargraphServer));
+	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphContentProvider);
 	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateFile));
+	context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(closeDocument));
 	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(updateConfiguration));
 }
 

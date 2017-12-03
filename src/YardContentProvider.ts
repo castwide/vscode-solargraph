@@ -14,10 +14,20 @@ export default class YardContentProvider implements vscode.TextDocumentContentPr
 		this.docs = {};
 	}
 
+	public updateAll() {
+		Object.keys(this.docs).forEach((uriString) => {
+			this.update(vscode.Uri.parse(uriString));
+		});
+	}
+
+	public remove(uri: vscode.Uri) {
+		delete this.docs[uri.toString()];
+	}
+
 	provideTextDocumentContent(uri: vscode.Uri): string {
-		//if (!this.docs[uri.toString()]) {
+		if (!this.docs[uri.toString()]) {
 			this.update(uri);
-		//}
+		}
 		return this.docs[uri.toString()] || 'Loading...';
 	}
 
