@@ -11,7 +11,8 @@ Solargraph provides code completion and inline documentation for Ruby.
 * Context-aware suggestions and documentation for the Ruby core
 * Detection of some variable types and method return values (e.g., `String.new.` returns String instance methods)
 * Identification of local, class, and instance variables within the current scope
-* **(New in Solargraph gem v0.14.0)** Experimental support for the Ruby stdlib and Ruby on Rails
+* Near-complete support for the Ruby stdlib
+* Partial support for Ruby on Rails
 
 ## Requirements
 
@@ -38,7 +39,7 @@ Solargraph provides a command to access searchable documentation directly from t
 * Hit ctrl+shift+r (or hit ctrl+shift+p and find `Search Ruby Documentation`).
 * Enter a keyword or path to search; e.g., `String` or `Array#join`.
 
-The documentation includes the Ruby core, bundled gems, and the current workspace.
+The documentation includes the Ruby core, bundled gems, and the current workspace. Documentation from the workspace is automatically updated when you save the corresponding file.
 
 You can also hover over variables, constants, and method calls to see popup information with links to more documentation.
 
@@ -64,7 +65,7 @@ Instead of reloading the VS Code window, you can run Restart Solargraph from the
 Solargraph will use the .solargraph.yml file for configuration if it exists in the workspace root. The extension provides
 a command to `Create a Solargraph config file`, or you can do it from the command line:
 
-    solargraph config .
+    $ solargraph config .
 
 The default file should look something like this:
 
@@ -74,6 +75,26 @@ The default file should look something like this:
       - spec/**/*
 
 This configuration tells Solargraph to parse all .rb files in the workspace excluding the spec folder.
+
+## Updating the Core Documentation (EXPERIMENTAL)
+
+The Solargraph gem ships with documentation for Ruby 2.2.2. As of gem version 0.15.0, there's an option to download additional documentation for other Ruby versions from the command line.
+
+    $ solargraph list-cores      # List the installed documentation versions
+    $ solargraph available-cores # List the versions available for download
+    $ solargraph download-core   # Install the best match for your Ruby version
+    $ solargraph clear-cores     # Clear the documentation cache
+
+## Runtime Suggestions (EXPERIMENTAL)
+
+As of gem version 0.15.0, Solargraph includes experimental support for plugins.
+
+The built-in `Runtime` plugin enhances code completion by querying namespaces for method names in a subprocess. If it finds any undocumented or "magic" methods, they get added to the suggestions.
+
+This feature is currently disabled by default. If you'd like to try it, you can enable it by setting the `plugins` section in your project's .solargraph.yml file:
+
+    plugins:
+    - runtime
 
 ## Extension Settings
 
