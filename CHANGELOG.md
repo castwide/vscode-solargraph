@@ -1,3 +1,6 @@
+## 0.10.3
+- Use suggestion's has_doc property to determine whether to resolve documentation
+
 ## 0.10.2 - December 4, 2017
 - README explains the Runtime plugin and how to update the core documentation
 - Reload inline documents to keep them in sync with the workspace

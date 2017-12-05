@@ -47,9 +47,18 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			} else if (item.documentation == 'Loading...') {
 				var workspace = vscode.workspace.rootPath;
 				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
+					console.log('Jeez, come on...')
 					if (result.suggestions.length > 0) {
-						item.documentation = this.formatMultipleSuggestions(result.suggestions);
+						var tmp = this.formatMultipleSuggestions(result.suggestions);
+						if (tmp.value == '') {
+							console.log('Trying to null it');
+							resolve(null);
+						} else {
+							item.documentation = this.formatMultipleSuggestions(result.suggestions);
+						}
+						console.log('Result: ' + JSON.stringify(item.documentation));
 					} else {
+						console.log('Empty. What to do here? Can we make the thing go away?');
 						item.documentation = '';
 					}
 					/*if (result.suggestions[0]) {
@@ -59,6 +68,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					}*/
 					resolve(item);
 				}).catch((result) => {
+					console.log('Rejection? WTF');
 					reject(result);
 				});
 			} else {
@@ -119,7 +129,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				}
 				if (cd['documentation']) {
 					this.setDocumentation(item, cd);
-				} else {
+				} else if (cd['has_doc']) {
 					item.documentation = 'Loading...'
 				}
 				item['original'] = cd;
