@@ -54,7 +54,13 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 							console.log('Trying to null it');
 							resolve(null);
 						} else {
-							item.documentation = this.formatMultipleSuggestions(result.suggestions);
+							if (item['original']['path']) {
+								var uri = 'solargraph:/document?' + item['original']['path'].replace('#', '%23');
+								var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+								var link = "\n\n[" + item['original']['path'] + '](' + href + ')';
+								tmp.value = link + "\n\n" + tmp.value;
+							}					
+							item.documentation = tmp;
 						}
 						console.log('Result: ' + JSON.stringify(item.documentation));
 					} else {
