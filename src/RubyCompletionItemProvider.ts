@@ -47,34 +47,16 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			} else if (item.documentation == 'Loading...') {
 				var workspace = vscode.workspace.rootPath;
 				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
-					console.log('Jeez, come on...')
 					if (result.suggestions.length > 0) {
 						var tmp = this.formatMultipleSuggestions(result.suggestions);
-						if (tmp.value == '') {
-							console.log('Trying to null it');
-							resolve(null);
-						} else {
-							if (item['original']['path']) {
-								var uri = 'solargraph:/document?' + item['original']['path'].replace('#', '%23');
-								var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
-								var link = "\n\n[" + item['original']['path'] + '](' + href + ')';
-								tmp.value = link + "\n\n" + tmp.value;
-							}					
+						if (tmp.value != '') {
 							item.documentation = tmp;
 						}
-						console.log('Result: ' + JSON.stringify(item.documentation));
 					} else {
-						console.log('Empty. What to do here? Can we make the thing go away?');
 						item.documentation = '';
 					}
-					/*if (result.suggestions[0]) {
-						this.setDocumentation(item, result.suggestions[0]);
-					} else {
-						item.documentation = '';
-					}*/
 					resolve(item);
 				}).catch((result) => {
-					console.log('Rejection? WTF');
 					reject(result);
 				});
 			} else {
@@ -147,10 +129,18 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 
 	private formatMultipleSuggestions(cds: any[]) {
 		var doc = '';
+		var docLink = '';
 		cds.forEach((cd) => {
+			console.log(JSON.stringify(cd));
+			if (!docLink && cd.path) {
+				var uri = 'solargraph:/document?' + cd.path.replace('#', '%23');
+				var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+				var link = "\n\n[" + cd.path + '](' + href + ')';
+				docLink = link;
+			}
 			doc += '<div>' + cd.documentation + '</div>';
 		});
-		return this.formatDocumentation(doc);
+		return this.formatDocumentation(docLink + doc);
 	}
 
 	private setDocumentation(item: vscode.CompletionItem, cd: any) {
