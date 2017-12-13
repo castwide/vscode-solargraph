@@ -1,4 +1,4 @@
-## 0.10.3
+## 0.10.3 - December 12, 2017
 - Use suggestion's has_doc property to determine whether to resolve documentation
 - Fix document links in expanded documentation
 
