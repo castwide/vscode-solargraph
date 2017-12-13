@@ -19,8 +19,7 @@
     <ul>
     <% object.parameters.each do |p| %>
         <li>
-            <%= p[0] %>
-            <%= " = #{p[1]}" unless p[1].nil? %>
+            <%= p[1] %>
         </li>
     <% end %>
     </ul>
