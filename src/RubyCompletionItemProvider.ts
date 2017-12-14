@@ -131,7 +131,6 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		var doc = '';
 		var docLink = '';
 		cds.forEach((cd) => {
-			console.log(JSON.stringify(cd));
 			if (!docLink && cd.path) {
 				var uri = 'solargraph:/document?' + cd.path.replace('#', '%23');
 				var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
