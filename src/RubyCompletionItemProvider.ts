@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as format from './format';
+import * as helper from './helper';
 
 export default class RubyCompletionItemProvider implements vscode.CompletionItemProvider {
 	private server:solargraph.Server = null;
@@ -28,7 +29,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			// workspace configurations in subdirectories. For now, we always
 			// use the workspace root.
 			//var workspace = solargraph.nearestWorkspace(document.fileName, vscode.workspace.rootPath);
-			var workspace = vscode.workspace.rootPath;
+			var workspace = helper.getDocumentWorkspaceFolder(document);
 			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
 				if (response['status'] == 'ok') {
 					resolve(that.getCompletionItems(response, document, position));
@@ -134,42 +135,31 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		var docLink = '';
 		cds.forEach((cd) => {
 			if (!docLink && cd.path) {
-				var uri = 'solargraph:/document?' + cd.path.replace('#', '%23');
-				var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
-				var link = "\n\n[" + cd.path + '](' + href + ')';
-				docLink = link;
+				docLink = "\n\n" + helper.getDocumentPageLink(cd.path) + "\n\n";
 			}
-			doc += '<div>' + cd.documentation + '</div>';
+			doc += "\n" + format.htmlToPlainText(cd.documentation);
 		});
 		return this.formatDocumentation(docLink + doc);
 	}
 
 	private setDocumentation(item: vscode.CompletionItem, cd: any) {
-		var documentation = '';
+		var docLink = '';
 		if (cd['path']) {
-			var uri = 'solargraph:/document?' + cd['path'].replace('#', '%23');
-			var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
-			var link = "\n\n[" + cd['path'] + '](' + href + ')';
-			documentation += link + "\n\n";
+			docLink = "\n\n" + helper.getDocumentPageLink(cd.path) + "\n\n";
 		}
-		var doc = cd['documentation'];
+		var doc = docLink + format.htmlToPlainText(cd['documentation']);
 		if (cd['params'] && cd['params'].length > 0) {
-			doc += "<p>Params:<br/>";
+			doc += "\nParams:\n";
 			for (var j = 0; j < cd['params'].length; j++) {
-				doc += "- " + cd['params'][j] + "<br/>";
+				doc += "- " + cd['params'][j] + "\n";
 			}
-			doc += "</p>";
 		}
 		var md = this.formatDocumentation(doc);
 		item.documentation = md;
 	}
 
 	private formatDocumentation(doc: string): vscode.MarkdownString {
-		var result = '';
-		if (doc) {
-			result += format.htmlToPlainText(doc);
-		}
-		var md = new vscode.MarkdownString(result);
+		var md = new vscode.MarkdownString(doc);
 		md.isTrusted = true;
 		return md;		
 	}

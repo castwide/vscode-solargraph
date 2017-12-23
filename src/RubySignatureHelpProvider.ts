@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as format from './format';
+import * as helper from './helper';
 
 export default class RubySignatureHelpProvider implements vscode.SignatureHelpProvider {
     private server:solargraph.Server;
@@ -11,7 +12,8 @@ export default class RubySignatureHelpProvider implements vscode.SignatureHelpPr
 
     public provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.SignatureHelp> {
         return new Promise<vscode.SignatureHelp>((resolve, reject) => {
-            this.server.signify(document.getText(), position.line, position.character, document.fileName, vscode.workspace.rootPath).then(function(data) {
+            var workspace = helper.getDocumentWorkspaceFolder(document);
+            this.server.signify(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
                 var help = new vscode.SignatureHelp();
                 data['suggestions'].forEach((s) => {
                     var doc = s.documentation;
