@@ -118,7 +118,9 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 				if (cd['documentation']) {
 					this.setDocumentation(item, cd);
 				} else if (cd['has_doc']) {
-					item.documentation = 'Loading...'
+					item.documentation = 'Loading...';
+				} else {
+					item.documentation = "\n" + cd['path'];
 				}
 				item['original'] = cd;
 				items.push(item);
