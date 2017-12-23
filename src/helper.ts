@@ -4,8 +4,10 @@ export function getDocumentWorkspaceFolder(document: vscode.TextDocument): strin
 	var folder = vscode.workspace.getWorkspaceFolder(document.uri);
 	if (folder) {
 		return folder.uri.fsPath;
+	} else if (vscode.workspace.workspaceFolders.length > 0) {
+		return vscode.workspace.workspaceFolders[0].uri.fsPath;
 	} else {
-		return vscode.workspace.rootPath;
+		return null;
 	}
 }
 
