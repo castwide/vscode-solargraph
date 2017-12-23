@@ -105,7 +105,15 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					if (cd['kind'] == 'Snippet') {
 						item.insertText = new SnippetString(cd['insert']);
 					} else {
-						item.insertText = cd['insert'];
+						// HACK: Exception for symbols starting with underscores (e.g., `:_foo`)
+						var match = cd['insert'].match(/^:_/);
+						if (match) {
+							item.insertText = cd['insert'].substring(match[0].length);
+							item.filterText = cd['insert'].substring(match[0].length);
+							item.sortText = cd['insert'].substring(match[0].length);
+						} else {
+							item.insertText = cd['insert'];
+						}
 					}
 				}
 				if (range) {
