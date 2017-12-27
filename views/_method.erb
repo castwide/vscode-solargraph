@@ -19,7 +19,7 @@
     <ul>
     <% object.parameters.each do |p| %>
         <li>
-            <%= p[1] %>
+            <%= p[0] %><% unless p[1].nil? or p[0].end_with?(':') %> =<% end %> <%= p[1] %>
         </li>
     <% end %>
     </ul>

@@ -1,3 +1,10 @@
+# 0.11.0
+- Method parameters in document pages
+- Fixed bug in completion of symbols with leading underscores
+- Fixed document page links
+- Always display suggestion paths
+- Multi-root workspace support
+
 ## 0.10.3 - December 12, 2017
 - Use suggestion's has_doc property to determine whether to resolve documentation
 - Fix document links in expanded documentation
