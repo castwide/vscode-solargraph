@@ -65,19 +65,23 @@
         "commands": [
             {
                 "command": "solargraph.search",
-                "title": "Search Ruby Documentation"
+                "title": "Search Ruby Documentation",
+                "category": "Solargraph"
             },
             {
                 "command": "solargraph.restart",
-                "title": "Restart Solargraph"
+                "title": "Restart Solargraph",
+                "category": "Solargraph"
             },
             {
                 "command": "solargraph.config",
-                "title": "Create a Solargraph config file"
+                "title": "Create a Solargraph config file",
+                "category": "Solargraph"
             },
             {
                 "command": "solargraph.checkGemVersion",
-                "title": "Check Solargraph gem version"
+                "title": "Check Solargraph gem version",
+                "category": "Solargraph"
             }
         ],
         "keybindings": [
