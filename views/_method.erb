@@ -20,6 +20,18 @@
         <% end %>
     </ul>
 <% end %>
+<% unless object.tags(:raise).empty? %>
+<h2>
+    Raises:
+</h2>
+<ul>
+    <% object.tags(:raise).each do |tag| %>
+        <li>
+            <%= erb :_name_type_tag, layout: false, locals: {tag: tag} %>
+        </li>
+    <% end %>
+</ul>
+<% end %>
 <h2>
     Returns:
 </h2>
@@ -31,15 +43,7 @@
     <ul>
         <% object.tags(:return).each do |tag| %>
             <li>
-                <% unless tag.types.nil? or tag.types.empty? %>
-                    [<%= tag.types.join(', ') %>]
-                    <% unless tag.text.empty? %>
-                        -
-                    <% end %>
-                <% end %>
-                <% unless tag.text.empty? %>
-                    <%= tag.text %>
-                <% end %>
+                <%= erb :_name_type_tag, layout: false, locals: {tag: tag} %>
             </li>
         <% end %>
     </ul>
