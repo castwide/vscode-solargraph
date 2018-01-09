@@ -28,16 +28,21 @@
         Undefined/unknown
     </p>
 <% else %>
-    <% tag = object.tag(:return) %>
-    <% unless tag.types.nil? or tag.types.empty? %>
-        [<%= tag.types.join(', ') %>]
-        <% unless tag.text.empty? %>
-            -
+    <ul>
+        <% object.tags(:return).each do |tag| %>
+            <li>
+                <% unless tag.types.nil? or tag.types.empty? %>
+                    [<%= tag.types.join(', ') %>]
+                    <% unless tag.text.empty? %>
+                        -
+                    <% end %>
+                <% end %>
+                <% unless tag.text.empty? %>
+                    <%= tag.text %>
+                <% end %>
+            </li>
         <% end %>
-    <% end %>
-    <% unless tag.text.empty? %>
-        <%= tag.text %>
-    <% end %>
+    </ul>
 <% end %>
 <% examples = object.tags(:example) %>
 <% unless examples.nil? %>
