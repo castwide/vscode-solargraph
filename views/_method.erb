@@ -8,20 +8,16 @@
     Overview:
 </h2>
 <%= htmlify object.docstring %>
-<h2>
-    Parameters:
-</h2>
-<% if object.parameters.empty? %>
-    <p>
-        None
-    </p>
-<% else %>
+<% unless object.tags(:param).empty? %>
+    <h2>
+        Parameters:
+    </h2>
     <ul>
-    <% object.parameters.each do |p| %>
-        <li>
-            <%= p[0] %><% unless p[1].nil? or p[0].end_with?(':') %> =<% end %> <%= p[1] %>
-        </li>
-    <% end %>
+        <% object.tags(:param).each do |tag| %>
+            <li>
+                <%= tag.name %> <% unless tag.types.empty? %>[<%= tag.types.join(', ') %>]<% end %> <%= tag.text %>
+            </li>
+        <% end %>
     </ul>
 <% end %>
 <h2>
@@ -34,18 +30,13 @@
 <% else %>
     <% tag = object.tag(:return) %>
     <% unless tag.types.nil? or tag.types.empty? %>
-    <ul>
-        <% tag.types.each do |r| %>
-            <li>
-                <a href="command:solargraph._openDocument?<%= URI.escape "\"solargraph:/document?#{r}\"" %>"><%= r %></a>
-            </li>
+        [<%= tag.types.join(', ') %>]
+        <% unless tag.text.empty? %>
+            -
         <% end %>
-    </ul>
     <% end %>
     <% unless tag.text.empty? %>
-        <p>
-            <%= tag.text %>
-        </p>
+        <%= tag.text %>
     <% end %>
 <% end %>
 <% examples = object.tags(:example) %>
