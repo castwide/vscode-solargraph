@@ -2,7 +2,7 @@
     <h1>
         <%= object.name %>
         <% if object.kind_of?(YARD::CodeObjects::MethodObject) and !object.parameters.empty? %>
-            (<%= object.parameters.map {|p| "#{p[0]}#{p[1] and p[0].end_with?(':') ? ' ' : (p[1] ? ' = ' : '')}#{p[1]}"}.join(', ') %>)
+            <small>(<%= object.parameters.map {|p| "#{p[0]}#{p[1] and p[0].end_with?(':') ? ' ' : (p[1] ? ' = ' : '')}#{p[1]}"}.join(', ') %>)</small>
         <% end %>
     </h1>
     <% unless object.files.empty? %>
