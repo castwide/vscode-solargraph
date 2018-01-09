@@ -15,7 +15,7 @@
     <ul>
         <% object.tags(:param).each do |tag| %>
             <li>
-                <%= tag.name %> <% unless tag.types.empty? %>[<%= tag.types.join(', ') %>]<% end %> <%= tag.text %>
+                <%= erb :_name_type_tag, layout: false, locals: {tag: tag} %>
             </li>
         <% end %>
     </ul>
