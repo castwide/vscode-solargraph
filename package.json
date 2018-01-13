@@ -85,7 +85,7 @@
             },
             {
                 "command": "solargraph.downloadCore",
-                "title": "Download documentation for current Ruby version",
+                "title": "Download current Ruby documentation",
                 "category": "Solargraph"
             }
         ],
