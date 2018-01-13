@@ -82,6 +82,11 @@
                 "command": "solargraph.checkGemVersion",
                 "title": "Check Solargraph gem version",
                 "category": "Solargraph"
+            },
+            {
+                "command": "solargraph.downloadCore",
+                "title": "Download documentation for current Ruby version",
+                "category": "Solargraph"
             }
         ],
         "keybindings": [

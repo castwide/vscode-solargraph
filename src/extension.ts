@@ -151,6 +151,19 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	});
 
+	// Download core command
+	var disposableDownloadCore = vscode.commands.registerCommand('solargraph.downloadCore', () => {
+		var cmd = solargraph.commands.solargraphCommand(['download-core'], solargraphConfiguration);
+		cmd.on('exit', (code) => {
+			if (code == 0) {
+				vscode.window.showInformationMessage('Current documentation downloaded.');
+				solargraphServer.restart();
+			} else {
+				vscode.window.showErrorMessage('An error occurred downloading current documentation.');
+			}
+		});
+	});
+
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');

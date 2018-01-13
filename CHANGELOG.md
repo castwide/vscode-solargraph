@@ -1,4 +1,6 @@
 # 0.11.0
+- First version of download core command
+- Documentation page tweaks
 - Method parameters in document pages
 - Fixed bug in completion of symbols with leading underscores
 - Fixed document page links
