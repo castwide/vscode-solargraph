@@ -113,6 +113,6 @@
     },
     "dependencies": {
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.3.4"
+        "solargraph-utils": "^0.4.0"
     }
 }
