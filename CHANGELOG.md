@@ -1,4 +1,4 @@
-# 0.11.0 - January 15, 2018
+# 0.11.0 - January 17, 2018
 - First version of download core command
 - Documentation page tweaks
 - Method parameters in document pages
