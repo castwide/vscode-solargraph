@@ -11,19 +11,21 @@ const solargraphServer = new solargraph.Server(solargraphConfiguration);
 const solargraphContentProvider = new YardContentProvider(solargraphServer);
 
 function prepareWorkspace() {
-	if (solargraphServer.isRunning() && vscode.workspace.rootPath) {
-		var prepareStatus = vscode.window.setStatusBarMessage('Analyzing Ruby code in workspace ' + vscode.workspace.rootPath);
-		solargraphServer.prepare(vscode.workspace.rootPath).then(function() {
-			prepareStatus.dispose();
-		}).catch(function() {
-			prepareStatus.dispose();
-			vscode.window.setStatusBarMessage('There was an error analyzing the Ruby code.', 3000);
+	if (solargraphServer.isRunning()) {
+		vscode.workspace.workspaceFolders.forEach((folder: vscode.WorkspaceFolder) => {
+			var prepareStatus = vscode.window.setStatusBarMessage('Analyzing Ruby code in workspace ' + folder.uri.fsPath);
+			solargraphServer.prepare(folder.uri.fsPath).then(function() {
+				prepareStatus.dispose();
+			}).catch(function() {
+				prepareStatus.dispose();
+				vscode.window.setStatusBarMessage('There was an error analyzing the Ruby code in ' + folder.uri.fsPath + '.', 3000);
+			});
 		});
 	}
 }
 
 function updateFile(saved: vscode.TextDocument) {
-	solargraphServer.update(saved.fileName, vscode.workspace.rootPath).then(() => {
+	solargraphServer.update(saved.fileName, vscode.workspace.getWorkspaceFolder(saved.uri).uri.fsPath).then(() => {
 		solargraphContentProvider.updateAll();
 	});
 }

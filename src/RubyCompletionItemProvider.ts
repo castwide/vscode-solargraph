@@ -25,10 +25,6 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position):Promise<vscode.CompletionItem[]> {
 		var that = this;
 		return new Promise((resolve, reject) => {
-			// TODO: In a future version, it might be possible to use separate
-			// workspace configurations in subdirectories. For now, we always
-			// use the workspace root.
-			//var workspace = solargraph.nearestWorkspace(document.fileName, vscode.workspace.rootPath);
 			var workspace = helper.getDocumentWorkspaceFolder(document);
 			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
 				if (response['status'] == 'ok') {
@@ -46,7 +42,9 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 			if (item.documentation && item.documentation != 'Loading...') {
 				resolve(item);
 			} else if (item.documentation == 'Loading...') {
-				var workspace = vscode.workspace.rootPath;
+				var workspaceFolder = vscode.workspace.getWorkspaceFolder(item['textDocument'].uri);
+				var workspace = (workspaceFolder ? workspaceFolder.uri.fsPath : vscode.workspace.rootPath);
+				console.log('Getting stuff from ' + workspace);
 				this.server.resolve(item['original']['path'], workspace).then((result:any) => {
 					if (result.suggestions.length > 0) {
 						var tmp = this.formatMultipleSuggestions(result.suggestions);
@@ -132,6 +130,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 					item.documentation = "\n" + cd['path'];
 				}
 				item['original'] = cd;
+				item['textDocument'] = document;
 				items.push(item);
 			});
 		}
