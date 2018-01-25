@@ -80,14 +80,28 @@ function applyConfiguration(config:solargraph.Configuration) {
 	config.workspace = vscode.workspace.rootPath || null;
 }
 
+function codeCompletionIsEnabled() {
+	var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+	if (rubyExt && rubyExt.isActive) {
+		var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
+		if (codeCompletion && codeCompletion != 'solargraph') {
+			return false;
+		}
+	}
+	return true;
+}
+
 function initializeAfterVerification(context: vscode.ExtensionContext) {
 	solargraph.updateGemDocumentation(solargraphConfiguration);
 	solargraphServer.start().then(function() {
 		prepareWorkspace();
 	});
-	context.subscriptions.push(vscode.languages.registerCompletionItemProvider('ruby', new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
-	context.subscriptions.push(vscode.languages.registerSignatureHelpProvider('ruby', new RubySignatureHelpProvider(solargraphServer), '(', ')'));
-	context.subscriptions.push(vscode.languages.registerHoverProvider('ruby', new RubyHoverProvider(solargraphServer)));
+	
+	if (codeCompletionIsEnabled()) {
+		context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['ruby', 'erb'], new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
+		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider(['ruby', 'erb'], new RubySignatureHelpProvider(solargraphServer), '(', ')'));
+		context.subscriptions.push(vscode.languages.registerHoverProvider(['ruby', 'erb'], new RubyHoverProvider(solargraphServer)));
+	}
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphContentProvider);
 	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateFile));
 	context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(closeDocument));
