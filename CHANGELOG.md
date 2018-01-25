@@ -1,3 +1,6 @@
+# 0.12.0 - January 26, 2018
+- Check Ruby extension's code completion setting
+
 # 0.11.0 - January 17, 2018
 - First version of download core command
 - Documentation page tweaks

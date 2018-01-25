@@ -80,7 +80,7 @@ function applyConfiguration(config:solargraph.Configuration) {
 	config.workspace = vscode.workspace.rootPath || null;
 }
 
-function codeCompletionIsEnabled() {
+function isCodeCompletionEnabled() {
 	var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
 	if (rubyExt && rubyExt.isActive) {
 		var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
@@ -97,7 +97,7 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 		prepareWorkspace();
 	});
 	
-	if (codeCompletionIsEnabled()) {
+	if (isCodeCompletionEnabled()) {
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['ruby', 'erb'], new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider(['ruby', 'erb'], new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider(['ruby', 'erb'], new RubyHoverProvider(solargraphServer)));
