@@ -1,4 +1,4 @@
-# 0.12.0 - January 26, 2018
+# 0.11.1 - January 26, 2018
 - Check Ruby extension's code completion setting
 
 # 0.11.0 - January 17, 2018
