@@ -13,7 +13,7 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 	public provideHover(document:vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover> {
 		return new Promise((resolve, reject) => {
 			var workspace = helper.getDocumentWorkspaceFolder(document);
-			this.server.hover(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
+			this.server.define(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
 				if (data['suggestions'].length > 0) {
 					var c:string = '';
 					var usedPaths: string[] = []
@@ -22,12 +22,15 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 						if (usedPaths.indexOf(s.path) == -1) {
 							usedPaths.push(s.path);
 							c = c + "\n\n" + helper.getDocumentPageLink(s.path);
+							if (s.return_type) {
+								c = c + " => " + helper.getDocumentPageLink(s.return_type);
+							}
 						}
-						c = c + "\n\n";
+						/*c = c + "\n\n";
 						var doc = s.documentation;
 						if (doc) {
 							c = c + format.htmlToPlainText(doc) + "\n\n";
-						}
+						}*/
 					}
 					var md = new vscode.MarkdownString(c);
 					md.isTrusted = true;

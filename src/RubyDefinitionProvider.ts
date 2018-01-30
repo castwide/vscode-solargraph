@@ -13,8 +13,7 @@ export default class RubyDefinitionProvider implements vscode.DefinitionProvider
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: CancellationToken): Promise<vscode.Definition> {
 		return new Promise((resolve, reject) => {
 			var workspace = helper.getDocumentWorkspaceFolder(document);
-			// TODO: define() instead of hover() (they return different stuff)
-			this.server.hover(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
+			this.server.define(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
 				if (data['suggestions'].length > 0) {
 					var result = [];
 					data['suggestions'].forEach((s) => {
