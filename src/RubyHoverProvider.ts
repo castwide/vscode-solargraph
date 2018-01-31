@@ -22,7 +22,7 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 						if (usedPaths.indexOf(s.path) == -1) {
 							usedPaths.push(s.path);
 							c = c + "\n\n" + helper.getDocumentPageLink(s.path);
-							if (s.return_type) {
+							if (s.return_type && s.kind != 'Class' && s.kind != 'Module') {
 								c = c + " => " + helper.getDocumentPageLink(s.return_type);
 							}
 						}
