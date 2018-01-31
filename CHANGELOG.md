@@ -1,3 +1,6 @@
+## 0.11.3 - January 31, 2018
+- Handle undefined workspace folders
+
 ## 0.11.2 - January 31, 2018
 - Updated solargraph-utils to fix shell argument bug
 - Invoke explicit bash shell on darwin and linux
