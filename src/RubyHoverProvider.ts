@@ -26,11 +26,11 @@ export default class RubyHoverProvider implements vscode.HoverProvider {
 								c = c + " => " + helper.getDocumentPageLink(s.return_type);
 							}
 						}
-						/*c = c + "\n\n";
+						c = c + "\n\n";
 						var doc = s.documentation;
 						if (doc) {
 							c = c + format.htmlToPlainText(doc) + "\n\n";
-						}*/
+						}
 					}
 					var md = new vscode.MarkdownString(c);
 					md.isTrusted = true;
