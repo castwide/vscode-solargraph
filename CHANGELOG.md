@@ -1,5 +1,6 @@
 ## 0.11.2 - January 31, 2018
 - Updated solargraph-utils to fix shell argument bug
+- Invoke explicit bash shell on darwin and linux
 
 ## 0.11.1 - January 26, 2018
 - Check Ruby extension's code completion setting
