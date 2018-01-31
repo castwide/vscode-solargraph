@@ -55,6 +55,10 @@ local and instance variables. Example:
     my_variable = some_method_call
     my_variable. # <= Hitting crtl-space here will suggest String instance methods
 
+### Intellisense
+
+Solargraph also provides hovers, signature help, and go to definition.
+
 ### Restarting Solargraph
 
 Some changes you make to a project, such as updating the Gemfile, might require you to restart the Solargraph server.

@@ -4,6 +4,7 @@ import YardContentProvider from './YardContentProvider';
 import RubyCompletionItemProvider from './RubyCompletionItemProvider';
 import RubySignatureHelpProvider from './RubySignatureHelpProvider';
 import RubyHoverProvider from './RubyHoverProvider';
+import RubyDefinitionProvider from './RubyDefinitionProvider';
 import * as solargraph from 'solargraph-utils';
 
 const solargraphConfiguration = new solargraph.Configuration();
@@ -80,11 +81,30 @@ function applyConfiguration(config:solargraph.Configuration) {
 	config.workspace = vscode.workspace.rootPath || null;
 }
 
+/**
+ * If the rebornix.Ruby extension is installed, check if Solargraph is the
+ * selected method for code completion.
+ */
 function isCodeCompletionEnabled() {
 	var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
 	if (rubyExt && rubyExt.isActive) {
 		var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
 		if (codeCompletion && codeCompletion != 'solargraph') {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * If the rebornix.Ruby extension is installed, check if Solargraph is the
+ * selected method for intellisense.
+ */
+function isIntellisenseEnabled() {
+	var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+	if (rubyExt && rubyExt.isActive) {
+		var intellisense = vscode.workspace.getConfiguration('ruby').get('intellisense');
+		if (intellisense && intellisense != 'solargraph') {
 			return false;
 		}
 	}
@@ -99,8 +119,11 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 	
 	if (isCodeCompletionEnabled()) {
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['ruby', 'erb'], new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
+	}
+	if (isIntellisenseEnabled()) {
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider(['ruby', 'erb'], new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider(['ruby', 'erb'], new RubyHoverProvider(solargraphServer)));
+		context.subscriptions.push(vscode.languages.registerDefinitionProvider(['ruby', 'erb'], new RubyDefinitionProvider(solargraphServer)));
 	}
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphContentProvider);
 	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(updateFile));
