@@ -96,6 +96,21 @@ function isCodeCompletionEnabled() {
 	return true;
 }
 
+/**
+ * If the rebornix.Ruby extension is installed, check if Solargraph is the
+ * selected method for intellisense.
+ */
+function isIntellisenseEnabled() {
+	var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+	if (rubyExt && rubyExt.isActive) {
+		var intellisense = vscode.workspace.getConfiguration('ruby').get('intellisense');
+		if (intellisense && intellisense != 'solargraph') {
+			return false;
+		}
+	}
+	return true;
+}
+
 function initializeAfterVerification(context: vscode.ExtensionContext) {
 	solargraph.updateGemDocumentation(solargraphConfiguration);
 	solargraphServer.start().then(function() {
@@ -104,6 +119,8 @@ function initializeAfterVerification(context: vscode.ExtensionContext) {
 	
 	if (isCodeCompletionEnabled()) {
 		context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['ruby', 'erb'], new RubyCompletionItemProvider(solargraphServer), '.', '@', '$'));
+	}
+	if (isIntellisenseEnabled()) {
 		context.subscriptions.push(vscode.languages.registerSignatureHelpProvider(['ruby', 'erb'], new RubySignatureHelpProvider(solargraphServer), '(', ')'));
 		context.subscriptions.push(vscode.languages.registerHoverProvider(['ruby', 'erb'], new RubyHoverProvider(solargraphServer)));
 		context.subscriptions.push(vscode.languages.registerDefinitionProvider(['ruby', 'erb'], new RubyDefinitionProvider(solargraphServer)));
