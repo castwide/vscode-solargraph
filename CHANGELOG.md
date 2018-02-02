@@ -1,3 +1,7 @@
+## 0.12.0 - February 3, 2018
+- Go to/peek definition support
+- Update solargraph-utils for improved shell detection
+
 ## 0.11.3 - January 31, 2018
 - Handle undefined workspace folders
 
