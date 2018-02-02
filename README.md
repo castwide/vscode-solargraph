@@ -57,7 +57,11 @@ local and instance variables. Example:
 
 ### Intellisense
 
-Solargraph also provides hovers, signature help, and go to definition.
+Solargraph also provides hovers and go to definition.
+
+Hover your mouse over code to see method definitions, return values, and links to documentation.
+
+To go to a method or variable's definition, right-click and select "Go to Definition" from the context menu, or press F12 for the definition at the cursor.
 
 ### Restarting Solargraph
 
