@@ -14,7 +14,7 @@ export default class RubyDefinitionProvider implements vscode.DefinitionProvider
 		return new Promise((resolve, reject) => {
 			var workspace = helper.getDocumentWorkspaceFolder(document);
 			this.server.define(document.getText(), position.line, position.character, document.fileName, workspace).then(function(data) {
-				if (data['suggestions'].length > 0) {
+				if (data['status'] == 'ok') {
 					var result = [];
 					data['suggestions'].forEach((s) => {
 						if (s['location']) {
