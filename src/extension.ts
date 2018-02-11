@@ -65,7 +65,10 @@ export function activate(context: ExtensionContext) {
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			//fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
 		},
-		middleware: middleware
+		middleware: middleware,
+		initializationOptions: {
+			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
+		}
 	}
 
 	// Create the language client and start the client.
