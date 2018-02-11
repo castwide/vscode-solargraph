@@ -1,6 +1,6 @@
 'use strict';
 
-import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkupContent, Hover } from 'vscode-languageserver';
+import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkupContent, Hover, TextEdit, Range, TextDocument, Position } from 'vscode-languageserver';
 import * as solargraph from 'solargraph-utils';
 import { uriToFilePath } from 'vscode-languageserver/lib/files';
 import * as format from './format';
@@ -27,7 +27,7 @@ connection.onInitialize((params): InitializeResult => {
 			textDocumentSync: documents.syncKind,
 			completionProvider: {
 				resolveProvider: true,
-				triggerCharacters: ['.', ':']
+				triggerCharacters: ['.', ':', '@']
 			},
 			hoverProvider: true
 		}
@@ -72,16 +72,42 @@ var setDocumentation = function(item: CompletionItem, cd: any) {
 	item.documentation = md;
 }
 
+var getBeginningPositionOfWord = function(doc: TextDocument, end: Position): Position {
+	var newChar = end.character;
+	var cursor = newChar - 1;
+	while (cursor >= 0) {
+		var offset = doc.offsetAt({line: end.line, character: cursor});
+		var char = doc.getText().substr(offset, 1);
+		if (char.match(/[a-z0-9_@\$]/i)) {
+			newChar = cursor;
+			cursor--;
+		} else {
+			break;
+		}
+	}
+	return {
+		line: end.line,
+		character: newChar
+	}
+}
+
 connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
 	let doc = documents.get(textDocumentPosition.textDocument.uri);
+	let begin = getBeginningPositionOfWord(doc, textDocumentPosition.position)
 	let filename = uriToFilePath(doc.uri);
 	return new Promise((resolve) => {
 		solargraphServer.suggest(doc.getText(), textDocumentPosition.position.line, textDocumentPosition.position.character, filename, workspaceRoot).then((results) => {
 			var items = [];
 			results['suggestions'].forEach((sugg) => {
 				var item = CompletionItem.create(sugg.label);
-				//item.insertText = sugg.insert;
 				item.kind = CompletionItemKind[sugg.kind];
+				item.textEdit = {
+					range: {
+						start: begin,
+						end: textDocumentPosition.position
+					},
+					newText: sugg.insert
+				}
 				if (sugg.documentation) {
 					item.documentation = formatDocumentation(sugg.documentation);
 				} else if (sugg.has_doc) {
