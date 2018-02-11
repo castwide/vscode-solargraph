@@ -6,9 +6,12 @@
 
 import * as path from 'path';
 
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, Hover, MarkdownString, ProviderResult } from 'vscode';
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
+import * as solargraph from 'solargraph-utils';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType } from 'vscode-languageclient';
+import * as format from './format';
+import { HoverRequest } from 'vscode-languageserver/lib/main';
 
 export function activate(context: ExtensionContext) {
 
@@ -24,6 +27,31 @@ export function activate(context: ExtensionContext) {
 		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
 	}
 
+	var getDocumentPageLink = function(path: string): string {
+		var uri = 'solargraph:/document?' + path.replace('#', '%23');
+		var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+		var link = "[" + path + '](' + href + ')';
+		return link;
+	}
+	
+	var middleware: Middleware = {
+		provideHover: (document, position, token, next): Promise<Hover> => {
+			return new Promise((resolve) => {
+				var promise = next(document, position, token);
+				// HACK: It's a promise, but TypeScript doesn't recognize it
+				promise['then']((hover) => {
+					var contents = [];
+					hover.contents.forEach((orig) => {
+						var md = new MarkdownString(orig.value);
+						md.isTrusted = true;
+						contents.push(md);
+					});
+					resolve(new vscode.Hover(contents));
+				});
+			});
+		}
+	}
+
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
@@ -33,11 +61,12 @@ export function activate(context: ExtensionContext) {
 			//configurationSection: 'lspSample',
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			//fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
-		}
+		},
+		middleware: middleware
 	}
 
 	// Create the language client and start the client.
-	var languageClient = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions);
+	var languageClient = new LanguageClient('lspSample', 'Ruby Language Server', serverOptions, clientOptions);
 	let disposable = languageClient.start();
 
 	// Push the disposable to the context's subscriptions so that the
