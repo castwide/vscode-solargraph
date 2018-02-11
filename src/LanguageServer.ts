@@ -35,7 +35,10 @@ connection.onInitialize((params): InitializeResult => {
 });
 
 documents.onDidChangeContent((change) => {
-	solargraphServer.update(uriToFilePath(change.document.uri), workspaceRoot);
+	// TODO: This might not be necessary given that completion requests send
+	// the document text, and this update function only reloads the version on
+	// disk.
+	//solargraphServer.update(uriToFilePath(change.document.uri), workspaceRoot);
 });
 
 connection.onDidChangeConfiguration((change) => {
@@ -50,9 +53,6 @@ var getDocumentPageLink = function(path: string): string {
 }
 
 var formatDocumentation = function(doc: string): MarkupContent {
-	/*var md = MarkedString.fromPlainText(doc);
-	md.isTrusted = true;
-	return md;*/
 	return { kind: 'markdown', value: doc };
 }
 
@@ -155,10 +155,6 @@ connection.onHover((textDocumentPosition: TextDocumentPositionParams): Promise<H
 						c = c + format.htmlToPlainText(doc) + "\n\n";
 					}
 				}
-				/*var md = new vscode.MarkdownString(c);
-				md.isTrusted = true;
-				var hover = new vscode.Hover(md);*/
-				//var md = new MarkdownString(c);
 				resolve({ contents: { kind: 'markdown', value: c }, then: null });
 			} else {
 				reject();
