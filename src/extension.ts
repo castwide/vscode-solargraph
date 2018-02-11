@@ -17,7 +17,7 @@ import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 export function activate(context: ExtensionContext) {
 
 	// The server is implemented in node
-	let serverModule = context.asAbsolutePath(path.join('out', 'src', 'LanguageServer.js'));
+	let serverModule = context.asAbsolutePath(path.join('node_modules', 'solargraph-utils', 'out', 'LanguageServer.js'));
 	// The debug options for the server
 	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
 

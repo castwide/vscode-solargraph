@@ -31,11 +31,9 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 	public update(uri: vscode.Uri) {
 		var that = this;
 		var converted = uri.toString(true).replace(/^solargraph:/, "http://localhost:");
-		console.log('Switched: ' + converted);
-		request.get({url: converted/*, form: {
-			query: uri.query,
-			workspace: vscode.workspace.rootPath
-		}*/}, function(err, httpResponse, body) {
+		request.get({
+			url: converted
+		}, function(err, httpResponse, body) {
 			that.docs[uri.toString()] = body;
 			that._onDidChange.fire(uri);
 		});
