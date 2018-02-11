@@ -48,7 +48,9 @@ connection.onDidChangeConfiguration((change) => {
 
 var getDocumentPageLink = function(path: string): string {
 	var uri = 'solargraph:/document?' + path.replace('#', '%23');
-	var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+	uri = "solargraph:" + solargraphServer.port + "/document?workspace=" + encodeURI(workspaceRoot) + "&query=" + path.replace('#', '%23');
+	console.log('URI: ' + uri);
+	var href = encodeURI('command:solargraph._openDocumentUrl?' + JSON.stringify(uri));
 	var link = "[" + path + '](' + href + ')';
 	return link;
 }

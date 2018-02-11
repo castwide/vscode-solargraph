@@ -12,6 +12,7 @@ import * as solargraph from 'solargraph-utils';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType } from 'vscode-languageclient';
 import * as format from './format';
 import { HoverRequest } from 'vscode-languageserver/lib/main';
+import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 
 export function activate(context: ExtensionContext) {
 
@@ -19,6 +20,8 @@ export function activate(context: ExtensionContext) {
 	let serverModule = context.asAbsolutePath(path.join('out', 'src', 'LanguageServer.js'));
 	// The debug options for the server
 	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
+
+	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
@@ -82,4 +85,17 @@ export function activate(context: ExtensionContext) {
 		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
 	});
 	context.subscriptions.push(disposableOpen);
+
+	// Open command (used internally for browsing documentation pages)
+	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
+		console.log('String is ' + uriString);
+		var uri = vscode.Uri.parse(uriString);
+		console.log('Getting ' + uri);
+		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
+		console.log('Label: ' + label);
+		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+	});
+	context.subscriptions.push(disposableOpenUrl);
+
+	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
 }
