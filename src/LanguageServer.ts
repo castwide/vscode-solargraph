@@ -1,9 +1,10 @@
 'use strict';
 
-import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkupContent, Hover, TextEdit, Range, TextDocument, Position } from 'vscode-languageserver';
+import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkupContent, MarkedString, Hover, TextEdit, Range, TextDocument, Position } from 'vscode-languageserver';
 import * as solargraph from 'solargraph-utils';
 import { uriToFilePath } from 'vscode-languageserver/lib/files';
 import * as format from './format';
+import { MarkdownString } from 'vscode';
 //import * as helper from './helper';
 
 let solargraphConfiguration = new solargraph.Configuration();
@@ -155,7 +156,7 @@ connection.onHover((textDocumentPosition: TextDocumentPositionParams): Promise<H
 						c = c + format.htmlToPlainText(doc) + "\n\n";
 					}
 				}
-				resolve({ contents: { kind: 'markdown', value: c }, then: null });
+				resolve({ contents: { kind: 'markdown', value: c } });
 			} else {
 				reject();
 			}

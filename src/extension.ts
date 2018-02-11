@@ -7,6 +7,7 @@
 import * as path from 'path';
 
 import { workspace, ExtensionContext } from 'vscode';
+import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 export function activate(context: ExtensionContext) {
@@ -42,4 +43,14 @@ export function activate(context: ExtensionContext) {
 	// Push the disposable to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation
 	context.subscriptions.push(disposable);
+
+	// Open command (used internally for browsing documentation pages)
+	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
+		console.log('String is ' + uriString);
+		var uri = vscode.Uri.parse(uriString);
+		console.log('Getting ' + uri);
+		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
+		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+	});
+	context.subscriptions.push(disposableOpen);
 }
