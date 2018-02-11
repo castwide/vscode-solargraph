@@ -1,12 +1,13 @@
 'use strict';
 
-import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkedString } from 'vscode-languageserver';
+import { IConnection, createConnection, IPCMessageReader, IPCMessageWriter, TextDocuments, InitializeResult, TextDocumentPositionParams, CompletionItem, CompletionItemKind, MarkupContent, Hover } from 'vscode-languageserver';
 import * as solargraph from 'solargraph-utils';
 import { uriToFilePath } from 'vscode-languageserver/lib/files';
 import * as format from './format';
 //import * as helper from './helper';
 
-let solargraphServer = new solargraph.Server(new solargraph.Configuration());
+let solargraphConfiguration = new solargraph.Configuration();
+let solargraphServer = new solargraph.Server(solargraphConfiguration);
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
@@ -17,13 +18,18 @@ let workspaceRoot: string;
 
 connection.onInitialize((params): InitializeResult => {
 	workspaceRoot = params.rootPath;
+	solargraphConfiguration.workspace = workspaceRoot;
+	solargraphServer.start().then(() => {
+		solargraphServer.prepare(workspaceRoot);
+	});
 	return {
 		capabilities: {
 			textDocumentSync: documents.syncKind,
 			completionProvider: {
 				resolveProvider: true,
-				triggerCharacters: ['.']
+				triggerCharacters: ['.', ':']
 			},
+			hoverProvider: true
 		}
 	}
 });
@@ -43,11 +49,11 @@ var getDocumentPageLink = function(path: string): string {
 	return link;
 }
 
-var formatDocumentation = function(doc: string): string {
+var formatDocumentation = function(doc: string): MarkupContent {
 	/*var md = MarkedString.fromPlainText(doc);
 	md.isTrusted = true;
 	return md;*/
-	return doc;
+	return { kind: 'markdown', value: doc };
 }
 
 var setDocumentation = function(item: CompletionItem, cd: any) {
@@ -74,9 +80,10 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Prom
 			var items = [];
 			results['suggestions'].forEach((sugg) => {
 				var item = CompletionItem.create(sugg.label);
+				//item.insertText = sugg.insert;
 				item.kind = CompletionItemKind[sugg.kind];
 				if (sugg.documentation) {
-					item.documentation = sugg.documentation;
+					item.documentation = formatDocumentation(sugg.documentation);
 				} else if (sugg.has_doc) {
 					item.documentation = 'Loading...';
 				} else {
@@ -99,7 +106,42 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Prom
 	});
 });
 
-var formatMultipleSuggestions = function(cds: any[]) {
+connection.onHover((textDocumentPosition: TextDocumentPositionParams): Promise<Hover> => {
+	return new Promise((resolve, reject) => {
+		let document = documents.get(textDocumentPosition.textDocument.uri);
+		let filename = uriToFilePath(document.uri);
+		solargraphServer.define(document.getText(), textDocumentPosition.position.line, textDocumentPosition.position.character, filename, workspaceRoot).then(function(data) {
+			if (data['suggestions'].length > 0) {
+				var c:string = '';
+				var usedPaths: string[] = []
+				for (var i = 0; i < data['suggestions'].length; i++) {
+					var s = data['suggestions'][i];
+					if (usedPaths.indexOf(s.path) == -1) {
+						usedPaths.push(s.path);
+						c = c + "\n\n" + getDocumentPageLink(s.path);
+						if (s.return_type && s.kind != 'Class' && s.kind != 'Module') {
+							c = c + " => " + getDocumentPageLink(s.return_type);
+						}
+					}
+					c = c + "\n\n";
+					var doc = s.documentation;
+					if (doc) {
+						c = c + format.htmlToPlainText(doc) + "\n\n";
+					}
+				}
+				/*var md = new vscode.MarkdownString(c);
+				md.isTrusted = true;
+				var hover = new vscode.Hover(md);*/
+				//var md = new MarkdownString(c);
+				resolve({ contents: { kind: 'markdown', value: c }, then: null });
+			} else {
+				reject();
+			}
+		});
+	});
+});
+
+var formatMultipleSuggestions = function(cds: any[]): MarkupContent {
 	var doc = '';
 	var docLink = '';
 	cds.forEach((cd) => {
@@ -120,9 +162,7 @@ connection.onCompletionResolve((item: CompletionItem): Promise<CompletionItem> =
 			solargraphServer.resolve(item.data.path, workspaceRoot).then((result:any) => {
 				if (result.suggestions.length > 0) {
 					var tmp = formatMultipleSuggestions(result.suggestions);
-					if (tmp.toString() != '') {
-						item.documentation = tmp.toString();
-					}
+					item.documentation = tmp;
 				} else {
 					item.documentation = '';
 				}
@@ -141,6 +181,3 @@ connection.onExit(() => {
 });
 
 connection.listen();
-solargraphServer.start().then(() => {
-	solargraphServer.prepare(workspaceRoot);
-});
