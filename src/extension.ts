@@ -29,14 +29,15 @@ export function activate(context: ExtensionContext) {
 		documentSelector: [{scheme: 'file', language: 'ruby'}],
 		synchronize: {
 			// Synchronize the setting section 'lspSample' to the server
-			configurationSection: 'lspSample',
+			//configurationSection: 'lspSample',
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			//fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
 		}
 	}
 
 	// Create the language client and start the client.
-	let disposable = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions).start();
+	var languageClient = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions);
+	let disposable = languageClient.start();
 
 	// Push the disposable to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation

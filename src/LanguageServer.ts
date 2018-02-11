@@ -23,30 +23,37 @@ connection.onInitialize((params): InitializeResult => {
 			completionProvider: {
 				resolveProvider: true,
 				triggerCharacters: ['.']
-			}
+			},
 		}
 	}
 });
 
 documents.onDidChangeContent((change) => {
-	// TODO: Handle a changed document (change.document)
+	solargraphServer.update(uriToFilePath(change.document.uri), workspaceRoot);
 });
 
 connection.onDidChangeConfiguration((change) => {
 	// TODO: Handle a configuration change
 });
 
-var formatDocumentation = function(doc: string): MarkedString {
-	var md = MarkedString.fromPlainText(doc);
-	//md.isTrusted = true;
-	return md;		
+var getDocumentPageLink = function(path: string): string {
+	var uri = 'solargraph:/document?' + path.replace('#', '%23');
+	var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
+	var link = "[" + path + '](' + href + ')';
+	return link;
+}
+
+var formatDocumentation = function(doc: string): string {
+	/*var md = MarkedString.fromPlainText(doc);
+	md.isTrusted = true;
+	return md;*/
+	return doc;
 }
 
 var setDocumentation = function(item: CompletionItem, cd: any) {
 	var docLink = '';
 	if (cd['path']) {
-		//docLink = "\n\n" + helper.getDocumentPageLink(cd.path) + "\n\n";
-		docLink = "\n\n" + cd.path + "\n\n";
+		docLink = "\n\n" + getDocumentPageLink(cd.path) + "\n\n";
 	}
 	var doc = docLink + format.htmlToPlainText(cd['documentation']);
 	if (cd['params'] && cd['params'].length > 0) {
@@ -56,7 +63,7 @@ var setDocumentation = function(item: CompletionItem, cd: any) {
 		}
 	}
 	var md = formatDocumentation(doc);
-	item.documentation = md.toString();
+	item.documentation = md;
 }
 
 connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
@@ -97,8 +104,7 @@ var formatMultipleSuggestions = function(cds: any[]) {
 	var docLink = '';
 	cds.forEach((cd) => {
 		if (!docLink && cd.path) {
-			//docLink = "\n\n" + helper.getDocumentPageLink(cd.path) + "\n\n";
-			docLink = "\n\n" + cd.path + "\n\n";
+			docLink = "\n\n" + getDocumentPageLink(cd.path) + "\n\n";
 		}
 		doc += "\n" + format.htmlToPlainText(cd.documentation);
 	});
