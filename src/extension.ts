@@ -1,7 +1,3 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
 'use strict';
 
 import * as path from 'path';
@@ -11,7 +7,6 @@ import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType } from 'vscode-languageclient';
 import * as format from './format';
-import { HoverRequest } from 'vscode-languageserver/lib/main';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 
 export function activate(context: ExtensionContext) {
