@@ -97,6 +97,7 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableOpen);
 
+	// https://css-tricks.com/snippets/javascript/get-url-variables/
 	var getQueryVariable = function(query, variable) {
 		var vars = query.split("&");
 		for (var i=0;i<vars.length;i++) {
