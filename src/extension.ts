@@ -45,7 +45,15 @@ export function activate(context: ExtensionContext) {
 				promise['then']((hover) => {
 					var contents = [];
 					hover.contents.forEach((orig) => {
-						var md = new MarkdownString(orig.value);
+						var str = '';
+						var regexp = /\(solargraph\:(.*?)\)/g;
+						var match;
+						var adjusted: string = orig.value;
+						while (match = regexp.exec(orig.value)) {
+							var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
+							adjusted = adjusted.replace(match[0], commandUri);
+						}
+						var md = new MarkdownString(adjusted);
 						md.isTrusted = true;
 						contents.push(md);
 					});
@@ -89,13 +97,19 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableOpen);
 
-	// Open command (used internally for browsing documentation pages)
+	var getQueryVariable = function(query, variable) {
+		var vars = query.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if(pair[0] == variable){return pair[1];}
+		}
+		return(false);
+	}
+
+	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
-		console.log('String is ' + uriString);
 		var uri = vscode.Uri.parse(uriString);
-		console.log('Getting ' + uri);
-		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
-		console.log('Label: ' + label);
+		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
 		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
 	});
 	context.subscriptions.push(disposableOpenUrl);
