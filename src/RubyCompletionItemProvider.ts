@@ -26,7 +26,7 @@ export default class RubyCompletionItemProvider implements vscode.CompletionItem
 		var that = this;
 		return new Promise((resolve, reject) => {
 			var workspace = helper.getDocumentWorkspaceFolder(document);
-			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace, vscode.workspace.getConfiguration('solargraph').withSnippets).then(function(response) {
+			this.server.suggest(document.getText(), position.line, position.character, document.fileName, workspace).then(function(response) {
 				if (response['status'] == 'ok') {
 					resolve(that.getCompletionItems(response, document, position));
 				} else {
