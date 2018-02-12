@@ -75,7 +75,8 @@ export function activate(context: ExtensionContext) {
 		},
 		middleware: middleware,
 		initializationOptions: {
-			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
+			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
+			useBundler: vscode.workspace.getConfiguration('solargraph').useBundler || false
 		}
 	}
 
@@ -92,14 +93,6 @@ export function activate(context: ExtensionContext) {
 	// client can be deactivated on extension deactivation
 	context.subscriptions.push(disposable);
 
-	// Open command (used internally for browsing documentation pages)
-	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
-		var uri = vscode.Uri.parse(uriString);
-		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
-		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
-	});
-	context.subscriptions.push(disposableOpen);
-
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
 	var getQueryVariable = function(query, variable) {
 		var vars = query.split("&");
@@ -109,6 +102,14 @@ export function activate(context: ExtensionContext) {
 		}
 		return(false);
 	}
+
+	// Open command (used internally for browsing documentation pages)
+	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
+		var uri = vscode.Uri.parse(uriString);
+		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
+		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+	});
+	context.subscriptions.push(disposableOpen);
 
 	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
