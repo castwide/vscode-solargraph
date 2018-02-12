@@ -110,7 +110,6 @@ This extension contributes the following settings:
 
 * `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
-* `solargraph.withSnippets`: Include snippets in completion suggestions. Default is false.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
 
 ## Known Issues
