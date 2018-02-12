@@ -81,17 +81,20 @@ export function activate(context: ExtensionContext) {
 
 	// Create the language client and start the client.
 	var languageClient = new LanguageClient('lspSample', 'Ruby Language Server', serverOptions, clientOptions);
+	languageClient.onReady().then(() => {
+		languageClient.onNotification("$/solargraphInfo", (server) => {
+			// Set the server URL in the document provider so links work
+			solargraphDocumentProvider.setServerUrl(server.url);
+		});
+	});
 	let disposable = languageClient.start();
-
 	// Push the disposable to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation
 	context.subscriptions.push(disposable);
 
 	// Open command (used internally for browsing documentation pages)
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
-		console.log('String is ' + uriString);
 		var uri = vscode.Uri.parse(uriString);
-		console.log('Getting ' + uri);
 		var label = (uri.path == '/search' ? 'Search for ' : '') + uri.query;
 		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
 	});

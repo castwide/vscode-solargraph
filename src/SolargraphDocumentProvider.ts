@@ -5,10 +5,15 @@ import * as request from 'request';
 export default class SolargraphDocumentProvider implements vscode.TextDocumentContentProvider {
 	private _onDidChange: vscode.EventEmitter<vscode.Uri>;
 	private docs: {[uri: string]: string};
+	private serverUrl: string;
 
 	constructor() {
 		this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
 		this.docs = {};
+	}
+
+	public setServerUrl(url: string) {
+		this.serverUrl = url;
 	}
 
 	public updateAll() {
@@ -30,7 +35,8 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 
 	public update(uri: vscode.Uri) {
 		var that = this;
-		var converted = uri.toString(true).replace(/^solargraph:/, "http://localhost:");
+		var converted = uri.toString(true).replace(/^solargraph:/, this.serverUrl) + "&workspace=" + encodeURI(vscode.workspace.rootPath);
+		console.log('Loading: ' + converted);
 		request.get({
 			url: converted
 		}, function(err, httpResponse, body) {
