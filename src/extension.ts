@@ -5,34 +5,19 @@ import * as path from 'path';
 import { workspace, ExtensionContext, Hover, MarkdownString, ProviderResult } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, StreamMessageReader, IPCMessageReader, createClientSocketTransport } from 'vscode-languageclient';
 import * as format from './format';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
+import * as child_process from 'child_process';
+import * as net from 'net';
 
 export function activate(context: ExtensionContext) {
 
-	// The server is implemented in node
-	let serverModule = context.asAbsolutePath(path.join('node_modules', 'solargraph-utils', 'out', 'LanguageServer.js'));
-	// The debug options for the server
-	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
+	console.log('Activating Solargraph');
 
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
-	// If the extension is launched in debug mode then the debug server options are used
-	// Otherwise the run options are used
-	let serverOptions: ServerOptions = {
-		run : { module: serverModule, transport: TransportKind.ipc },
-		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
-	}
-
-	var getDocumentPageLink = function(path: string): string {
-		var uri = 'solargraph:/document?' + path.replace('#', '%23');
-		var href = encodeURI('command:solargraph._openDocument?' + JSON.stringify(uri));
-		var link = "[" + path + '](' + href + ')';
-		return link;
-	}
-	
-	var middleware: Middleware = {
+	let middleware: Middleware = {
 		provideHover: (document, position, token, next): Promise<Hover> => {
 			return new Promise((resolve) => {
 				var promise = next(document, position, token);
@@ -61,32 +46,47 @@ export function activate(context: ExtensionContext) {
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
-		documentSelector: [{scheme: 'file', language: 'ruby'}],
+		documentSelector: [{scheme: 'file', language: 'ruby'}]/*,
 		synchronize: {
 			// Synchronize the setting section 'lspSample' to the server
 			//configurationSection: 'lspSample',
 			// Notify the server about file changes to '.clientrc files contain in the workspace
-			//fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+			//fileEvents: workspace.createFileSystemWatcher('** /.clientrc')
 		},
 		middleware: middleware,
 		initializationOptions: {
 			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
 			useBundler: vscode.workspace.getConfiguration('solargraph').useBundler || false
-		}
+		}*/
 	}
 
-	// Create the language client and start the client.
-	var languageClient = new LanguageClient('lspSample', 'Ruby Language Server', serverOptions, clientOptions);
-	languageClient.onReady().then(() => {
-		languageClient.onNotification("$/solargraphInfo", (server) => {
-			// Set the server URL in the document provider so links work
-			solargraphDocumentProvider.setServerUrl(server.url);
+	let configuration = new solargraph.Configuration();
+	// TODO: Don't hardcode
+	configuration.useBundler = true;
+	configuration.workspace = vscode.workspace.rootPath;
+	let socketServer = new solargraph.LanguageServer(configuration);
+	socketServer.start().then(() => {
+		let serverOptions: ServerOptions = () => {
+			return new Promise((resolve) => {
+				let socket: net.Socket = net.createConnection(socketServer.port);
+				resolve({
+					reader: socket,
+					writer: socket
+				});
+			});
+		};
+		// Create the language client and start the client.
+		var languageClient = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+		languageClient.onReady().then(() => {
+			console.log('Solargraph server is running on port ' + socketServer.port);
 		});
+		let disposable = languageClient.start();
+		// Push the disposable to the context's subscriptions so that the
+		// client can be deactivated on extension deactivation
+		context.subscriptions.push(disposable);
+	}).catch((err) => {
+		console.log('Failed to start language server: ' + err);
 	});
-	let disposable = languageClient.start();
-	// Push the disposable to the context's subscriptions so that the
-	// client can be deactivated on extension deactivation
-	context.subscriptions.push(disposable);
 
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
 	var getQueryVariable = function(query, variable) {
