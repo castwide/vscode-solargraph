@@ -43,6 +43,14 @@ export function activate(context: ExtensionContext) {
 		}
 	}
 
+	function applyConfiguration(config:solargraph.Configuration) {
+		config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
+		config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
+		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+		config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
+		config.workspace = vscode.workspace.rootPath || null;
+	}
+	
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
@@ -61,8 +69,7 @@ export function activate(context: ExtensionContext) {
 	}
 
 	let configuration = new solargraph.Configuration();
-	// TODO: Don't hardcode
-	configuration.useBundler = true;
+	applyConfiguration(configuration);
 	configuration.workspace = vscode.workspace.rootPath;
 	let socketServer = new solargraph.LanguageServer(configuration);
 	socketServer.start().then(() => {
