@@ -50,6 +50,12 @@
                     "description": "Use `bundle exec` to run solargraph. (If this is true, the solargraph.commandPath setting is ignored.)",
                     "default": false
                 },
+                "solargraph.bundlerPath": {
+                    "type": "string",
+                    "description": "Path to the bundle executable, defaults to 'bundle'",
+                    "default": "bundle",
+                    "isExecutable": true
+                },
                 "solargraph.checkGemVersion": {
                     "type": "boolean",
                     "description": "Check if a new version of the Solargraph gem is available.",
