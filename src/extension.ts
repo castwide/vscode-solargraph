@@ -70,12 +70,11 @@ export function activate(context: ExtensionContext) {
 
 	let configuration = new solargraph.Configuration();
 	applyConfiguration(configuration);
-	configuration.workspace = vscode.workspace.rootPath;
-	let socketServer = new solargraph.LanguageServer(configuration);
-	socketServer.start().then(() => {
+	let socketAdapter = new solargraph.SocketAdapter(configuration);
+	socketAdapter.start().then(() => {
 		let serverOptions: ServerOptions = () => {
 			return new Promise((resolve) => {
-				let socket: net.Socket = net.createConnection(socketServer.port);
+				let socket: net.Socket = net.createConnection(socketAdapter.port);
 				resolve({
 					reader: socket,
 					writer: socket
@@ -85,7 +84,7 @@ export function activate(context: ExtensionContext) {
 		// Create the language client and start the client.
 		var languageClient = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
 		languageClient.onReady().then(() => {
-			console.log('Solargraph server is running on port ' + socketServer.port);
+			console.log('Solargraph server is running on port ' + socketAdapter.port);
 		});
 		let disposable = languageClient.start();
 		// Push the disposable to the context's subscriptions so that the
