@@ -50,6 +50,12 @@
                     "description": "Use `bundle exec` to run solargraph. (If this is true, the solargraph.commandPath setting is ignored.)",
                     "default": false
                 },
+                "solargraph.bundlerPath": {
+                    "type": "string",
+                    "description": "Path to the bundle executable, defaults to 'bundle'",
+                    "default": "bundle",
+                    "isExecutable": true
+                },
                 "solargraph.withSnippets": {
                     "type": "boolean",
                     "description": "Include snippets with completion suggestions.",

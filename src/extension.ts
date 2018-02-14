@@ -74,10 +74,12 @@ function notifyGemUpdate() {
 }
 
 function applyConfiguration(config:solargraph.Configuration) {
-	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
-	config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
-	config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
-	config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
+	let vsconfig = vscode.workspace.getConfiguration('solargraph');
+	config.commandPath = vsconfig.commandPath || 'solargraph';
+	config.useBundler  = vsconfig.useBundler || false;
+	config.bundlerPath = vsconfig.bundlerPath || 'bundle';
+	config.viewsPath   = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+	config.withSnippets = vsconfig.withSnippets || false;
 	config.workspace = vscode.workspace.rootPath || null;
 }
 
