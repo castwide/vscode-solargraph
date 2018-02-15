@@ -5,15 +5,12 @@ import * as path from 'path';
 import { workspace, ExtensionContext, Hover, MarkdownString, ProviderResult } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, StreamMessageReader, IPCMessageReader, createClientSocketTransport } from 'vscode-languageclient';
-import * as format from './format';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport } from 'vscode-languageclient';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import * as child_process from 'child_process';
 import * as net from 'net';
 
 export function activate(context: ExtensionContext) {
-
-	console.log('Activating Solargraph');
 
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
@@ -53,7 +50,6 @@ export function activate(context: ExtensionContext) {
 	
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
-		// Register the server for plain text documents
 		documentSelector: [{scheme: 'file', language: 'ruby'}]/*,
 		synchronize: {
 			// Synchronize the setting section 'lspSample' to the server
@@ -87,8 +83,6 @@ export function activate(context: ExtensionContext) {
 			console.log('Solargraph server is running on port ' + socketAdapter.port);
 		});
 		let disposable = languageClient.start();
-		// Push the disposable to the context's subscriptions so that the
-		// client can be deactivated on extension deactivation
 		context.subscriptions.push(disposable);
 	}).catch((err) => {
 		console.log('Failed to start language server: ' + err);
