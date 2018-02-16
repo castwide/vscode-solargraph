@@ -59,18 +59,22 @@ function checkGemVersion() {
 }
 
 function notifyGemUpdate() {
-	vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` or update your Gemfile to install it.', 'Update Now').then((item) => {
-		if (item == 'Update Now') {
-			solargraph.updateGem(solargraphConfiguration).then(() => {
-				vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
-				if (solargraphServer.isRunning()) {
-					solargraphServer.restart();
-				}
-			}).catch(() => {
-				vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
-			});
-		}
-	});
+	if (vscode.workspace.getConfiguration('solargraph').useBundler && vscode.workspace.rootPath) {
+		vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Update your Gemfile to install it.');
+	} else {
+		vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` to install it.', 'Update Now').then((item) => {
+			if (item == 'Update Now') {
+				solargraph.updateGem(solargraphConfiguration).then(() => {
+					vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
+					if (solargraphServer.isRunning()) {
+						solargraphServer.restart();
+					}
+				}).catch(() => {
+					vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
+				});
+			}
+		});
+	}
 }
 
 function applyConfiguration(config:solargraph.Configuration) {
