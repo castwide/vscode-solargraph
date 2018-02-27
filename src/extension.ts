@@ -10,6 +10,17 @@ import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import * as child_process from 'child_process';
 import * as net from 'net';
 
+function applyConfiguration(config:solargraph.Configuration) {
+	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
+	config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
+	config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+	config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
+	config.workspace = vscode.workspace.rootPath || null;
+}
+let configuration = new solargraph.Configuration();
+applyConfiguration(configuration);
+let socketAdapter = new solargraph.SocketAdapter(configuration);
+
 export function activate(context: ExtensionContext) {
 
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
@@ -39,14 +50,6 @@ export function activate(context: ExtensionContext) {
 			});
 		}
 	}
-
-	function applyConfiguration(config:solargraph.Configuration) {
-		config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
-		config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
-		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
-		config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
-		config.workspace = vscode.workspace.rootPath || null;
-	}
 	
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
@@ -64,9 +67,6 @@ export function activate(context: ExtensionContext) {
 		}*/
 	}
 
-	let configuration = new solargraph.Configuration();
-	applyConfiguration(configuration);
-	let socketAdapter = new solargraph.SocketAdapter(configuration);
 	socketAdapter.start().then(() => {
 		let serverOptions: ServerOptions = () => {
 			return new Promise((resolve) => {
@@ -115,4 +115,8 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(disposableOpenUrl);
 
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
+}
+
+export function deactivate() {
+	socketAdapter.stop();
 }
