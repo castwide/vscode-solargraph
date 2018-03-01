@@ -7,8 +7,7 @@ import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable } from 'vscode-languageclient';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
-import * as child_process from 'child_process';
-import * as net from 'net';
+import { makeLanguageClient } from './language-client';
 
 function applyConfiguration(config:solargraph.Configuration) {
 	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
@@ -21,62 +20,6 @@ let configuration = new solargraph.Configuration();
 applyConfiguration(configuration);
 let socketProvider = new solargraph.SocketProvider(configuration);
 
-function makeLanguageClient(): LanguageClient {
-	let middleware: Middleware = {
-		provideHover: (document, position, token, next): Promise<Hover> => {
-			return new Promise((resolve) => {
-				var promise = next(document, position, token);
-				// HACK: It's a promise, but TypeScript doesn't recognize it
-				promise['then']((hover) => {
-					var contents = [];
-					hover.contents.forEach((orig) => {
-						var str = '';
-						var regexp = /\(solargraph\:(.*?)\)/g;
-						var match;
-						var adjusted: string = orig.value;
-						while (match = regexp.exec(orig.value)) {
-							var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
-							adjusted = adjusted.replace(match[0], commandUri);
-						}
-						var md = new MarkdownString(adjusted);
-						md.isTrusted = true;
-						contents.push(md);
-					});
-					resolve(new vscode.Hover(contents));
-				});
-			});
-		}
-	}
-
-	// Options to control the language client
-	let clientOptions: LanguageClientOptions = {
-		documentSelector: [{scheme: 'file', language: 'ruby'}]/*,
-		synchronize: {
-			// Synchronize the setting section 'lspSample' to the server
-			//configurationSection: 'lspSample',
-			// Notify the server about file changes to '.clientrc files contain in the workspace
-			//fileEvents: workspace.createFileSystemWatcher('** /.clientrc')
-		},
-		middleware: middleware,
-		initializationOptions: {
-			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
-			useBundler: vscode.workspace.getConfiguration('solargraph').useBundler || false
-		}*/
-	}
-
-	let serverOptions: ServerOptions = () => {
-		return new Promise((resolve) => {
-			let socket: net.Socket = net.createConnection(socketProvider.port);
-			resolve({
-				reader: socket,
-				writer: socket
-			});
-		});
-	};
-
-	return new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-}
-
 export function activate(context: ExtensionContext) {
 
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
@@ -85,9 +28,7 @@ export function activate(context: ExtensionContext) {
 	let disposableClient: Disposable;
 
 	socketProvider.start().then(() => {
-		// Create the language client and start the client.
-		//languageClient = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-		languageClient = makeLanguageClient();
+		languageClient = makeLanguageClient(socketProvider);
 		disposableClient = languageClient.start();
 		context.subscriptions.push(disposableClient);
 	}).catch((err) => {
@@ -126,7 +67,7 @@ export function activate(context: ExtensionContext) {
 		languageClient.stop().then(() => {
 			disposableClient.dispose();
 			socketProvider.restart().then(() => {
-				languageClient = makeLanguageClient();
+				languageClient = makeLanguageClient(socketProvider);
 				disposableClient = languageClient.start();
 				context.subscriptions.push(disposableClient);
 				vscode.window.showInformationMessage('Solargraph server restarted.');
