@@ -9,19 +9,21 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Mi
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import { makeLanguageClient } from './language-client';
 
-function applyConfiguration(config:solargraph.Configuration) {
-	config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
-	config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
-	config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
-	config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
-	config.workspace = vscode.workspace.rootPath || null;
-}
-let configuration = new solargraph.Configuration();
-applyConfiguration(configuration);
-let socketProvider = new solargraph.SocketProvider(configuration);
+let socketProvider: solargraph.SocketProvider;
 
 export function activate(context: ExtensionContext) {
 
+	let applyConfiguration = function(config:solargraph.Configuration) {
+		config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
+		config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
+		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+		config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
+		config.workspace = vscode.workspace.rootPath || null;
+	}
+	let configuration = new solargraph.Configuration();
+	applyConfiguration(configuration);
+	socketProvider = new solargraph.SocketProvider(configuration);
+	
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
 	let languageClient: LanguageClient;
