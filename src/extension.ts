@@ -5,7 +5,7 @@ import * as path from 'path';
 import { workspace, ExtensionContext, Hover, MarkdownString, ProviderResult } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable } from 'vscode-languageclient';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import * as child_process from 'child_process';
 import * as net from 'net';
@@ -19,12 +19,9 @@ function applyConfiguration(config:solargraph.Configuration) {
 }
 let configuration = new solargraph.Configuration();
 applyConfiguration(configuration);
-let socketAdapter = new solargraph.SocketAdapter(configuration);
+let socketProvider = new solargraph.SocketProvider(configuration);
 
-export function activate(context: ExtensionContext) {
-
-	let solargraphDocumentProvider = new SolargraphDocumentProvider();
-
+function makeLanguageClient(): LanguageClient {
 	let middleware: Middleware = {
 		provideHover: (document, position, token, next): Promise<Hover> => {
 			return new Promise((resolve) => {
@@ -50,7 +47,7 @@ export function activate(context: ExtensionContext) {
 			});
 		}
 	}
-	
+
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		documentSelector: [{scheme: 'file', language: 'ruby'}]/*,
@@ -67,23 +64,32 @@ export function activate(context: ExtensionContext) {
 		}*/
 	}
 
-	socketAdapter.start().then(() => {
-		let serverOptions: ServerOptions = () => {
-			return new Promise((resolve) => {
-				let socket: net.Socket = net.createConnection(socketAdapter.port);
-				resolve({
-					reader: socket,
-					writer: socket
-				});
+	let serverOptions: ServerOptions = () => {
+		return new Promise((resolve) => {
+			let socket: net.Socket = net.createConnection(socketProvider.port);
+			resolve({
+				reader: socket,
+				writer: socket
 			});
-		};
-		// Create the language client and start the client.
-		var languageClient = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-		languageClient.onReady().then(() => {
-			console.log('Solargraph server is running on port ' + socketAdapter.port);
 		});
-		let disposable = languageClient.start();
-		context.subscriptions.push(disposable);
+	};
+
+	return new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+}
+
+export function activate(context: ExtensionContext) {
+
+	let solargraphDocumentProvider = new SolargraphDocumentProvider();
+
+	let languageClient: LanguageClient;
+	let disposableClient: Disposable;
+
+	socketProvider.start().then(() => {
+		// Create the language client and start the client.
+		//languageClient = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+		languageClient = makeLanguageClient();
+		disposableClient = languageClient.start();
+		context.subscriptions.push(disposableClient);
 	}).catch((err) => {
 		console.log('Failed to start language server: ' + err);
 	});
@@ -114,9 +120,24 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableOpenUrl);
 
+
+	// Restart command
+	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
+		languageClient.stop().then(() => {
+			disposableClient.dispose();
+			socketProvider.restart().then(() => {
+				languageClient = makeLanguageClient();
+				disposableClient = languageClient.start();
+				context.subscriptions.push(disposableClient);
+				vscode.window.showInformationMessage('Solargraph server restarted.');
+			});
+		});
+	});
+	context.subscriptions.push(disposableRestart);
+
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
 }
 
 export function deactivate() {
-	socketAdapter.stop();
+	socketProvider.stop();
 }
