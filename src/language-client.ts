@@ -2,8 +2,22 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Mi
 import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
+import * as vscode from 'vscode';
 
 export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
+	let convertDocumentation = function (text: string) {
+		var regexp = /\(solargraph\:(.*?)\)/g;
+		var match;
+		var adjusted: string = text;
+		while (match = regexp.exec(text)) {
+			var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
+			adjusted = adjusted.replace(match[0], commandUri);
+		}
+		var md = new MarkdownString(adjusted);
+		md.isTrusted = true;
+		return md;
+	}
+
 	let middleware: Middleware = {
 		provideHover: (document, position, token, next): Promise<Hover> => {
 			return new Promise((resolve) => {
@@ -12,38 +26,38 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 				promise['then']((hover) => {
 					var contents = [];
 					hover.contents.forEach((orig) => {
-						var str = '';
-						var regexp = /\(solargraph\:(.*?)\)/g;
-						var match;
-						var adjusted: string = orig.value;
-						while (match = regexp.exec(orig.value)) {
-							var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
-							adjusted = adjusted.replace(match[0], commandUri);
-						}
-						var md = new MarkdownString(adjusted);
-						md.isTrusted = true;
-						contents.push(md);
+						contents.push(convertDocumentation(orig.value));
 					});
 					resolve(new Hover(contents));
 				});
 			});
-		}
+		},
+		resolveCompletionItem: (item, token, next) => {
+			return new Promise((resolve) => {
+				var promise = next(item, token);
+				// HACK: It's a promise, but TypeScript doesn't recognize it
+				promise['then']((item) => {
+					item.documentation = convertDocumentation(item.documentation);
+					resolve(item);
+				});
+			});
+		},
 	}
 
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
-		documentSelector: [{scheme: 'file', language: 'ruby'}]/*,
-		synchronize: {
+		documentSelector: [{scheme: 'file', language: 'ruby'}],
+		/*synchronize: {
 			// Synchronize the setting section 'lspSample' to the server
 			//configurationSection: 'lspSample',
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			//fileEvents: workspace.createFileSystemWatcher('** /.clientrc')
-		},
+		},*/
 		middleware: middleware,
 		initializationOptions: {
-			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views',
-			useBundler: vscode.workspace.getConfiguration('solargraph').useBundler || false
-		}*/
+			enablePages: true,
+			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
+		}
 	}
 
 	let serverOptions: ServerOptions = () => {
