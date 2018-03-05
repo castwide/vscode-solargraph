@@ -218,7 +218,7 @@ export function activate(context: vscode.ExtensionContext) {
 			initializeAfterVerification(context);
 		} else {
 			console.log('The Solargraph gem is not available.');
-			vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+			/*vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
 				if (item == 'Install Now') {
 					solargraph.installGem(solargraphConfiguration).then(() => {
 						vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
@@ -227,7 +227,7 @@ export function activate(context: vscode.ExtensionContext) {
 						vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
 					});
 				}
-			});
+			});*/
 		}
 	});
 
