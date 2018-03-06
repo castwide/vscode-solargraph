@@ -1,4 +1,4 @@
-## 0.13.0 - February 6, 2018
+## 0.13.0 - March 6, 2018
 - bundlerPath configuration option
 - Disabled installation notification
 
