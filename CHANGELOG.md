@@ -1,6 +1,6 @@
-## 0.13.0
-- First version of language server support
-- Removed withSnippets option
+## 0.13.0 - March 6, 2018
+- bundlerPath configuration option
+- Disabled installation notification
 
 ## 0.12.0 - February 3, 2018
 - Go to/peek definition support

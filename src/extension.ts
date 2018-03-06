@@ -14,15 +14,17 @@ let socketProvider: solargraph.SocketProvider;
 export function activate(context: ExtensionContext) {
 
 	let applyConfiguration = function(config:solargraph.Configuration) {
-		config.commandPath = vscode.workspace.getConfiguration('solargraph').commandPath || 'solargraph';
-		config.useBundler = vscode.workspace.getConfiguration('solargraph').useBundler || false;
-		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
-		config.withSnippets = vscode.workspace.getConfiguration('solargraph').withSnippets || false;
+		let vsconfig = vscode.workspace.getConfiguration('solargraph');
+		config.commandPath = vsconfig.commandPath || 'solargraph';
+		config.useBundler  = vsconfig.useBundler || false;
+		config.bundlerPath = vsconfig.bundlerPath || 'bundle';
+		config.viewsPath   = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+		config.withSnippets = vsconfig.withSnippets || false;
 		config.workspace = vscode.workspace.rootPath || null;
 	}
-	let configuration = new solargraph.Configuration();
-	applyConfiguration(configuration);
-	socketProvider = new solargraph.SocketProvider(configuration);
+	let solargraphConfiguration = new solargraph.Configuration();
+	applyConfiguration(solargraphConfiguration);
+	socketProvider = new solargraph.SocketProvider(solargraphConfiguration);
 	
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
@@ -38,13 +40,46 @@ export function activate(context: ExtensionContext) {
 	});
 
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
-	var getQueryVariable = function(query, variable) {
+	var getQueryVariable = function (query, variable) {
 		var vars = query.split("&");
-		for (var i=0;i<vars.length;i++) {
+		for (var i = 0; i < vars.length; i++) {
 			var pair = vars[i].split("=");
-			if(pair[0] == variable){return pair[1];}
+			if (pair[0] == variable) { return pair[1]; }
 		}
-		return(false);
+	}
+
+	/*function notifyGemUpdate() {
+		if (vscode.workspace.getConfiguration('solargraph').useBundler && vscode.workspace.rootPath) {
+			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Update your Gemfile to install it.');
+		} else {
+			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` to install it.', 'Update Now').then((item) => {
+				if (item == 'Update Now') {
+					solargraph.updateGem(solargraphConfiguration).then(() => {
+						vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
+						if (solargraphServer.isRunning()) {
+							solargraphServer.restart();
+						}
+					}).catch(() => {
+						vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
+					});
+				}
+			});
+		}
+	}*/
+
+	/**
+	 * If the rebornix.Ruby extension is installed, check if Solargraph is the
+	 * selected method for code completion.
+	 */
+	function isCodeCompletionEnabled() {
+		var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+		if (rubyExt && rubyExt.isActive) {
+			var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
+			if (codeCompletion && codeCompletion != 'solargraph') {
+				return false;
+			}
+			return (false);
+		}
 	}
 
 	// Open command (used internally for browsing documentation pages)
@@ -75,6 +110,28 @@ export function activate(context: ExtensionContext) {
 				vscode.window.showInformationMessage('Solargraph server restarted.');
 			});
 		});
+	});
+
+	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
+		if (result) {
+			console.log('The Solargraph gem is installed and working.');
+			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+				//checkGemVersion();
+			}
+			//initializeAfterVerification(context);
+		} else {
+			console.log('The Solargraph gem is not available.');
+			/*vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+				if (item == 'Install Now') {
+					solargraph.installGem(solargraphConfiguration).then(() => {
+						vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+						initializeAfterVerification(context);					
+					}).catch(() => {
+						vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+					});
+				}
+			});*/
+		}
 	});
 	context.subscriptions.push(disposableRestart);
 
