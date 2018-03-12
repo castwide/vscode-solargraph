@@ -53,8 +53,7 @@
                 "solargraph.bundlerPath": {
                     "type": "string",
                     "description": "Path to the bundle executable, defaults to 'bundle'",
-                    "default": "bundle",
-                    "isExecutable": true
+                    "default": "bundle"
                 },
                 "solargraph.checkGemVersion": {
                     "type": "boolean",
