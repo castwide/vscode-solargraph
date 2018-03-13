@@ -42,8 +42,7 @@
                 "solargraph.commandPath": {
                     "type": "string",
                     "default": "solargraph",
-                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
-                    "isExecutable": true
+                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions."
                 },
                 "solargraph.useBundler": {
                     "type": "boolean",
