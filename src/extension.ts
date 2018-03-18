@@ -33,6 +33,7 @@ export function activate(context: ExtensionContext) {
 
 	socketProvider.start().then(() => {
 		languageClient = makeLanguageClient(socketProvider);
+		solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
 		context.subscriptions.push(disposableClient);
 	}).catch((err) => {
@@ -105,6 +106,7 @@ export function activate(context: ExtensionContext) {
 			disposableClient.dispose();
 			socketProvider.restart().then(() => {
 				languageClient = makeLanguageClient(socketProvider);
+				solargraphDocumentProvider.setLanguageClient(languageClient);
 				disposableClient = languageClient.start();
 				context.subscriptions.push(disposableClient);
 				vscode.window.showInformationMessage('Solargraph server restarted.');

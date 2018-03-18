@@ -6,42 +6,42 @@ import * as vscode from 'vscode';
 
 export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 	let convertDocumentation = function (text: string) {
-		var regexp = /\(solargraph\:(.*?)\)/g;
-		var match;
-		var adjusted: string = text;
-		while (match = regexp.exec(text)) {
-			var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
-			adjusted = adjusted.replace(match[0], commandUri);
-		}
-		var md = new MarkdownString(adjusted);
+		// var regexp = /\(solargraph\:(.*?)\)/g;
+		// var match;
+		// var adjusted: string = text;
+		// while (match = regexp.exec(text)) {
+		// 	var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
+		// 	adjusted = adjusted.replace(match[0], commandUri);
+		// }
+		var md = new MarkdownString(text);
 		md.isTrusted = true;
 		return md;
 	}
 
 	let middleware: Middleware = {
-		provideHover: (document, position, token, next): Promise<Hover> => {
-			return new Promise((resolve) => {
-				var promise = next(document, position, token);
-				// HACK: It's a promise, but TypeScript doesn't recognize it
-				promise['then']((hover) => {
-					var contents = [];
-					hover.contents.forEach((orig) => {
-						contents.push(convertDocumentation(orig.value));
-					});
-					resolve(new Hover(contents));
-				});
-			});
-		},
-		resolveCompletionItem: (item, token, next) => {
-			return new Promise((resolve) => {
-				var promise = next(item, token);
-				// HACK: It's a promise, but TypeScript doesn't recognize it
-				promise['then']((item) => {
-					item.documentation = convertDocumentation(item.documentation);
-					resolve(item);
-				});
-			});
-		},
+		// provideHover: (document, position, token, next): Promise<Hover> => {
+		// 	return new Promise((resolve) => {
+		// 		var promise = next(document, position, token);
+		// 		// HACK: It's a promise, but TypeScript doesn't recognize it
+		// 		promise['then']((hover) => {
+		// 			var contents = [];
+		// 			hover.contents.forEach((orig) => {
+		// 				contents.push(convertDocumentation(orig.value));
+		// 			});
+		// 			resolve(new Hover(contents));
+		// 		});
+		// 	});
+		// },
+		// resolveCompletionItem: (item, token, next) => {
+		// 	return new Promise((resolve) => {
+		// 		var promise = next(item, token);
+		// 		// HACK: It's a promise, but TypeScript doesn't recognize it
+		// 		promise['then']((item) => {
+		// 			item.documentation = convertDocumentation(item.documentation);
+		// 			resolve(item);
+		// 		});
+		// 	});
+		// },
 	}
 
 	// Options to control the language client
@@ -70,5 +70,6 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 		});
 	};
 
-	return new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+	return client;
 }
