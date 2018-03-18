@@ -1,4 +1,4 @@
-<% @objects.reverse.each do |object| %>
+<% objects.reverse.each do |object| %>
     <h1>
         <%= object.name %>
         <% if object.kind_of?(YARD::CodeObjects::MethodObject) and !object.parameters.empty? %>

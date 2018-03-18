@@ -1,6 +1,5 @@
 'use strict';
 import * as vscode from 'vscode';
-import * as request from 'request';
 import { LanguageClient } from 'vscode-languageclient';
 
 export default class SolargraphDocumentProvider implements vscode.TextDocumentContentProvider {
@@ -40,17 +39,22 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 		return this.docs[uri.toString()] || 'Loading...';
 	}
 
+	private parseQuery(query: string): any {
+		var result = {};
+		var parts = query.split('&');
+		parts.forEach((part) => {
+			var frag = part.split('=');
+			result[frag[0]] = frag[1];
+		})
+		return result;
+	}
+
 	public update(uri: vscode.Uri) {
 		var that = this;
-		/*var converted = uri.toString(true).replace(/^solargraph:/, this.serverUrl) + "&workspace=" + encodeURI(vscode.workspace.rootPath);
-		console.log('Loading: ' + converted);
-		request.get({
-			url: converted
-		}, function(err, httpResponse, body) {
-			that.docs[uri.toString()] = body;
-			that._onDidChange.fire(uri);
-		});*/
-		this.languageClient.sendRequest('$/solargraph/document', { query: 'String' }).then((result: any) => {
+		var method = '$/solargraph' + uri.path;
+		var query = this.parseQuery(uri.query);
+		console.log(method + ' and ' + query.query);
+		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
 			this.docs[uri.toString()] = result.content;
 			this._onDidChange.fire(uri);
 		});
