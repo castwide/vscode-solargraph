@@ -1,6 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
+import { MarkdownString } from 'vscode';
 
 export default class SolargraphDocumentProvider implements vscode.TextDocumentContentProvider {
 	private _onDidChange: vscode.EventEmitter<vscode.Uri>;
@@ -53,9 +54,20 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 		var that = this;
 		var method = '$/solargraph' + uri.path;
 		var query = this.parseQuery(uri.query);
+		// TODO DRY this function
+		let convertDocumentation = function (text: string): string {
+			var regexp = /\"solargraph\:(.*?)\"/g;
+			var match;
+			var adjusted: string = text;
+			while (match = regexp.exec(text)) {
+				var commandUri = "\"command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + "\"";
+				adjusted = adjusted.replace(match[0], commandUri);
+			}
+			return adjusted;
+		};		
 		console.log(method + ' and ' + query.query);
 		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
-			this.docs[uri.toString()] = result.content;
+			this.docs[uri.toString()] = convertDocumentation(result.content);
 			this._onDidChange.fire(uri);
 		});
 	}

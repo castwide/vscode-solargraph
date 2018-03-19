@@ -114,6 +114,17 @@ export function activate(context: ExtensionContext) {
 		});
 	});
 
+	// Search command
+	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
+		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
+			if (val) {
+				var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
+				vscode.commands.executeCommand('solargraph._openDocument', uri);
+			}
+		});
+	});
+	context.subscriptions.push(disposableSearch);
+
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
