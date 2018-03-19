@@ -33,7 +33,6 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 	}
 
 	provideTextDocumentContent(uri: vscode.Uri): string {
-		console.log('I need to get the stuff for ' + uri);
 		if (!this.docs[uri.toString()]) {
 			this.update(uri);
 		}
@@ -65,7 +64,6 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 			}
 			return adjusted;
 		};		
-		console.log(method + ' and ' + query.query);
 		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
 			this.docs[uri.toString()] = convertDocumentation(result.content);
 			this._onDidChange.fire(uri);
