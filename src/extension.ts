@@ -31,13 +31,8 @@ export function activate(context: ExtensionContext) {
 	let languageClient: LanguageClient;
 	let disposableClient: Disposable;
 
-	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
 	socketProvider.start().then(() => {
 		languageClient = makeLanguageClient(socketProvider);
-		languageClient.onReady().then(() => {
-			prepareStatus.dispose();
-			vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
-		});
 		solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
 		context.subscriptions.push(disposableClient);

@@ -1,4 +1,4 @@
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable, ErrorHandler } from 'vscode-languageclient';
 import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
@@ -47,12 +47,12 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
 		documentSelector: [{scheme: 'file', language: 'ruby'}],
-		/*synchronize: {
-			// Synchronize the setting section 'lspSample' to the server
-			//configurationSection: 'lspSample',
-			// Notify the server about file changes to '.clientrc files contain in the workspace
-			//fileEvents: workspace.createFileSystemWatcher('** /.clientrc')
-		},*/
+		synchronize: {
+			// Synchronize the setting section 'example' to the server
+			//configurationSection: 'example',
+			// Notify the server about file changes to any file in the workspace
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
+		},
 		middleware: middleware,
 		initializationOptions: {
 			enablePages: true,
@@ -71,5 +71,14 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 	};
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
+	client.onReady().then(() => {
+		prepareStatus.dispose();
+		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
+	}).catch(() => {
+		prepareStatus.dispose();
+		vscode.window.setStatusBarMessage('Solargraph failed to initialize.', 3000);
+	});
+
 	return client;
 }
