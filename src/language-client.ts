@@ -37,7 +37,9 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 				var promise = next(item, token);
 				// HACK: It's a promise, but TypeScript doesn't recognize it
 				promise['then']((item) => {
-					item.documentation = convertDocumentation(item.documentation);
+					if (item.documentation) {
+						item.documentation = convertDocumentation(item.documentation);
+					}
 					resolve(item);
 				});
 			});
