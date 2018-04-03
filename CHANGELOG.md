@@ -1,3 +1,7 @@
+## 0.14.0 - April 4, 2018
+- First version of language server
+- Allow commandPath and bundlerPath in workspace configuration
+
 ## 0.13.0 - March 6, 2018
 - bundlerPath configuration option
 - Disabled installation notification
