@@ -50,8 +50,8 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 	let clientOptions: LanguageClientOptions = {
 		documentSelector: [{scheme: 'file', language: 'ruby'}],
 		synchronize: {
-			// Synchronize the setting section 'example' to the server
-			//configurationSection: 'example',
+			// Synchronize the setting section 'solargraph' to the server
+			configurationSection: 'solargraph',
 			// Notify the server about file changes to any file in the workspace
 			fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
 		},
