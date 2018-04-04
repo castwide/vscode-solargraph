@@ -135,6 +135,7 @@ export function activate(context: ExtensionContext) {
 			vscode.window.showInformationMessage('Solargraph server restarted.');
 		});
 	});
+	context.subscriptions.push(disposableRestart);
 
 	// Search command
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
@@ -147,28 +148,41 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableSearch);
 
+	// Check gem version command
+	var disposableCheckGemVersion = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
+		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
+			if (result) {
+				vscode.window.showInformationMessage('Solargraph gem is up to date.');
+			} else {
+				notifyGemUpdate();	
+			}
+		}).catch(() => {
+			console.log('An error occurred checking the Solargraph gem version.');
+		});
+	});
+	context.subscriptions.push(disposableSearch);
+	
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
-			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-				checkGemVersion();
-			}
+			// if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+			// 	checkGemVersion();
+			// }
 			startLanguageServer();
 		} else {
 			console.log('The Solargraph gem is not available.');
-			vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-				if (item == 'Install Now') {
-					solargraph.installGem(solargraphConfiguration).then(() => {
-						vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-						startLanguageServer();
-					}).catch(() => {
-						vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-					});
-				}
-			});
+			// vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+			// 	if (item == 'Install Now') {
+			// 		solargraph.installGem(solargraphConfiguration).then(() => {
+			// 			vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+			// 			startLanguageServer();
+			// 		}).catch(() => {
+			// 			vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+			// 		});
+			// 	}
+			// });
 		}
 	});
-	context.subscriptions.push(disposableRestart);
 
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
 }

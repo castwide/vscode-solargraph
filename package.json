@@ -56,7 +56,7 @@
                 },
                 "solargraph.checkGemVersion": {
                     "type": "boolean",
-                    "description": "Check if a new version of the Solargraph gem is available.",
+                    "description": "Automatically check if a new version of the Solargraph gem is available.",
                     "default": true
                 },
                 "solargraph.diagnostics": {
