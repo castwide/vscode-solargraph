@@ -163,9 +163,44 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(disposableSearch);
 	
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
+		// TODO: Check for enablement from the rebornix.Ruby extension until this
+		// extension is no longer one of its dependencies.
+
+		/**
+		 * If the rebornix.Ruby extension is installed, check if Solargraph is the
+		 * selected method for code completion.
+		 */
+		var isCodeCompletionEnabled = function() {
+			var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+			if (rubyExt && rubyExt.isActive) {
+				if (rubyExt.packageJSON.version != '0.17.0') return true;
+				var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
+				if (codeCompletion && codeCompletion != 'solargraph') {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/**
+		 * If the rebornix.Ruby extension is installed, check if Solargraph is the
+		 * selected method for intellisense.
+		 */
+		var isIntellisenseEnabled = function() {
+			var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
+			if (rubyExt && rubyExt.isActive) {
+				if (rubyExt.packageJSON.version != '0.17.0') return true;
+				var intellisense = vscode.workspace.getConfiguration('ruby').get('intellisense');
+				if (intellisense && intellisense != 'solargraph') {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
-			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion && (isCodeCompletionEnabled() || isIntellisenseEnabled())) {
 				checkGemVersion();
 			}
 			startLanguageServer();
