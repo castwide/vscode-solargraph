@@ -1,4 +1,4 @@
-## 0.14.0 - April 4, 2018
+## 0.14.0 - April 5, 2018
 - First version of language server
 - Allow commandPath and bundlerPath in workspace configuration
 
