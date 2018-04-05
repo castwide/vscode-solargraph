@@ -200,12 +200,16 @@ export function activate(context: ExtensionContext) {
 
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
+			// TODO: Check rebornix.Ruby settings while it depends on this extension
 			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion && (isCodeCompletionEnabled() || isIntellisenseEnabled())) {
 				checkGemVersion();
 			}
-			startLanguageServer();
+			if (isCodeCompletionEnabled()) {
+				startLanguageServer();
+			}
 		} else {
 			console.log('The Solargraph gem is not available.');
+			// TODO: Disable this error message while rebornix.Ruby depends on this extension
 			// vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
 			// 	if (item == 'Install Now') {
 			// 		solargraph.installGem(solargraphConfiguration).then(() => {

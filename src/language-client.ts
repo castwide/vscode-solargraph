@@ -5,7 +5,7 @@ import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
 
 export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
-	let convertDocumentation = function (text: string) {
+	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
 		var adjusted: string = text;
@@ -36,9 +36,9 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 			return new Promise((resolve) => {
 				var promise = next(item, token);
 				// HACK: It's a promise, but TypeScript doesn't recognize it
-				promise['then']((item) => {
+				promise['then']((item: vscode.CompletionItem) => {
 					if (item.documentation) {
-						item.documentation = convertDocumentation(item.documentation);
+						item.documentation = convertDocumentation(item.documentation.toString());
 					}
 					resolve(item);
 				});
