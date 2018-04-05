@@ -165,9 +165,9 @@ export function activate(context: ExtensionContext) {
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
-			// if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-			// 	checkGemVersion();
-			// }
+			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+				checkGemVersion();
+			}
 			startLanguageServer();
 		} else {
 			console.log('The Solargraph gem is not available.');
