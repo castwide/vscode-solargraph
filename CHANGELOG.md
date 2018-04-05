@@ -1,3 +1,6 @@
+## 0.14.1 - Aprtil 5, 2018
+- Fixed server start after gem updates.
+
 ## 0.14.0 - April 5, 2018
 - First version of language server
 - Allow commandPath and bundlerPath in workspace configuration

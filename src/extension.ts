@@ -66,16 +66,21 @@ export function activate(context: ExtensionContext) {
 
 	var restartLanguageServer = function (): Promise<void> {
 		return new Promise((resolve) => {
-			languageClient.stop().then(() => {
-				disposableClient.dispose();
-				socketProvider.restart().then(() => {
-					languageClient = makeLanguageClient(socketProvider);
-					solargraphDocumentProvider.setLanguageClient(languageClient);
-					disposableClient = languageClient.start();
-					context.subscriptions.push(disposableClient);
-					resolve();
+			if (languageClient) {
+				languageClient.stop().then(() => {
+					disposableClient.dispose();
+					socketProvider.restart().then(() => {
+						languageClient = makeLanguageClient(socketProvider);
+						solargraphDocumentProvider.setLanguageClient(languageClient);
+						disposableClient = languageClient.start();
+						context.subscriptions.push(disposableClient);
+						resolve();
+					});
 				});
-			});	
+			} else {
+				startLanguageServer();
+				resolve();
+			}
 		});
 	}
 
