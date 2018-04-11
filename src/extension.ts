@@ -102,21 +102,6 @@ export function activate(context: ExtensionContext) {
 		}
 	}
 
-	/**
-	 * If the rebornix.Ruby extension is installed, check if Solargraph is the
-	 * selected method for code completion.
-	 */
-	function isCodeCompletionEnabled() {
-		var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
-		if (rubyExt && rubyExt.isActive) {
-			var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
-			if (codeCompletion && codeCompletion != 'solargraph') {
-				return false;
-			}
-			return (false);
-		}
-	}
-
 	// Open command (used internally for browsing documentation pages)
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
 		var uri = vscode.Uri.parse(uriString);
@@ -168,63 +153,24 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(disposableSearch);
 	
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
-		// TODO: Check for enablement from the rebornix.Ruby extension until this
-		// extension is no longer one of its dependencies.
-
-		/**
-		 * If the rebornix.Ruby extension is installed, check if Solargraph is the
-		 * selected method for code completion.
-		 */
-		var isCodeCompletionEnabled = function() {
-			var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
-			if (rubyExt && rubyExt.isActive) {
-				if (rubyExt.packageJSON.version != '0.17.0') return true;
-				var codeCompletion = vscode.workspace.getConfiguration('ruby').get('codeCompletion');
-				if (codeCompletion && codeCompletion != 'solargraph') {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		/**
-		 * If the rebornix.Ruby extension is installed, check if Solargraph is the
-		 * selected method for intellisense.
-		 */
-		var isIntellisenseEnabled = function() {
-			var rubyExt = vscode.extensions.getExtension('rebornix.Ruby');
-			if (rubyExt && rubyExt.isActive) {
-				if (rubyExt.packageJSON.version != '0.17.0') return true;
-				var intellisense = vscode.workspace.getConfiguration('ruby').get('intellisense');
-				if (intellisense && intellisense != 'solargraph') {
-					return false;
-				}
-			}
-			return true;
-		}
-
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
-			// TODO: Check rebornix.Ruby settings while it depends on this extension
-			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion && (isCodeCompletionEnabled() || isIntellisenseEnabled())) {
+			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
 				checkGemVersion();
 			}
-			if (isCodeCompletionEnabled()) {
-				startLanguageServer();
-			}
+			startLanguageServer();
 		} else {
 			console.log('The Solargraph gem is not available.');
-			// TODO: Disable this error message while rebornix.Ruby depends on this extension
-			// vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-			// 	if (item == 'Install Now') {
-			// 		solargraph.installGem(solargraphConfiguration).then(() => {
-			// 			vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-			// 			startLanguageServer();
-			// 		}).catch(() => {
-			// 			vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-			// 		});
-			// 	}
-			// });
+			vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+				if (item == 'Install Now') {
+					solargraph.installGem(solargraphConfiguration).then(() => {
+						vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+						startLanguageServer();
+					}).catch(() => {
+						vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+					});
+				}
+			});
 		}
 	});
 

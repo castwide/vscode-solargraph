@@ -1,4 +1,8 @@
-## 0.14.1 - Aprtil 5, 2018
+## 0.15.0 - April 10, 2018
+- Removed rebornix.Ruby integration checks
+- Enabled gem notifications
+
+## 0.14.1 - April 5, 2018
 - Fixed server start after gem updates.
 
 ## 0.14.0 - April 5, 2018
