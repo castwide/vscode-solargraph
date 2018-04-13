@@ -63,6 +63,13 @@ Hover your mouse over code to see method definitions, return values, and links t
 
 To go to a method or variable's definition, right-click and select "Go to Definition" from the context menu, or press F12 for the definition at the cursor.
 
+
+### Linting/Diagnostics
+
+Solargraph uses RuboCop for diagnostics. Use a .rubocop.yml file in your project's root folder to customize the linting rules.
+
+To disable diagnostics, change the `solargraph.diagnostics` setting to `false`.
+
 ### Restarting Solargraph
 
 Some changes you make to a project, such as updating the Gemfile, might require you to restart the Solargraph server.
@@ -111,6 +118,7 @@ This extension contributes the following settings:
 * `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
+* `solargraph.diagnostics`: The method to use for diagnostics (linting). Valid options are `rubocop` or `false` to disable.
 
 ## Known Issues
 
