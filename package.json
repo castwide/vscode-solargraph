@@ -18,14 +18,16 @@
     "license": "MIT",
     "categories": [
         "Languages",
-        "Snippets"
+        "Linters",
+        "Formatters"
     ],
     "keywords": [
         "Ruby",
         "autocomplete",
         "intellisense",
         "YARD",
-        "code completion"
+        "code completion",
+        "language server"
     ],
     "engines": {
         "vscode": "^1.18.0"

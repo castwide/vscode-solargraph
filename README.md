@@ -1,10 +1,8 @@
 # VS Code Solargraph Extension
 
-Solargraph provides code completion and inline documentation for Ruby.
+Solargraph is a language server that provides intellisense, code completion, and inline documentation for Ruby.
 
 ![Screenshot](vscode-solargraph-0.16.0.gif)
-
-*This project is still in early development.* Expect bugs and breaking changes.
 
 ## Features
 
@@ -119,8 +117,10 @@ This extension contributes the following settings:
 
 * `solargraph.commandPath`: Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
+* `solargraph.bundlerPath`: Path to the bundle command.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
 * `solargraph.diagnostics`: The method to use for diagnostics (linting). Valid options are `rubocop` or `false` to disable.
+* `solargraph.formatting`: The method to use for formatting. Valid options are `rubocop` or `false` to disable.
 
 ## Known Issues
 
