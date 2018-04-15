@@ -1,3 +1,7 @@
+## 0.16.0 - April 16, 2018
+- `solargraph.diagnostics` default is false
+- Updated solargraph-utils
+
 ## 0.15.0 - April 10, 2018
 - Removed rebornix.Ruby integration checks
 - Enabled gem notifications

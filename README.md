@@ -64,9 +64,11 @@ Hover your mouse over code to see method definitions, return values, and links t
 To go to a method or variable's definition, right-click and select "Go to Definition" from the context menu, or press F12 for the definition at the cursor.
 
 
-### Linting/Diagnostics
+### Diagnostics (Linting)
 
-Solargraph uses RuboCop for diagnostics. Use a .rubocop.yml file in your project's root folder to customize the linting rules.
+Solargraph uses RuboCop for diagnostics. To enable it, set the `solargraph.diagnostics` configuration to `rubocop`. You may also need to `gem install rubocop`.
+
+Use a .rubocop.yml file in your project's root folder to customize the linting rules.
 
 To disable diagnostics, change the `solargraph.diagnostics` setting to `false`.
 
