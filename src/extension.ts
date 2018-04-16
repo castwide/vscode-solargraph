@@ -42,19 +42,6 @@ export function activate(context: ExtensionContext) {
 		});	
 	}
 
-	var checkGemVersion = function() {
-		/*console.log('Checking gem version');
-		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
-			if (result) {
-				console.log('Solargraph gem version is current');
-			} else {
-				notifyGemUpdate();	
-			}
-		}).catch(() => {
-			console.log('An error occurred checking the Solargraph gem version.');
-		});*/
-	}
-
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
 	var getQueryVariable = function (query, variable) {
 		var vars = query.split("&");
@@ -146,48 +133,19 @@ export function activate(context: ExtensionContext) {
 	
 	// Build gem documentation command
 	var disposableBuildGemDocs = vscode.commands.registerCommand('solargraph.buildGemDocs', () => {
-		var disposableStatus = vscode.window.setStatusBarMessage('Building new YARD documentation...')
-		var cmd = solargraph.commands.yardCommand(['gems'], solargraphConfiguration);
-		cmd.on('exit', (code) => {
-			disposableStatus.dispose();
-			if (code == 0) {
-				vscode.window.setStatusBarMessage('YARD documentation complete.', 3000);
-			} else {
-				vscode.window.setStatusBarMessage('An error occurred during build.', 3000);
-			}
-		});
-		cmd.on('error', (err) => {
-			disposableStatus.dispose();
-			vscode.window.setStatusBarMessage('Unable to build documentation.', 3000);
-		});
+		languageClient.sendNotification('$/solargraph/documentGems', { rebuild: false });
 	});
 	context.subscriptions.push(disposableBuildGemDocs);
 
 	// Rebuild gems documentation command
 	var disposableRebuildAllGemDocs = vscode.commands.registerCommand('solargraph.rebuildAllGemDocs', () => {
-		var disposableStatus = vscode.window.setStatusBarMessage('Rebuilding all YARD documentation...')
-		var cmd = solargraph.commands.yardCommand(['gems', '--rebuild'], solargraphConfiguration);
-		cmd.on('exit', (code) => {
-			disposableStatus.dispose();
-			if (code == 0) {
-				vscode.window.setStatusBarMessage('YARD documentation rebuild complete.', 3000);
-			} else {
-				vscode.window.setStatusBarMessage('An error occurred during rebuild.', 3000);
-			}
-		});
-		cmd.on('error', (err) => {
-			disposableStatus.dispose();
-			vscode.window.setStatusBarMessage('Unable to rebuild documentation.', 3000);
-		});
+		languageClient.sendNotification('$/solargraph/documentGems', { rebuild: true });
 	});
 	context.subscriptions.push(disposableRebuildAllGemDocs);
 
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');
-			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-				checkGemVersion();
-			}
 			startLanguageServer();
 		} else {
 			console.log('The Solargraph gem is not available.');
