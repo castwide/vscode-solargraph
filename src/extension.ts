@@ -152,6 +152,44 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableSearch);
 	
+	// Build gem documentation command
+	var disposableBuildGemDocs = vscode.commands.registerCommand('solargraph.buildGemDocs', () => {
+		var disposableStatus = vscode.window.setStatusBarMessage('Building new YARD documentation...')
+		var cmd = solargraph.commands.yardCommand(['gems'], solargraphConfiguration);
+		cmd.on('exit', (code) => {
+			disposableStatus.dispose();
+			if (code == 0) {
+				vscode.window.setStatusBarMessage('YARD documentation complete.', 3000);
+			} else {
+				vscode.window.setStatusBarMessage('An error occurred during build.', 3000);
+			}
+		});
+		cmd.on('error', (err) => {
+			disposableStatus.dispose();
+			vscode.window.setStatusBarMessage('Unable to build documentation.', 3000);
+		});
+	});
+	context.subscriptions.push(disposableBuildGemDocs);
+
+	// Rebuild gems documentation command
+	var disposableRebuildAllGemDocs = vscode.commands.registerCommand('solargraph.rebuildAllGemDocs', () => {
+		var disposableStatus = vscode.window.setStatusBarMessage('Rebuilding all YARD documentation...')
+		var cmd = solargraph.commands.yardCommand(['gems', '--rebuild'], solargraphConfiguration);
+		cmd.on('exit', (code) => {
+			disposableStatus.dispose();
+			if (code == 0) {
+				vscode.window.setStatusBarMessage('YARD documentation rebuild complete.', 3000);
+			} else {
+				vscode.window.setStatusBarMessage('An error occurred during rebuild.', 3000);
+			}
+		});
+		cmd.on('error', (err) => {
+			disposableStatus.dispose();
+			vscode.window.setStatusBarMessage('Unable to rebuild documentation.', 3000);
+		});
+	});
+	context.subscriptions.push(disposableRebuildAllGemDocs);
+
 	solargraph.verifyGemIsInstalled(solargraphConfiguration).then((result) => {
 		if (result) {
 			console.log('The Solargraph gem is installed and working.');

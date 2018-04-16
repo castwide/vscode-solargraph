@@ -1,3 +1,6 @@
+## 0.16.1 - April 23, 2018
+- Commands for building gem documentation
+
 ## 0.16.0 - April 16, 2018
 - `solargraph.diagnostics` default is false
 - Updated solargraph-utils

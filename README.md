@@ -9,6 +9,7 @@ Solargraph is a language server that provides intellisense, code completion, and
 * Context-aware suggestions and documentation for the Ruby core
 * Detection of some variable types and method return values (e.g., `String.new.` returns String instance methods)
 * Identification of local, class, and instance variables within the current scope
+* Support for gems
 * Near-complete support for the Ruby stdlib
 * Partial support for Ruby on Rails
 
@@ -61,6 +62,11 @@ Hover your mouse over code to see method definitions, return values, and links t
 
 To go to a method or variable's definition, right-click and select "Go to Definition" from the context menu, or press F12 for the definition at the cursor.
 
+### Gem Support
+
+Solargraph is capable of providing code completion and documentation for gems. When your code uses `require` to include a gem, its classes and methods become available in completion and intellisense.
+
+You can make sure your gems are available with the commands `Build new gem documentation` or `Rebuild all gem documentation` in the command palette.
 
 ### Diagnostics (Linting)
 
