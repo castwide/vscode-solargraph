@@ -77,6 +77,9 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 	client.onReady().then(() => {
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
+		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+			client.sendNotification('$/solargraph/checkGemVersion');
+		}
 	}).catch(() => {
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph failed to initialize.', 3000);

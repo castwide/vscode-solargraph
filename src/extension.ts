@@ -43,7 +43,7 @@ export function activate(context: ExtensionContext) {
 	}
 
 	var checkGemVersion = function() {
-		console.log('Checking gem version');
+		/*console.log('Checking gem version');
 		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
 			if (result) {
 				console.log('Solargraph gem version is current');
@@ -52,7 +52,7 @@ export function activate(context: ExtensionContext) {
 			}
 		}).catch(() => {
 			console.log('An error occurred checking the Solargraph gem version.');
-		});
+		});*/
 	}
 
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
@@ -140,15 +140,7 @@ export function activate(context: ExtensionContext) {
 
 	// Check gem version command
 	var disposableCheckGemVersion = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
-		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
-			if (result) {
-				vscode.window.showInformationMessage('Solargraph gem is up to date.');
-			} else {
-				notifyGemUpdate();	
-			}
-		}).catch(() => {
-			console.log('An error occurred checking the Solargraph gem version.');
-		});
+		languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
 	});
 	context.subscriptions.push(disposableSearch);
 	
