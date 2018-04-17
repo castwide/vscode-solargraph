@@ -58,13 +58,32 @@
                 "solargraph.checkGemVersion": {
                     "type": "boolean",
                     "description": "Automatically check if a new version of the Solargraph gem is available.",
-                    "default": true
+                    "default": true,
+                    "enum": [true, false]
                 },
                 "solargraph.diagnostics": {
-                    "type": ["string", "boolean"],
-                    "description": "Method to use for diagnostics (linting). Use `false` to disable.",
-                    "enum": ["rubocop", false],
-                    "default": false
+                    "type": ["boolean"],
+                    "description": "Enable diagnostics",
+                    "default": true,
+                    "enum": [true, false]
+                },
+                "solargraph.completion": {
+                    "type": ["boolean"],
+                    "description": "Enable completion",
+                    "default": true,
+                    "enum": [true, false]
+                },
+                "solargraph.hover": {
+                    "type": ["boolean"],
+                    "description": "Enable hover",
+                    "default": true,
+                    "enum": [true, false]
+                },
+                "solargraph.autoformat": {
+                    "type": ["boolean"],
+                    "description": "Enable hover",
+                    "default": true,
+                    "enum": [true, false]
                 },
                 "solargraph.formatting": {
                     "type": ["string", "boolean"],
