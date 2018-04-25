@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "Code completion and inline documentation for Ruby",
     "icon": "solargraph.png",
-    "version": "0.16.1",
+    "version": "0.17.0",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -81,15 +81,15 @@
                 },
                 "solargraph.autoformat": {
                     "type": ["boolean"],
-                    "description": "Enable hover",
+                    "description": "Enable automatic formatting while typing",
                     "default": true,
                     "enum": [true, false]
                 },
                 "solargraph.formatting": {
-                    "type": ["string", "boolean"],
-                    "description": "Method to use for document formatting. Use `false` to disable.",
-                    "enum": ["rubocop", false],
-                    "default": "rubocop"
+                    "type": ["boolean"],
+                    "description": "Enable document formatting",
+                    "enum": [true, false],
+                    "default": true
                 }
             }
         },

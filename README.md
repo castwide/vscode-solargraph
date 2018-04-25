@@ -97,7 +97,7 @@ The default file should look something like this:
 
 This configuration tells Solargraph to parse all .rb files in the workspace excluding the spec folder.
 
-## Updating the Core Documentation (EXPERIMENTAL)
+## Updating the Core Documentation
 
 The Solargraph gem ships with documentation for Ruby 2.2.2. As of gem version 0.15.0, there's an option to download additional documentation for other Ruby versions from the command line.
 
@@ -117,6 +117,8 @@ This feature is currently disabled by default. If you'd like to try it, you can 
     plugins:
     - runtime
 
+**The runtime plugin is highly experimental. Expect bugs and breaking changes.**
+
 ## Extension Settings
 
 This extension contributes the following settings:
@@ -125,8 +127,11 @@ This extension contributes the following settings:
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 * `solargraph.bundlerPath`: Path to the bundle command.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
-* `solargraph.diagnostics`: The method to use for diagnostics (linting). Valid options are `rubocop` or `false` to disable.
-* `solargraph.formatting`: The method to use for formatting. Valid options are `rubocop` or `false` to disable.
+* `solargraph.diagnostics`: Enable diagnostics reporting. See [Solargraph Tips](http://solargraph.org/tips) for diagnostics options.
+* `solargraph.completion`: Enable autocompletion.
+* `solargraph.hover`: Enable tips on hover.
+* `solargraph.autoformat`: Enable automatic formatting while typing.
+* `solargraph.formatting`: Enable document formatting. The gem currently uses RuboCop for formatting.
 
 ## Known Issues
 
