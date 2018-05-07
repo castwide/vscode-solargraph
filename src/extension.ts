@@ -143,7 +143,7 @@ export function activate(context: ExtensionContext) {
 
 	// Check gem version command
 	var disposableCheckGemVersion = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
-		languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
+		// languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
 		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
 			if (result) {
 				vscode.window.showInformationMessage('The Solargraph gem is up to date.');
