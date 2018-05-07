@@ -61,12 +61,6 @@
                     "default": true,
                     "enum": [true, false]
                 },
-                "solargraph.diagnostics": {
-                    "type": ["boolean"],
-                    "description": "Enable diagnostics",
-                    "default": true,
-                    "enum": [true, false]
-                },
                 "solargraph.completion": {
                     "type": ["boolean"],
                     "description": "Enable completion",
@@ -79,17 +73,23 @@
                     "default": true,
                     "enum": [true, false]
                 },
+                "solargraph.diagnostics": {
+                    "type": ["boolean"],
+                    "description": "Enable diagnostics",
+                    "default": false,
+                    "enum": [true, false]
+                },
                 "solargraph.autoformat": {
                     "type": ["boolean"],
-                    "description": "Enable automatic formatting while typing",
-                    "default": true,
+                    "description": "Enable automatic formatting while typing (WARNING: experimental)",
+                    "default": false,
                     "enum": [true, false]
                 },
                 "solargraph.formatting": {
                     "type": ["boolean"],
                     "description": "Enable document formatting",
                     "enum": [true, false],
-                    "default": true
+                    "default": false
                 }
             }
         },

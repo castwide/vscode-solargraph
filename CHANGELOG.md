@@ -1,4 +1,5 @@
-## 0.16.1 - April 23, 2018
+## 0.17.0
+- Dynamic registration options
 - Commands for building gem documentation
 
 ## 0.16.0 - April 16, 2018

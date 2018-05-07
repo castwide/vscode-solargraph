@@ -70,11 +70,18 @@ You can make sure your gems are available with the commands `Build new gem docum
 
 ### Diagnostics (Linting)
 
-Solargraph uses RuboCop for diagnostics. To enable it, set the `solargraph.diagnostics` configuration to `rubocop`. You may also need to `gem install rubocop`.
+To enable diagnostics, set the `solargraph.diagnostics` configuration to `true`.
+
+Solargraph uses RuboCop for diagnostics by default. If your project has a .solargraph.yml file, you can configure the diagnostics in its `reporters` section. Example:
+
+    ```
+    reporters:
+    - rubocop
+    ```
+
+See [Solargraph Tips](http://solargraph.org/tips) for more information about the .solargraph.yml file.
 
 Use a .rubocop.yml file in your project's root folder to customize the linting rules.
-
-To disable diagnostics, change the `solargraph.diagnostics` setting to `false`.
 
 ### Restarting Solargraph
 
