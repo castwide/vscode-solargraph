@@ -1,3 +1,6 @@
+## 0.17.2 - May 17, 2018
+- Improved messages for solargraph executable failures
+
 ## 0.17.1 - May 8, 2018
 - Use original gem version check
 

@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "Code completion and inline documentation for Ruby",
     "icon": "solargraph.png",
-    "version": "0.17.1",
+    "version": "0.17.2",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -17,7 +17,7 @@
     },
     "license": "MIT",
     "categories": [
-        "Languages",
+        "Programming Languages",
         "Linters",
         "Formatters"
     ],
@@ -59,36 +59,64 @@
                     "type": "boolean",
                     "description": "Automatically check if a new version of the Solargraph gem is available.",
                     "default": true,
-                    "enum": [true, false]
+                    "enum": [
+                        true,
+                        false
+                    ]
                 },
                 "solargraph.completion": {
-                    "type": ["boolean"],
+                    "type": [
+                        "boolean"
+                    ],
                     "description": "Enable completion",
                     "default": true,
-                    "enum": [true, false]
+                    "enum": [
+                        true,
+                        false
+                    ]
                 },
                 "solargraph.hover": {
-                    "type": ["boolean"],
+                    "type": [
+                        "boolean"
+                    ],
                     "description": "Enable hover",
                     "default": true,
-                    "enum": [true, false]
+                    "enum": [
+                        true,
+                        false
+                    ]
                 },
                 "solargraph.diagnostics": {
-                    "type": ["boolean"],
+                    "type": [
+                        "boolean"
+                    ],
                     "description": "Enable diagnostics",
                     "default": false,
-                    "enum": [true, false]
+                    "enum": [
+                        true,
+                        false
+                    ]
                 },
                 "solargraph.autoformat": {
-                    "type": ["boolean"],
+                    "type": [
+                        "boolean"
+                    ],
                     "description": "Enable automatic formatting while typing (WARNING: experimental)",
                     "default": false,
-                    "enum": [true, false]
+                    "enum": [
+                        true,
+                        false
+                    ]
                 },
                 "solargraph.formatting": {
-                    "type": ["boolean"],
+                    "type": [
+                        "boolean"
+                    ],
                     "description": "Enable document formatting",
-                    "enum": [true, false],
+                    "enum": [
+                        true,
+                        false
+                    ],
                     "default": false
                 }
             }
@@ -154,7 +182,7 @@
     },
     "dependencies": {
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.7.2",
+        "solargraph-utils": "^0.7.3",
         "vscode-languageclient": "^4.0.0",
         "vscode-languageserver": "^4.0.0"
     }
