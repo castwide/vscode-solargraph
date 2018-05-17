@@ -182,6 +182,19 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableRebuildAllGemDocs);
 
+	// Solargraph configuration command
+	var disposableSolargraphConfig = vscode.commands.registerCommand('solargraph.config', () => {
+		var child = solargraph.commands.solargraphCommand(['config'], solargraphConfiguration);
+		child.on('exit', (code) => {
+			if (code == 0) {
+				vscode.window.showInformationMessage('Created default .solargraph.yml file.');
+			} else {
+				vscode.window.showErrorMessage('Error creating .solargraph.yml file.');
+			}
+		});
+	});
+	context.subscriptions.push(disposableSolargraphConfig);
+	
 	startLanguageServer();
 
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);

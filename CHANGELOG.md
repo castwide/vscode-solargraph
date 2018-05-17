@@ -1,3 +1,6 @@
+## 0.17.3 - May 18, 2018
+- Missing solargraph.config command
+
 ## 0.17.2 - May 17, 2018
 - Improved messages for solargraph executable failures
 
