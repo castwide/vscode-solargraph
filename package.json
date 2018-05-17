@@ -34,7 +34,8 @@
     "activationEvents": [
         "onLanguage:ruby",
         "onCommand:solargraph.search",
-        "onCommand:solargraph.restart"
+        "onCommand:solargraph.restart",
+        "onCommand:solargraph.config"
     ],
     "contributes": {
         "configuration": {
