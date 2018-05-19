@@ -205,6 +205,12 @@ export function activate(context: ExtensionContext) {
 				vscode.window.showErrorMessage('Error downloading core documentation.');
 			}
 		});
+		// TODO: LSP version of downloadCore
+		// if (languageClient) {
+		// 	languageClient.sendNotification('$/solargraph/downloadCore');
+		// } else {
+		// 	vscode.window.showInformationMessage('Solargraph is still starting. Please try again in a moment.');
+		// }
 	});
 	context.subscriptions.push(disposableSolargraphDownloadCore);
 
