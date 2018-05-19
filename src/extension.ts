@@ -195,6 +195,19 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableSolargraphConfig);
 	
+	// Solargraph download core command
+	var disposableSolargraphDownloadCore = vscode.commands.registerCommand('solargraph.downloadCore', () => {
+		var child = solargraph.commands.solargraphCommand(['download-core'], solargraphConfiguration);
+		child.on('exit', (code) => {
+			if (code == 0) {
+				vscode.window.showInformationMessage('Core documentation downloaded.');
+			} else {
+				vscode.window.showErrorMessage('Error downloading core documentation.');
+			}
+		});
+	});
+	context.subscriptions.push(disposableSolargraphDownloadCore);
+
 	startLanguageServer();
 
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);

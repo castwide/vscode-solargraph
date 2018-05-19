@@ -1,3 +1,6 @@
+## 0.17.4
+- solargraph.downloadCore command
+
 ## 0.17.3 - May 18, 2018
 - Missing solargraph.config command
 
