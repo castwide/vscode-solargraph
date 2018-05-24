@@ -42,7 +42,7 @@ export function activate(context: ExtensionContext) {
 			}
 		}).catch((err) => {
 			console.log('Failed to start language server: ' + JSON.stringify(err));
-			if (err.code == 'ENOENT') {
+			if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
 				vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
 					if (item == 'Install Now') {
 						solargraph.installGem(solargraphConfiguration).then(() => {
