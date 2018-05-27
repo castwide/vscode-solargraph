@@ -1,4 +1,4 @@
-## 0.17.4
+## 0.17.4 - May 29, 2018
 - solargraph.downloadCore command
 - Updated README
 
