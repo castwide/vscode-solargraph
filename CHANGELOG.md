@@ -1,3 +1,7 @@
+## 0.17.5
+- Package updates
+- Error message for gems missing the `socket` command
+
 ## 0.17.4 - May 29, 2018
 - solargraph.downloadCore command
 - Updated README

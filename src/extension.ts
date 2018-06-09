@@ -53,6 +53,8 @@ export function activate(context: ExtensionContext) {
 						});
 					}
 				});
+			} else if (err.toString().includes('Could not find command "socket"')) {
+				vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
 			} else {
 				vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
 			}
