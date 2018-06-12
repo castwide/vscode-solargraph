@@ -120,6 +120,50 @@
                         false
                     ],
                     "default": false
+                },
+                "solargraph.symbols": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "description": "Enable symbols",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "default": true
+                },
+                "solargraph.definitions": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "description": "Enable definitions (go to, etc.)",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "default": true
+                },
+                "solargraph.rename": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "description": "Enable symbol renaming",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "default": true
+                },
+                "solargraph.references": {
+                    "type": [
+                        "boolean"
+                    ],
+                    "description": "Enable finding references",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "default": true
                 }
             }
         },
