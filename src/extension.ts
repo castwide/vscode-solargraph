@@ -32,33 +32,38 @@ export function activate(context: ExtensionContext) {
 	let disposableClient: Disposable;
 
 	var startLanguageServer = function() {
-		socketProvider.start().then(() => {
-			languageClient = makeLanguageClient(socketProvider);
-			solargraphDocumentProvider.setLanguageClient(languageClient);
-			disposableClient = languageClient.start();
-			context.subscriptions.push(disposableClient);
-			if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-				checkGemVersion();
-			}
-		}).catch((err) => {
-			console.log('Failed to start language server: ' + JSON.stringify(err));
-			if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
-				vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-					if (item == 'Install Now') {
-						solargraph.installGem(solargraphConfiguration).then(() => {
-							vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-							startLanguageServer();
-						}).catch(() => {
-							vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-						});
-					}
-				});
-			} else if (err.toString().includes('Could not find command "socket"')) {
-				vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
-			} else {
-				vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
-			}
-		});	
+		// socketProvider.start().then(() => {
+		// 	languageClient = makeLanguageClient(socketProvider);
+		// 	solargraphDocumentProvider.setLanguageClient(languageClient);
+		// 	disposableClient = languageClient.start();
+		// 	context.subscriptions.push(disposableClient);
+		// 	if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+		// 		checkGemVersion();
+		// 	}
+		// }).catch((err) => {
+		// 	console.log('Failed to start language server: ' + JSON.stringify(err));
+		// 	if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
+		// 		vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+		// 			if (item == 'Install Now') {
+		// 				solargraph.installGem(solargraphConfiguration).then(() => {
+		// 					vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+		// 					startLanguageServer();
+		// 				}).catch(() => {
+		// 					vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+		// 				});
+		// 			}
+		// 		});
+		// 	} else if (err.toString().includes('Could not find command "socket"')) {
+		// 		vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
+		// 	} else {
+		// 		vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
+		// 	}
+		// });
+		languageClient = makeLanguageClient(solargraphConfiguration);
+		solargraphDocumentProvider.setLanguageClient(languageClient);
+		disposableClient = languageClient.start();
+		context.subscriptions.push(disposableClient);
+		console.log('Done starting?');
 	}
 
 	// https://css-tricks.com/snippets/javascript/get-url-variables/
@@ -72,7 +77,7 @@ export function activate(context: ExtensionContext) {
 
 	var restartLanguageServer = function (): Promise<void> {
 		return new Promise((resolve) => {
-			if (languageClient) {
+			/*if (languageClient) {
 				languageClient.stop().then(() => {
 					disposableClient.dispose();
 					socketProvider.restart().then(() => {
@@ -86,7 +91,8 @@ export function activate(context: ExtensionContext) {
 			} else {
 				startLanguageServer();
 				resolve();
-			}
+			}*/
+			resolve();
 		});
 	}
 

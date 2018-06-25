@@ -3,8 +3,12 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
+import { ChildProcess } from 'child_process';
 
-export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
+//export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
+export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
+	console.log('Making a language client');
+
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -62,15 +66,30 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 		}
 	}
 
+	// let serverOptions: ServerOptions = () => {
+	// 	return new Promise((resolve) => {
+	// 		let socket: net.Socket = net.createConnection(socketProvider.port);
+	// 		resolve({
+	// 			reader: socket,
+	// 			writer: socket
+	// 		});
+	// 	});
+	// };
+
 	let serverOptions: ServerOptions = () => {
-		return new Promise((resolve) => {
-			let socket: net.Socket = net.createConnection(socketProvider.port);
-			resolve({
-				reader: socket,
-				writer: socket
+		return new Promise<ChildProcess>((resolve, reject) => {
+			let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
+			let started = false;
+			child.stderr.on('data', (data: Buffer) => {
+				console.log(data.toString());
+				if (!started) {
+					console.log("It's happening!")
+					started = true;
+					resolve(child);
+				}
 			});
 		});
-	};
+	}
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
 	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
