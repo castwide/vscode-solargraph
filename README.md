@@ -140,6 +140,10 @@ This extension contributes the following settings:
 * `solargraph.hover`: Enable tips on hover.
 * `solargraph.autoformat`: Enable automatic formatting while typing.
 * `solargraph.formatting`: Enable document formatting. The gem currently uses RuboCop for formatting.
+* `solargraph.symbols`: Enable search for document and workspace symbols.
+* `solargraph.definitions`: Enable go-to-definition.
+* `solargraph.rename`: Enable symbol renaming.
+* `solargraph.references`: Enable finding references.
 
 ## Known Issues
 
