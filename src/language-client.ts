@@ -52,7 +52,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 
 	// Options to control the language client
 	let clientOptions: LanguageClientOptions = {
-		documentSelector: [{scheme: 'file', language: 'ruby'}],
+		documentSelector: [{scheme: 'file', language: 'ruby'}, {scheme: 'file', pattern: '**/Gemfile'}],
 		synchronize: {
 			// Synchronize the setting section 'solargraph' to the server
 			configurationSection: 'solargraph',

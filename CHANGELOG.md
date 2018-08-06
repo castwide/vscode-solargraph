@@ -1,4 +1,7 @@
-## 0.17.5
+## 0.17.6 - July 16, 2018
+- Include visibility in method document pages
+
+## 0.17.5 - July 9, 2018
 - Package updates
 - Error message for gems missing the `socket` command
 - Dynamic registration for symbols, definitions, rename, and references
