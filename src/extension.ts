@@ -63,7 +63,6 @@ export function activate(context: ExtensionContext) {
 		solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
 		context.subscriptions.push(disposableClient);
-		console.log('Done starting?');
 	}
 
 	// https://css-tricks.com/snippets/javascript/get-url-variables/

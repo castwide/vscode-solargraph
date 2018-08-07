@@ -7,8 +7,6 @@ import { ChildProcess } from 'child_process';
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
-	console.log('Making a language client');
-
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -83,7 +81,6 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			child.stderr.on('data', (data: Buffer) => {
 				console.log(data.toString());
 				if (!started) {
-					console.log("It's happening!")
 					started = true;
 					resolve(child);
 				}
