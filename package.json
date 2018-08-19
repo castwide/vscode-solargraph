@@ -228,8 +228,8 @@
     },
     "dependencies": {
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.7.3",
-        "vscode-languageclient": "^4.0.0",
+        "solargraph-utils": "^0.7.4",
+        "vscode-languageclient": "^5.0.1",
         "vscode-languageserver": "^4.0.0"
     }
 }
