@@ -54,9 +54,9 @@
                 },
                 "solargraph.externalServer": {
                     "type": "object",
-                    "description": "The address and port to use for external transports.",
+                    "description": "The host and port to use for external transports. (Ignored for stdio and socket transports.)",
                     "properties": {
-                        "address": {
+                        "host": {
                             "type": "string",
                             "default": "localhost"
                         },
