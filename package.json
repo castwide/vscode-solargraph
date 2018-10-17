@@ -44,9 +44,8 @@
             "properties": {
                 "solargraph.transport": {
                     "type": "string",
-                    "default": "stdio",
+                    "default": "socket",
                     "enum": [
-                        "stdio",
                         "socket",
                         "external"
                     ],
