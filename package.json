@@ -29,7 +29,7 @@
         "language server"
     ],
     "engines": {
-        "vscode": "^1.18.0"
+        "vscode": "^1.25.0"
     },
     "activationEvents": [
         "onLanguage:ruby",
