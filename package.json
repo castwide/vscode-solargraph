@@ -42,6 +42,30 @@
         "configuration": {
             "title": "Solargraph settings for Ruby",
             "properties": {
+                "solargraph.transport": {
+                    "type": "string",
+                    "default": "stdio",
+                    "enum": [
+                        "stdio",
+                        "socket",
+                        "external"
+                    ],
+                    "description": "The type of transport to use."
+                },
+                "solargraph.externalServer": {
+                    "type": "object",
+                    "description": "The address and port to use for external transports.",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "default": "localhost"
+                        },
+                        "port": {
+                            "type": "integer",
+                            "default": 7658
+                        }
+                    }
+                },
                 "solargraph.commandPath": {
                     "type": "string",
                     "default": "solargraph",
