@@ -4,6 +4,7 @@ import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
 import { ChildProcess } from 'child_process';
+import * as cp from 'child_process';
 import { resolve } from 'url';
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
@@ -69,7 +70,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		var transport = vscode.workspace.getConfiguration('solargraph').transport;
 		if (transport == 'stdio') {
 			return () => {
-				return new Promise<ChildProcess>((resolve) => {
+				return new Promise((resolve) => {
 					let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
 					// let started = false;
 					// child.stderr.on('data', (data: Buffer) => {
@@ -79,8 +80,8 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 					// 		resolve(child);
 					// 	}
 					// });
-					// child.on('error', (err: Error) => {
-					// 	reject(err);
+					// child.on('exit', (res, txt) => {
+					// 	console.log('Exited with ' + res + ' ' + txt);
 					// });
 					resolve(child);
 				});
