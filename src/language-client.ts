@@ -4,6 +4,7 @@ import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
 import { ChildProcess } from 'child_process';
+import { resolve } from 'url';
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
@@ -64,29 +65,46 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		}
 	}
 
-	// let serverOptions: ServerOptions = () => {
-	// 	return new Promise((resolve) => {
-	// 		let socket: net.Socket = net.createConnection(socketProvider.port);
-	// 		resolve({
-	// 			reader: socket,
-	// 			writer: socket
-	// 		});
-	// 	});
-	// };
-
-	let serverOptions: ServerOptions = () => {
-		return new Promise<ChildProcess>((resolve, reject) => {
-			let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
-			let started = false;
-			child.stderr.on('data', (data: Buffer) => {
-				console.log(data.toString());
-				if (!started) {
-					started = true;
-					resolve(child);
-				}
-			});
-		});
+	var selectClient = function(): ServerOptions {
+		var transport = vscode.workspace.getConfiguration('solargraph').transport;
+		if (transport == 'stdio') {
+			return () => {
+				return new Promise<ChildProcess>((resolve, reject) => {
+					let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
+					let started = false;
+					child.stderr.on('data', (data: Buffer) => {
+						console.log(data.toString());
+						if (!started) {
+							started = true;
+							resolve(child);
+						}
+					});
+				});
+			}
+		} else if (transport == 'socket') {
+			return () => {
+				return new Promise((resolve) => {
+					let socket: net.Socket = net.createConnection(socketProvider.port);
+					resolve({
+						reader: socket,
+						writer: socket
+					});
+				});
+			};
+		} else {
+			return () => {
+				return new Promise((resolve) => {
+					let socket: net.Socket = net.createConnection({host: vscode.workspace.getConfiguration('solargraph').externalServer.address, port: vscode.workspace.getConfiguration('solargraph').externalServer.port});
+					resolve({
+						reader: socket,
+						writer: socket
+					});
+				});
+			}
+		}
 	}
+
+	let serverOptions: ServerOptions = selectClient();
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
 	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
