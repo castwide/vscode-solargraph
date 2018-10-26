@@ -1,3 +1,7 @@
+## 0.18.0
+- Package updates
+- Status bar notifications for gem documentation (gem support pending)
+
 ## 0.17.6 - July 16, 2018
 - Include visibility in method document pages
 

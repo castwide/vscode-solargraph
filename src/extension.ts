@@ -174,13 +174,28 @@ export function activate(context: ExtensionContext) {
 	
 	// Build gem documentation command
 	var disposableBuildGemDocs = vscode.commands.registerCommand('solargraph.buildGemDocs', () => {
-		languageClient.sendNotification('$/solargraph/documentGems', { rebuild: false });
+		let prepareStatus = vscode.window.setStatusBarMessage('Building new gem documentation...');
+		languageClient.sendRequest('$/solargraph/documentGems', { rebuild: false }).then((response) => {
+			prepareStatus.dispose();
+			if (response['status'] == 'ok') {
+				vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
+			} else {
+				vscode.window.setStatusBarMessage('An error occurred building gem documentation.', 3000);
+			}
+		});
 	});
 	context.subscriptions.push(disposableBuildGemDocs);
 
 	// Rebuild gems documentation command
 	var disposableRebuildAllGemDocs = vscode.commands.registerCommand('solargraph.rebuildAllGemDocs', () => {
-		languageClient.sendNotification('$/solargraph/documentGems', { rebuild: true });
+		let prepareStatus = vscode.window.setStatusBarMessage('Rebuilding all gem documentation...');
+		languageClient.sendRequest('$/solargraph/documentGems', { rebuild: true }).then((response) => {
+			if (response['status'] == 'ok') {
+				vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
+			} else {
+				vscode.window.setStatusBarMessage('An error occurred rebuilding gem documentation.', 3000);
+			}
+		});
 	});
 	context.subscriptions.push(disposableRebuildAllGemDocs);
 
