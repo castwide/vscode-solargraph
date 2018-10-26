@@ -72,17 +72,12 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			return () => {
 				return new Promise((resolve) => {
 					let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
-					// let started = false;
-					// child.stderr.on('data', (data: Buffer) => {
-					// 	console.log(data.toString());
-					// 	if (!started) {
-					// 		started = true;
-					// 		resolve(child);
-					// 	}
-					// });
-					// child.on('exit', (res, txt) => {
-					// 	console.log('Exited with ' + res + ' ' + txt);
-					// });
+					child.stderr.on('data', (data: Buffer) => {
+						console.log(data.toString());
+					});
+					child.on('exit', (code, signal) => {
+						console.log('Solargraph exited with code', code, signal);
+					});
 					resolve(child);
 				});
 			}
