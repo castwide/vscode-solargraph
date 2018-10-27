@@ -226,6 +226,11 @@
                 "command": "solargraph.rebuildAllGemDocs",
                 "title": "Rebuild all gem documentation",
                 "category": "Solargraph"
+            },
+            {
+                "command": "solargraph.environment",
+                "title": "Get environment info",
+                "category": "Solargraph"
             }
         ],
         "keybindings": [
