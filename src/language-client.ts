@@ -3,8 +3,12 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
+import { ChildProcess } from 'child_process';
+import * as cp from 'child_process';
+import { resolve } from 'url';
 
-export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
+//export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
+export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -62,15 +66,67 @@ export function makeLanguageClient(socketProvider: solargraph.SocketProvider): L
 		}
 	}
 
-	let serverOptions: ServerOptions = () => {
-		return new Promise((resolve) => {
-			let socket: net.Socket = net.createConnection(socketProvider.port);
-			resolve({
-				reader: socket,
-				writer: socket
-			});
-		});
-	};
+	var selectClient = function(): ServerOptions {
+		var transport = vscode.workspace.getConfiguration('solargraph').transport;
+		if (transport == 'stdio') {
+			return () => {
+				return new Promise((resolve) => {
+					let child = solargraph.commands.solargraphCommand(['stdio'], configuration);
+					child.stderr.on('data', (data: Buffer) => {
+						console.log(data.toString());
+					});
+					child.on('exit', (code, signal) => {
+						console.log('Solargraph exited with code', code, signal);
+					});
+					resolve(child);
+				});
+			}
+		} else if (transport == 'socket') {
+			return () => {
+				return new Promise((resolve) => {
+					let socketProvider: solargraph.SocketProvider = new solargraph.SocketProvider(configuration);
+					socketProvider.start().then(() => {
+						let socket: net.Socket = net.createConnection(socketProvider.port);
+						resolve({
+							reader: socket,
+							writer: socket
+						});	
+					}).catch((err) => {
+						// TODO Handle error
+						// console.log('Failed to start language server: ' + JSON.stringify(err));
+						// if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
+						// 	vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+						// 		if (item == 'Install Now') {
+						// 			solargraph.installGem(configuration).then(() => {
+						// 				vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+						// 				startLanguageServer();
+						// 			}).catch(() => {
+						// 				vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+						// 			});
+						// 		}
+						// 	});
+						// } else if (err.toString().includes('Could not find command "socket"')) {
+						// 	vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
+						// } else {
+						// 	vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
+						// }			
+					});
+				});
+			};
+		} else {
+			return () => {
+				return new Promise((resolve) => {
+					let socket: net.Socket = net.createConnection({host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: vscode.workspace.getConfiguration('solargraph').externalServer.port});
+					resolve({
+						reader: socket,
+						writer: socket
+					});
+				});
+			}
+		}
+	}
+
+	let serverOptions: ServerOptions = selectClient();
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
 	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
