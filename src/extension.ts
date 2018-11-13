@@ -1,11 +1,9 @@
 'use strict';
 
-import * as path from 'path';
-
-import { workspace, ExtensionContext, Hover, MarkdownString, ProviderResult } from 'vscode';
+import { ExtensionContext } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable } from 'vscode-languageclient';
+import { LanguageClient, Disposable } from 'vscode-languageclient';
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import { makeLanguageClient } from './language-client';
 
