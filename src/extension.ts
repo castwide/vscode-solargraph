@@ -9,8 +9,6 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Mi
 import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import { makeLanguageClient } from './language-client';
 
-let socketProvider: solargraph.SocketProvider;
-
 export function activate(context: ExtensionContext) {
 
 	let applyConfiguration = function(config:solargraph.Configuration) {
@@ -24,7 +22,6 @@ export function activate(context: ExtensionContext) {
 	}
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
-	socketProvider = new solargraph.SocketProvider(solargraphConfiguration);
 	
 	let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
@@ -32,34 +29,12 @@ export function activate(context: ExtensionContext) {
 	let disposableClient: Disposable;
 
 	var startLanguageServer = function() {
-		// socketProvider.start().then(() => {
-		// 	languageClient = makeLanguageClient(socketProvider);
-		// 	solargraphDocumentProvider.setLanguageClient(languageClient);
-		// 	disposableClient = languageClient.start();
-		// 	context.subscriptions.push(disposableClient);
-		// 	if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-		// 		checkGemVersion();
-		// 	}
-		// }).catch((err) => {
-		// 	console.log('Failed to start language server: ' + JSON.stringify(err));
-		// 	if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
-		// 		vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-		// 			if (item == 'Install Now') {
-		// 				solargraph.installGem(solargraphConfiguration).then(() => {
-		// 					vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-		// 					startLanguageServer();
-		// 				}).catch(() => {
-		// 					vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-		// 				});
-		// 			}
-		// 		});
-		// 	} else if (err.toString().includes('Could not find command "socket"')) {
-		// 		vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
-		// 	} else {
-		// 		vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
-		// 	}
-		// });
 		languageClient = makeLanguageClient(solargraphConfiguration);
+		languageClient.onReady().then(() => {
+			languageClient.onNotification('$/solargraph/restart', (params) => {
+				console.log('I should restart!');
+			});	
+		});
 		solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
 		context.subscriptions.push(disposableClient);
@@ -76,54 +51,17 @@ export function activate(context: ExtensionContext) {
 
 	var restartLanguageServer = function (): Promise<void> {
 		return new Promise((resolve) => {
-			/*if (languageClient) {
+			if (languageClient) {
 				languageClient.stop().then(() => {
 					disposableClient.dispose();
-					socketProvider.restart().then(() => {
-						languageClient = makeLanguageClient(socketProvider);
-						solargraphDocumentProvider.setLanguageClient(languageClient);
-						disposableClient = languageClient.start();
-						context.subscriptions.push(disposableClient);
-						resolve();
-					});
+					startLanguageServer();
+					resolve();
 				});
 			} else {
 				startLanguageServer();
 				resolve();
-			}*/
-			resolve();
-		});
-	}
-
-	function checkGemVersion() {
-		console.log('Checking gem version');
-		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
-			if (result) {
-				console.log('Solargraph gem version is current');
-			} else {
-				notifyGemUpdate();	
 			}
-		}).catch(() => {
-			console.log('An error occurred checking the Solargraph gem version.');
 		});
-	}
-	
-	function notifyGemUpdate() {
-		if (vscode.workspace.getConfiguration('solargraph').useBundler && vscode.workspace.rootPath) {
-			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Update your Gemfile to install it.');
-		} else {
-			vscode.window.showInformationMessage('A new version of the Solargraph gem is available. Run `gem update solargraph` to install it.', 'Update Now').then((item) => {
-				if (item == 'Update Now') {
-					solargraph.updateGem(solargraphConfiguration).then(() => {
-						restartLanguageServer().then(() => {
-							vscode.window.showInformationMessage('Successfully updated the Solargraph gem.');
-						});
-					}).catch(() => {
-						vscode.window.showErrorMessage('Failed to update the Solargraph gem.');
-					});
-				}
-			});
-		}
 	}
 
 	// Open command (used internally for browsing documentation pages)
@@ -164,18 +102,9 @@ export function activate(context: ExtensionContext) {
 
 	// Check gem version command
 	var disposableCheckGemVersion = vscode.commands.registerCommand('solargraph.checkGemVersion', () => {
-		// languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
-		solargraph.verifyGemIsCurrent(solargraphConfiguration).then((result) => {
-			if (result) {
-				vscode.window.showInformationMessage('The Solargraph gem is up to date.');
-			} else {
-				notifyGemUpdate();	
-			}
-		}).catch(() => {
-			console.log('An error occurred checking the Solargraph gem version.');
-		});
+		languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
 	});
-	context.subscriptions.push(disposableSearch);
+	context.subscriptions.push(disposableCheckGemVersion);
 	
 	// Build gem documentation command
 	var disposableBuildGemDocs = vscode.commands.registerCommand('solargraph.buildGemDocs', () => {
@@ -219,28 +148,24 @@ export function activate(context: ExtensionContext) {
 	
 	// Solargraph download core command
 	var disposableSolargraphDownloadCore = vscode.commands.registerCommand('solargraph.downloadCore', () => {
-		var child = solargraph.commands.solargraphCommand(['download-core'], solargraphConfiguration);
-		child.on('exit', (code) => {
-			if (code == 0) {
-				vscode.window.showInformationMessage('Core documentation downloaded.');
-			} else {
-				vscode.window.showErrorMessage('Error downloading core documentation.');
-			}
-		});
-		// TODO: LSP version of downloadCore
-		// if (languageClient) {
-		// 	languageClient.sendNotification('$/solargraph/downloadCore');
-		// } else {
-		// 	vscode.window.showInformationMessage('Solargraph is still starting. Please try again in a moment.');
-		// }
+		if (languageClient) {
+			languageClient.sendNotification('$/solargraph/downloadCore');
+		} else {
+			vscode.window.showInformationMessage('Solargraph is still starting. Please try again in a moment.');
+		}
 	});
 	context.subscriptions.push(disposableSolargraphDownloadCore);
 
 	startLanguageServer();
+	languageClient.onReady().then(() => {
+		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+			languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
+		}
+	});
 
 	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
 }
 
 export function deactivate() {
-	socketProvider.stop();
+	// TODO: Any cleanup necessary?
 }
