@@ -64,6 +64,10 @@
                             "type": "integer",
                             "default": 7658
                         }
+                    },
+                    "default": {
+                        "host": "localhost",
+                        "port": 7658
                     }
                 },
                 "solargraph.commandPath": {
