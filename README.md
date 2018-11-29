@@ -144,6 +144,30 @@ This extension contributes the following settings:
 * `solargraph.definitions`: Enable go-to-definition.
 * `solargraph.rename`: Enable symbol renaming.
 * `solargraph.references`: Enable finding references.
+* `solargraph.transport`: socket (default), stdio, or external. See [Transports](#transports) for more information.
+* `solargraph.externalServer`: The host and port for external transports. See [Transports](#transports) for more information.
+
+## Transport Options
+
+Extension version 0.18.0 introduces the `solargraph.transport` setting with the following options:
+
+* `socket`: Run a TCP server. This is the default option.
+* `stdio`: Run a STDIO server.
+* `external`: Connect to an external server instead of starting a new one.
+
+Most users should use the default `socket` option or switch to `stdio` in case of network issues.
+
+The `external` option is intended for cases where the project is hosted in a different environment from the editor,
+such as a docker container or a remote server. Users can opt to run a socket server in the remote environment and connect
+to it via TCP. Example configuration:
+
+    ```
+    "socket.transport": "external",
+    "socket.externalServer": {
+        "host": "localhost",
+        "port": 7658
+    }
+    ```
 
 ## Known Issues
 
