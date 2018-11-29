@@ -66,7 +66,14 @@ export function activate(context: ExtensionContext) {
 	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
 		var uri = vscode.Uri.parse(uriString);
 		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+		// TODO: Implement webviews
+		//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+		let panel = vscode.window.createWebviewPanel(
+			'solargraph',
+			label,
+			vscode.ViewColumn.Two,
+			{}
+		);
 	});
 	context.subscriptions.push(disposableOpen);
 
@@ -74,7 +81,14 @@ export function activate(context: ExtensionContext) {
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
 		var uri = vscode.Uri.parse(uriString);
 		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-		vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+		// TODO: Implement webviews
+		//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+		let panel = vscode.window.createWebviewPanel(
+			'solargraph',
+			label,
+			vscode.ViewColumn.Two,
+			{}
+		);
 	});
 	context.subscriptions.push(disposableOpenUrl);
 
