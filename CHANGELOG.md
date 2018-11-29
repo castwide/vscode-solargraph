@@ -1,6 +1,8 @@
 ## 0.18.0
 - Package updates
 - Status bar notifications for gem documentation
+- Transport and externalServer configuration
+- Updated solargraph-utils
 
 ## 0.17.6 - July 16, 2018
 - Include visibility in method document pages

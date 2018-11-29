@@ -252,11 +252,11 @@
         "@types/node": "^6.0.40",
         "mocha": "^4.1.0",
         "typescript": "^2.0.3",
-        "vscode": "^1.1.21"
+        "vscode": "^1.1.22"
     },
     "dependencies": {
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.7.5",
+        "solargraph-utils": "^0.8.0",
         "vscode-languageclient": "^5.0.1",
         "vscode-languageserver": "^4.0.0"
     }
