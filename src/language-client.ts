@@ -3,9 +3,6 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
-import { ChildProcess } from 'child_process';
-import * as cp from 'child_process';
-import { resolve } from 'url';
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
