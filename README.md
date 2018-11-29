@@ -75,10 +75,8 @@ To enable diagnostics, set the `solargraph.diagnostics` configuration to `true`.
 
 Solargraph uses RuboCop for diagnostics by default. If your project has a .solargraph.yml file, you can configure the diagnostics in its `reporters` section. Example:
 
-    ```
     reporters:
     - rubocop
-    ```
 
 See [Solargraph Tips](http://solargraph.org/tips) for more information about the .solargraph.yml file.
 
@@ -161,13 +159,11 @@ The `external` option is intended for cases where the project is hosted in a dif
 such as a docker container or a remote server. Users can opt to run a socket server in the remote environment and connect
 to it via TCP. Example configuration:
 
-    ```
     "socket.transport": "external",
     "socket.externalServer": {
         "host": "localhost",
         "port": 7658
     }
-    ```
 
 ## Known Issues
 
