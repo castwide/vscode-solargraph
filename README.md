@@ -39,7 +39,7 @@ Solargraph provides a command to access searchable documentation directly from t
 * Hit ctrl+shift+r (or hit ctrl+shift+p and find `Search Ruby Documentation`).
 * Enter a keyword or path to search; e.g., `String` or `Array#join`.
 
-The documentation includes the Ruby core, bundled gems, and the current workspace. Documentation from the workspace is automatically updated when you save the corresponding file.
+The documentation includes the Ruby core, required gems, and the current workspace. Documentation from the workspace is automatically updated when you save the corresponding file.
 
 You can also hover over variables, constants, and method calls to see popup information with links to more documentation.
 
@@ -68,6 +68,18 @@ To go to a method or variable's definition, right-click and select "Go to Defini
 Solargraph is capable of providing code completion and documentation for gems. When your code uses `require` to include a gem, its classes and methods become available in completion and intellisense.
 
 You can make sure your gems are available with the commands `Build new gem documentation` or `Rebuild all gem documentation` in the command palette.
+
+### Solargraph and Bundler
+
+If your project uses Bundler, the most comprehensive way to use your bundled gems is to bundle Solargraph.
+
+In the Gemfile:
+
+    gem 'solargraph', group: :development
+
+Run `bundle install` and use `bundle exec yard gems` to generate the documentation. This process documents cached or vendored gems, or even gems that are installed from a local path.
+
+In order to access intellisense for bundled gems, you'll need to start the language server with Bundler by setting the `solargraph.useBundler` option to `true`.
 
 ### Diagnostics (Linting)
 
