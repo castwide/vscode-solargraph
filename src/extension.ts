@@ -122,6 +122,7 @@ export function activate(context: ExtensionContext) {
 	var disposableRebuildAllGemDocs = vscode.commands.registerCommand('solargraph.rebuildAllGemDocs', () => {
 		let prepareStatus = vscode.window.setStatusBarMessage('Rebuilding all gem documentation...');
 		languageClient.sendRequest('$/solargraph/documentGems', { rebuild: true }).then((response) => {
+			prepareStatus.dispose();
 			if (response['status'] == 'ok') {
 				vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
 			} else {

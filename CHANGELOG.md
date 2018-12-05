@@ -1,3 +1,6 @@
+## 0.18.1
+- Dispose "Rebuilding all gem documentation" status notification
+
 ## 0.18.0 - December 5, 2018
 - Package updates
 - Status bar notifications for gem documentation
