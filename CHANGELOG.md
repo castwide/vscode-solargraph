@@ -1,4 +1,4 @@
-## 0.18.0
+## 0.18.0 - December 5, 2018
 - Package updates
 - Status bar notifications for gem documentation
 - Transport and externalServer configuration
