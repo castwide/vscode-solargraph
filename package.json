@@ -192,6 +192,16 @@
                         false
                     ],
                     "default": true
+                },
+                "solargraph.logLevel": {
+                    "type": "string",
+                    "description": "Level of debug info to log. `warn` is least and `debug` is most.",
+                    "enum": [
+                        "warn",
+                        "info",
+                        "debug"
+                    ],
+                    "default": "warn"
                 }
             }
         },
