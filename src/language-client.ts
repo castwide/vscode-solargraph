@@ -54,7 +54,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			// Synchronize the setting section 'solargraph' to the server
 			configurationSection: 'solargraph',
 			// Notify the server about file changes to any file in the workspace
-			fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.rb|*.gemspec|Gemfile}')
 		},
 		middleware: middleware,
 		initializationOptions: {
