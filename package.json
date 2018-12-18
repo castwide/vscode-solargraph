@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "Code completion and inline documentation for Ruby",
     "icon": "solargraph.png",
-    "version": "0.18.0",
+    "version": "0.18.1",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -192,6 +192,21 @@
                         false
                     ],
                     "default": true
+                },
+                "solargraph.folding": {
+                    "type": "boolean",
+                    "description": "Enable folding ranges",
+                    "default": true
+                },
+                "solargraph.logLevel": {
+                    "type": "string",
+                    "description": "Level of debug info to log. `warn` is least and `debug` is most.",
+                    "enum": [
+                        "warn",
+                        "info",
+                        "debug"
+                    ],
+                    "default": "warn"
                 }
             }
         },
