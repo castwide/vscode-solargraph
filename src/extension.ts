@@ -4,7 +4,6 @@ import { ExtensionContext } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import { LanguageClient, Disposable } from 'vscode-languageclient';
-//import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
 
@@ -22,8 +21,6 @@ export function activate(context: ExtensionContext) {
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
 	
-	//let solargraphDocumentProvider = new SolargraphDocumentProvider();
-
 	let languageClient: LanguageClient;
 	let disposableClient: Disposable;
 	let webViewProvider: SolargraphWebviewProvider = new SolargraphWebviewProvider();
@@ -35,19 +32,9 @@ export function activate(context: ExtensionContext) {
 				console.log('I should restart!');
 			});
 		});
-		//solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
 		webViewProvider.setLanguageClient(languageClient);
 		context.subscriptions.push(disposableClient);
-	}
-
-	// https://css-tricks.com/snippets/javascript/get-url-variables/
-	var getQueryVariable = function (query, variable) {
-		var vars = query.split("&");
-		for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if (pair[0] == variable) { return pair[1]; }
-		}
 	}
 
 	var restartLanguageServer = function (): Promise<void> {
@@ -65,37 +52,10 @@ export function activate(context: ExtensionContext) {
 		});
 	}
 
-	// Open command (used internally for browsing documentation pages)
-	// var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
-	// 	var uri = vscode.Uri.parse(uriString);
-	// 	var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-	// 	// TODO: Implement webviews
-	// 	//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
-	// 	let panel = vscode.window.createWebviewPanel(
-	// 		'solargraph',
-	// 		label,
-	// 		vscode.ViewColumn.Two,
-	// 		{}
-	// 	);
-	// });
-	// context.subscriptions.push(disposableOpen);
-
 	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
-		// var uri = vscode.Uri.parse(uriString);
-		// var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-		// // TODO: Implement webviews
-		// //vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
-		// let panel = vscode.window.createWebviewPanel(
-		// 	'solargraph',
-		// 	label,
-		// 	vscode.ViewColumn.Two,
-		// 	{}
-		// );
-		// var converted = 'solargraph:' + uriString;
-		// console.log('Opening ' + converted);
 		var uri = vscode.Uri.parse(uriString);
-		webViewProvider.provideTextDocumentContent(uri);
+		webViewProvider.open(uri);
 	});
 	context.subscriptions.push(disposableOpenUrl);
 
@@ -111,14 +71,9 @@ export function activate(context: ExtensionContext) {
 	// Search command
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
-			// if (val) {
-			// 	var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
-			// 	vscode.commands.executeCommand('solargraph._openDocument', uri);
-			// }
 			if (val) {
 				var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
-				//webViewProvider.open(uri);
-				webViewProvider.provideTextDocumentContent(vscode.Uri.parse(uri));
+				webViewProvider.open(vscode.Uri.parse(uri));
 			}
 		});
 	});
@@ -187,8 +142,6 @@ export function activate(context: ExtensionContext) {
 			languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
 		}
 	});
-
-	vscode.workspace.registerTextDocumentContentProvider('solargraph', webViewProvider);
 }
 
 export function deactivate() {

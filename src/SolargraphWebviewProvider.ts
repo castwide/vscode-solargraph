@@ -2,19 +2,12 @@ import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
 import { timingSafeEqual } from 'crypto';
 
-export default class SolargraphWebviewProvider implements vscode.TextDocumentContentProvider {
-	private _onDidChange: vscode.EventEmitter<vscode.Uri>;
+export default class SolargraphWebviewProvider {
 	private languageClient: LanguageClient;
 	private views: { [uriString: string]: vscode.WebviewPanel };
 
 	constructor() {
-		this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
 		this.views = {};
-	}
-
-	public provideTextDocumentContent(uri: vscode.Uri): string {
-		console.log('Trying to provide ' + uri.toString());
-		return this.open(uri);
 	}
 
 	private parseQuery(query: string): any {
@@ -27,6 +20,29 @@ export default class SolargraphWebviewProvider implements vscode.TextDocumentCon
 		return result;
 	}
 
+	public open(uri: vscode.Uri): void {
+		var uriString = uri.toString();
+		var method = '$/solargraph' + uri.path;
+		var query = this.parseQuery(uri.query);
+		if (!this.views[uriString]) {
+			this.views[uriString] = vscode.window.createWebviewPanel('solargraph', uriString, vscode.ViewColumn.Two, {enableCommandUris: true});
+			this.views[uriString].onDidDispose(() => {
+				delete this.views[uriString];
+			});
+			this.views[uriString].webview.html = 'Loading...'
+		}
+		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
+			if (this.views[uriString]) {
+				var converted = this.convertDocumentation(result.content);
+				this.views[uriString].webview.html = converted;
+			}
+		});
+	}
+
+	public setLanguageClient(lc: LanguageClient) {
+		this.languageClient = lc;
+	}
+
 	private convertDocumentation(text: string): string {
 		var regexp = /\"solargraph\:(.*?)\"/g;
 		var match;
@@ -37,38 +53,4 @@ export default class SolargraphWebviewProvider implements vscode.TextDocumentCon
 		}
 		return adjusted;
 	};
-
-	private open(uri: vscode.Uri): string {
-		var uriString = uri.toString();
-		var method = '$/solargraph' + uri.path;
-		var query = this.parseQuery(uri.query);
-		if (!this.views[uriString]) {
-			this.views[uriString] = vscode.window.createWebviewPanel('solargraph', uriString, vscode.ViewColumn.Two, {enableCommandUris: true});
-			this.views[uriString].webview.onDidReceiveMessage(message => {
-				console.log('Received ' + message);
-			});
-			this.views[uriString].onDidDispose(() => {
-				delete this.views[uriString];
-			});
-			this.views[uriString].webview.html = 'Loading...'
-		}
-		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
-			if (this.views[uriString]) {
-				console.log(result.content);
-				var converted = this.convertDocumentation(result.content);
-				console.log(converted);
-				this.views[uriString].webview.html = converted;
-				this._onDidChange.fire(uri);
-			}
-		});
-		return this.views[uriString].webview.html;
-	}
-
-	get onDidChange() {
-		return this._onDidChange.event;
-	}
-
-	public setLanguageClient(lc: LanguageClient) {
-		this.languageClient = lc;
-	}
 }
