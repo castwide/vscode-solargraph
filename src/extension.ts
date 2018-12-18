@@ -4,8 +4,9 @@ import { ExtensionContext } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import { LanguageClient, Disposable } from 'vscode-languageclient';
-import SolargraphDocumentProvider from './SolargraphDocumentProvider';
+//import SolargraphDocumentProvider from './SolargraphDocumentProvider';
 import { makeLanguageClient } from './language-client';
+import SolargraphWebviewProvider from './SolargraphWebviewProvider';
 
 export function activate(context: ExtensionContext) {
 
@@ -21,20 +22,22 @@ export function activate(context: ExtensionContext) {
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
 	
-	let solargraphDocumentProvider = new SolargraphDocumentProvider();
+	//let solargraphDocumentProvider = new SolargraphDocumentProvider();
 
 	let languageClient: LanguageClient;
 	let disposableClient: Disposable;
+	let webViewProvider: SolargraphWebviewProvider = new SolargraphWebviewProvider();
 
-	var startLanguageServer = function() {
+	var startLanguageServer = function () {
 		languageClient = makeLanguageClient(solargraphConfiguration);
 		languageClient.onReady().then(() => {
 			languageClient.onNotification('$/solargraph/restart', (params) => {
 				console.log('I should restart!');
-			});	
+			});
 		});
-		solargraphDocumentProvider.setLanguageClient(languageClient);
+		//solargraphDocumentProvider.setLanguageClient(languageClient);
 		disposableClient = languageClient.start();
+		webViewProvider.setLanguageClient(languageClient);
 		context.subscriptions.push(disposableClient);
 	}
 
@@ -63,32 +66,36 @@ export function activate(context: ExtensionContext) {
 	}
 
 	// Open command (used internally for browsing documentation pages)
-	var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
-		var uri = vscode.Uri.parse(uriString);
-		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-		// TODO: Implement webviews
-		//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
-		let panel = vscode.window.createWebviewPanel(
-			'solargraph',
-			label,
-			vscode.ViewColumn.Two,
-			{}
-		);
-	});
-	context.subscriptions.push(disposableOpen);
+	// var disposableOpen = vscode.commands.registerCommand('solargraph._openDocument', (uriString: string) => {
+	// 	var uri = vscode.Uri.parse(uriString);
+	// 	var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
+	// 	// TODO: Implement webviews
+	// 	//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+	// 	let panel = vscode.window.createWebviewPanel(
+	// 		'solargraph',
+	// 		label,
+	// 		vscode.ViewColumn.Two,
+	// 		{}
+	// 	);
+	// });
+	// context.subscriptions.push(disposableOpen);
 
 	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
+		// var uri = vscode.Uri.parse(uriString);
+		// var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
+		// // TODO: Implement webviews
+		// //vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
+		// let panel = vscode.window.createWebviewPanel(
+		// 	'solargraph',
+		// 	label,
+		// 	vscode.ViewColumn.Two,
+		// 	{}
+		// );
+		// var converted = 'solargraph:' + uriString;
+		// console.log('Opening ' + converted);
 		var uri = vscode.Uri.parse(uriString);
-		var label = (uri.path == '/search' ? 'Search for ' : '') + getQueryVariable(uri.query, "query");
-		// TODO: Implement webviews
-		//vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, label);
-		let panel = vscode.window.createWebviewPanel(
-			'solargraph',
-			label,
-			vscode.ViewColumn.Two,
-			{}
-		);
+		webViewProvider.provideTextDocumentContent(uri);
 	});
 	context.subscriptions.push(disposableOpenUrl);
 
@@ -104,9 +111,14 @@ export function activate(context: ExtensionContext) {
 	// Search command
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
 		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
+			// if (val) {
+			// 	var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
+			// 	vscode.commands.executeCommand('solargraph._openDocument', uri);
+			// }
 			if (val) {
 				var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
-				vscode.commands.executeCommand('solargraph._openDocument', uri);
+				//webViewProvider.open(uri);
+				webViewProvider.provideTextDocumentContent(vscode.Uri.parse(uri));
 			}
 		});
 	});
@@ -176,7 +188,7 @@ export function activate(context: ExtensionContext) {
 		}
 	});
 
-	vscode.workspace.registerTextDocumentContentProvider('solargraph', solargraphDocumentProvider);
+	vscode.workspace.registerTextDocumentContentProvider('solargraph', webViewProvider);
 }
 
 export function deactivate() {

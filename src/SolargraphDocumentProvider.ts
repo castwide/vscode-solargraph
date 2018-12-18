@@ -14,7 +14,7 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 		this.docs = {};
 	}
 
-	public setLanguageClient(languageClient) {
+	public setLanguageClient(languageClient: LanguageClient) {
 		this.languageClient = languageClient;
 	}
 
@@ -59,7 +59,7 @@ export default class SolargraphDocumentProvider implements vscode.TextDocumentCo
 			var match;
 			var adjusted: string = text;
 			while (match = regexp.exec(text)) {
-				var commandUri = "\"command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + "\"";
+				var commandUri = "\"command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify(match[1])) + "\"";
 				adjusted = adjusted.replace(match[0], commandUri);
 			}
 			return adjusted;
