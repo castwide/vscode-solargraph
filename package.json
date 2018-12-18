@@ -193,6 +193,11 @@
                     ],
                     "default": true
                 },
+                "solargraph.folding": {
+                    "type": "boolean",
+                    "description": "Enable folding ranges",
+                    "default": true
+                },
                 "solargraph.logLevel": {
                     "type": "string",
                     "description": "Level of debug info to log. `warn` is least and `debug` is most.",

@@ -1,6 +1,8 @@
 ## 0.18.1
 - Dispose "Rebuilding all gem documentation" status notification
 - Language client watches a more specific file pattern
+- Log level configuration
+- Folding ranges configuration
 
 ## 0.18.0 - December 5, 2018
 - Package updates
