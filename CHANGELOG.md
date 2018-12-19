@@ -1,3 +1,15 @@
+## 0.18.1
+- Dispose "Rebuilding all gem documentation" status notification
+- Language client watches a more specific file pattern
+- Log level configuration
+- Folding ranges configuration
+
+## 0.18.0 - December 5, 2018
+- Package updates
+- Status bar notifications for gem documentation
+- Transport and externalServer configuration
+- Updated solargraph-utils
+
 ## 0.17.6 - July 16, 2018
 - Include visibility in method document pages
 

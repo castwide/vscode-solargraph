@@ -3,9 +3,6 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
-import { ChildProcess } from 'child_process';
-import * as cp from 'child_process';
-import { resolve } from 'url';
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
@@ -57,7 +54,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			// Synchronize the setting section 'solargraph' to the server
 			configurationSection: 'solargraph',
 			// Notify the server about file changes to any file in the workspace
-			fileEvents: vscode.workspace.createFileSystemWatcher('**/*')
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/{*.rb|*.gemspec|Gemfile}')
 		},
 		middleware: middleware,
 		initializationOptions: {
@@ -116,7 +113,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		} else {
 			return () => {
 				return new Promise((resolve) => {
-					let socket: net.Socket = net.createConnection({host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: vscode.workspace.getConfiguration('solargraph').externalServer.port});
+					let socket: net.Socket = net.createConnection({ host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: vscode.workspace.getConfiguration('solargraph').externalServer.port });
 					resolve({
 						reader: socket,
 						writer: socket

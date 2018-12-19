@@ -39,7 +39,7 @@ Solargraph provides a command to access searchable documentation directly from t
 * Hit ctrl+shift+r (or hit ctrl+shift+p and find `Search Ruby Documentation`).
 * Enter a keyword or path to search; e.g., `String` or `Array#join`.
 
-The documentation includes the Ruby core, bundled gems, and the current workspace. Documentation from the workspace is automatically updated when you save the corresponding file.
+The documentation includes the Ruby core, required gems, and the current workspace. Documentation from the workspace is automatically updated when you save the corresponding file.
 
 You can also hover over variables, constants, and method calls to see popup information with links to more documentation.
 
@@ -69,16 +69,26 @@ Solargraph is capable of providing code completion and documentation for gems. W
 
 You can make sure your gems are available with the commands `Build new gem documentation` or `Rebuild all gem documentation` in the command palette.
 
+### Solargraph and Bundler
+
+If your project uses Bundler, the most comprehensive way to use your bundled gems is to bundle Solargraph.
+
+In the Gemfile:
+
+    gem 'solargraph', group: :development
+
+Run `bundle install` and use `bundle exec yard gems` to generate the documentation. This process documents cached or vendored gems, or even gems that are installed from a local path.
+
+In order to access intellisense for bundled gems, you'll need to start the language server with Bundler by setting the `solargraph.useBundler` option to `true`.
+
 ### Diagnostics (Linting)
 
 To enable diagnostics, set the `solargraph.diagnostics` configuration to `true`.
 
 Solargraph uses RuboCop for diagnostics by default. If your project has a .solargraph.yml file, you can configure the diagnostics in its `reporters` section. Example:
 
-    ```
     reporters:
     - rubocop
-    ```
 
 See [Solargraph Tips](http://solargraph.org/tips) for more information about the .solargraph.yml file.
 
@@ -144,6 +154,28 @@ This extension contributes the following settings:
 * `solargraph.definitions`: Enable go-to-definition.
 * `solargraph.rename`: Enable symbol renaming.
 * `solargraph.references`: Enable finding references.
+* `solargraph.transport`: socket (default), stdio, or external. See [Transports](#transports) for more information.
+* `solargraph.externalServer`: The host and port for external transports. See [Transports](#transports) for more information.
+
+## Transport Options
+
+Extension version 0.18.0 introduces the `solargraph.transport` setting with the following options:
+
+* `socket`: Run a TCP server. This is the default option.
+* `stdio`: Run a STDIO server.
+* `external`: Connect to an external server instead of starting a new one.
+
+Most users should use the default `socket` option or switch to `stdio` in case of network issues.
+
+The `external` option is intended for cases where the project is hosted in a different environment from the editor,
+such as a docker container or a remote server. Users can opt to run a socket server in the remote environment and connect
+to it via TCP. Example configuration:
+
+    "socket.transport": "external",
+    "socket.externalServer": {
+        "host": "localhost",
+        "port": 7658
+    }
 
 ## Known Issues
 
