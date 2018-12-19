@@ -81,9 +81,8 @@ export function activate(context: ExtensionContext) {
 
 	// Environment command
 	var disposableEnv = vscode.commands.registerCommand('solargraph.environment', () => {
-		// languageClient.sendNotification('$/solargraph/environment', {});
-		var uri = 'solargraph:/environment';
-		vscode.commands.executeCommand('solargraph._openDocument', uri);
+		var uri = vscode.Uri.parse('solargraph:/environment');
+		webViewProvider.open(uri);
 	});
 	context.subscriptions.push(disposableEnv);
 

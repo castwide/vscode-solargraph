@@ -31,7 +31,8 @@ export default class SolargraphWebviewProvider {
 			});
 			this.views[uriString].webview.html = 'Loading...'
 		}
-		this.languageClient.sendRequest(method, { query: query.query }).then((result: any) => {
+		this.languageClient.sendRequest(method, query).then((result: any) => {
+			console.log(JSON.stringify(result));
 			if (this.views[uriString]) {
 				var converted = this.convertDocumentation(result.content);
 				this.views[uriString].webview.html = converted;
