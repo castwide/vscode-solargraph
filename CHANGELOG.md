@@ -1,8 +1,10 @@
-## 0.18.1
+## 0.19.0
 - Dispose "Rebuilding all gem documentation" status notification
 - Language client watches a more specific file pattern
 - Log level configuration
 - Folding ranges configuration
+- Environment command
+- Upgrade to Webview API
 
 ## 0.18.0 - December 5, 2018
 - Package updates
