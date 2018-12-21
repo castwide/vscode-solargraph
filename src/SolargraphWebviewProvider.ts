@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
-import { timingSafeEqual } from 'crypto';
 
 export default class SolargraphWebviewProvider {
 	private languageClient: LanguageClient;
@@ -32,7 +31,6 @@ export default class SolargraphWebviewProvider {
 			this.views[uriString].webview.html = 'Loading...'
 		}
 		this.languageClient.sendRequest(method, query).then((result: any) => {
-			console.log(JSON.stringify(result));
 			if (this.views[uriString]) {
 				var converted = this.convertDocumentation(result.content);
 				this.views[uriString].webview.html = converted;
