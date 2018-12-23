@@ -106,7 +106,8 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 						// 	vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
 						// } else {
 						// 	vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
-						// }			
+						// }
+						console.log('Error starting socket provider', err);
 					});
 				});
 			};

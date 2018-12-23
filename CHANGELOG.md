@@ -5,6 +5,7 @@
 - Folding ranges configuration
 - Environment command
 - Upgrade to Webview API
+- Updated solargraph-utils
 
 ## 0.18.0 - December 5, 2018
 - Package updates
