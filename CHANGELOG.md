@@ -1,4 +1,4 @@
-## 0.19.0
+## 0.19.0 - December 26, 2018
 - Dispose "Rebuilding all gem documentation" status notification
 - Language client watches a more specific file pattern
 - Log level configuration
