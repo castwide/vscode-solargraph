@@ -1,3 +1,6 @@
+## 0.19.1 - December 28, 2018
+- Fixed FileSystemWatcher glob pattern
+
 ## 0.19.0 - December 26, 2018
 - Dispose "Rebuilding all gem documentation" status notification
 - Language client watches a more specific file pattern
