@@ -154,8 +154,10 @@ This extension contributes the following settings:
 * `solargraph.definitions`: Enable go-to-definition.
 * `solargraph.rename`: Enable symbol renaming.
 * `solargraph.references`: Enable finding references.
+* `solargraph.folding`: Enable folding ranges.
 * `solargraph.transport`: socket (default), stdio, or external. See [Transports](#transports) for more information.
 * `solargraph.externalServer`: The host and port for external transports. See [Transports](#transports) for more information.
+* `solargraph.logLevel`: The logging level. Options in ascending amount of detail are `warn`, `info`, and `debug`. The default is `warn`.
 
 ## Transport Options
 
