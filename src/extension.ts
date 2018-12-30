@@ -54,7 +54,8 @@ export function activate(context: ExtensionContext) {
 
 	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
-		var uri = vscode.Uri.parse(uriString);
+		var hashed = uriString.replace('#', '%23');
+		var uri = vscode.Uri.parse(hashed);
 		webViewProvider.open(uri);
 	});
 	context.subscriptions.push(disposableOpenUrl);

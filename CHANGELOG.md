@@ -1,3 +1,6 @@
+## 0.19.2
+- solargraph._openDocumentUrl escapes hashes
+
 ## 0.19.1 - December 28, 2018
 - Fixed FileSystemWatcher glob pattern
 
