@@ -135,7 +135,6 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 	setInterval(() => {
 		prepareStatus.text = `Starting the Solargraph language server ${frame()}`
 	}, 100)
-	// let prepareStatus = vscode.window.setStatusBarMessage(`Starting the Solargraph language server ${frame()}`);
 	client.onReady().then(() => {
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
