@@ -3,6 +3,11 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
+import * as elegantSpinner from 'elegant-spinner';
+
+const frame = elegantSpinner();
+const prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+prepareStatus.show();
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
@@ -87,7 +92,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 						resolve({
 							reader: socket,
 							writer: socket
-						});	
+						});
 					}).catch((err) => {
 						// TODO Handle error
 						// console.log('Failed to start language server: ' + JSON.stringify(err));
@@ -127,7 +132,10 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 	let serverOptions: ServerOptions = selectClient();
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-	let prepareStatus = vscode.window.setStatusBarMessage('Starting the Solargraph language server...');
+	setInterval(() => {
+		prepareStatus.text = `Starting the Solargraph language server ${frame()}`
+	}, 100)
+	// let prepareStatus = vscode.window.setStatusBarMessage(`Starting the Solargraph language server ${frame()}`);
 	client.onReady().then(() => {
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);

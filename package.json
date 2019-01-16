@@ -275,6 +275,7 @@
         "vscode": "^1.1.22"
     },
     "dependencies": {
+        "elegant-spinner": "^1.0.1",
         "html2plaintext": "^1.1.0",
         "solargraph-utils": "^0.8.2",
         "vscode-languageclient": "^5.0.1",
