@@ -80,7 +80,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			}
 		} else if (transport == 'socket') {
 			return () => {
-				return new Promise((resolve) => {
+				return new Promise((resolve, reject) => {
 					let socketProvider: solargraph.SocketProvider = new solargraph.SocketProvider(configuration);
 					socketProvider.start().then(() => {
 						let socket: net.Socket = net.createConnection(socketProvider.port);
@@ -89,25 +89,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 							writer: socket
 						});	
 					}).catch((err) => {
-						// TODO Handle error
-						// console.log('Failed to start language server: ' + JSON.stringify(err));
-						// if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
-						// 	vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
-						// 		if (item == 'Install Now') {
-						// 			solargraph.installGem(configuration).then(() => {
-						// 				vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
-						// 				startLanguageServer();
-						// 			}).catch(() => {
-						// 				vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
-						// 			});
-						// 		}
-						// 	});
-						// } else if (err.toString().includes('Could not find command "socket"')) {
-						// 	vscode.window.showErrorMessage('The Solargraph gem is out of date. Run `gem update solargraph` or update your Gemfile.');
-						// } else {
-						// 	vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
-						// }
-						console.log('Error starting socket provider', err);
+						reject(err);
 					});
 				});
 			};

@@ -14,7 +14,7 @@ export default class SolargraphWebviewProvider {
 		var parts = query.split('&');
 		parts.forEach((part) => {
 			var frag = part.split('=');
-			result[frag[0]] = frag[1];
+			result[decodeURIComponent(frag[0])] = decodeURIComponent(frag[1]);
 		})
 		return result;
 	}
@@ -22,7 +22,8 @@ export default class SolargraphWebviewProvider {
 	public open(uri: vscode.Uri): void {
 		var uriString = uri.toString();
 		var method = '$/solargraph' + uri.path;
-		var query = this.parseQuery(uri.query);
+		var query = this.parseQuery(uri.query.replace(/=/g, '%3D').replace(/\%$/, '%25').replace(/query\%3D/, 'query='));
+		console.log('dammit', query);
 		if (!this.views[uriString]) {
 			this.views[uriString] = vscode.window.createWebviewPanel('solargraph', uriString, vscode.ViewColumn.Two, {enableCommandUris: true});
 			this.views[uriString].onDidDispose(() => {

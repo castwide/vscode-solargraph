@@ -31,6 +31,22 @@ export function activate(context: ExtensionContext) {
 			languageClient.onNotification('$/solargraph/restart', (params) => {
 				console.log('I should restart!');
 			});
+		}).catch((err) => {
+			console.log('Error starting Solargraph socket provider', err);
+			if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
+				vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
+					if (item == 'Install Now') {
+						solargraph.installGem(solargraphConfiguration).then(() => {
+							vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+							startLanguageServer();
+						}).catch(() => {
+							vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+						});
+					}
+				});
+			} else {
+				vscode.window.showErrorMessage("Failed to start Solargraph: " + err);
+			}
 		});
 		disposableClient = languageClient.start();
 		webViewProvider.setLanguageClient(languageClient);
