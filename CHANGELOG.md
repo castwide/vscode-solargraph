@@ -1,3 +1,6 @@
+## 0.19.3
+- Display spinner while Solargraph is initializing
+
 ## 0.19.2 - January 28, 2019
 - solargraph._openDocumentUrl escapes special characters
 - Show error message when solargraph gem is not installed

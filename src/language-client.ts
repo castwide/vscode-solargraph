@@ -3,9 +3,9 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
-import * as elegantSpinner from 'elegant-spinner';
+import Spinner from './spinner';
 
-const frame = elegantSpinner();
+const frame = new Spinner();
 const prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 prepareStatus.show();
 
@@ -115,7 +115,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
 	let interval = setInterval(() => {
-		prepareStatus.text = `Starting the Solargraph language server ${frame()}`
+		prepareStatus.text = `Starting the Solargraph language server ${frame.spin()}`
 	}, 100);
 	client.onReady().then(() => {
 		clearInterval(interval);
