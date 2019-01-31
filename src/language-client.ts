@@ -114,16 +114,18 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 	let serverOptions: ServerOptions = selectClient();
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-	setInterval(() => {
+	let interval = setInterval(() => {
 		prepareStatus.text = `Starting the Solargraph language server ${frame()}`
-	}, 100)
+	}, 100);
 	client.onReady().then(() => {
+		clearInterval(interval);
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
 		// if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
 		// 	client.sendNotification('$/solargraph/checkGemVersion');
 		// }
 	}).catch(() => {
+		clearInterval(interval);
 		prepareStatus.dispose();
 		vscode.window.setStatusBarMessage('Solargraph failed to initialize.', 3000);
 	});
