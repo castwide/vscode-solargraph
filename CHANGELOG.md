@@ -1,4 +1,4 @@
-## 0.19.3
+## 0.19.3 - February 7, 2019
 - Display spinner while Solargraph is initializing
 
 ## 0.19.2 - January 28, 2019
