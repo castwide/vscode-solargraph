@@ -1,7 +1,7 @@
 {
     "name": "solargraph",
     "displayName": "Ruby Solargraph",
-    "description": "Code completion and inline documentation for Ruby",
+    "description": "A Ruby language server featuring code completion, intellisense, and inline documentation",
     "icon": "solargraph.png",
     "version": "0.19.3",
     "publisher": "castwide",
