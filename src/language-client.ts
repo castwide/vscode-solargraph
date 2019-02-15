@@ -1,4 +1,4 @@
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Middleware, RequestType, MessageTransports, createClientSocketTransport, Disposable, ErrorHandler } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, Middleware, } from 'vscode-languageclient';
 import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
