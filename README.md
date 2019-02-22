@@ -11,7 +11,7 @@ Solargraph is a language server that provides intellisense, code completion, and
 * Identification of local, class, and instance variables within the current scope
 * Find references and rename symbols (experimental as of solargraph gem v0.22.0)
 * Support for gems
-* Near-complete support for the Ruby stdlib
+* Near-complete support for the Ruby core and stdlib
 * Partial support for Ruby on Rails
 
 ## Requirements
@@ -124,19 +124,6 @@ The Solargraph gem ships with documentation for Ruby 2.2.2. As of gem version 0.
     $ solargraph download-core   # Install the best match for your Ruby version
     $ solargraph clear-cores     # Clear the documentation cache
 
-## Runtime Suggestions (EXPERIMENTAL)
-
-As of gem version 0.15.0, Solargraph includes experimental support for plugins.
-
-The built-in `Runtime` plugin enhances code completion by querying namespaces for method names in a subprocess. If it finds any undocumented or "magic" methods, they get added to the suggestions.
-
-This feature is currently disabled by default. If you'd like to try it, you can enable it by setting the `plugins` section in your project's .solargraph.yml file:
-
-    plugins:
-    - runtime
-
-**The runtime plugin is highly experimental. Expect bugs and breaking changes.**
-
 ## Extension Settings
 
 This extension contributes the following settings:
@@ -181,6 +168,5 @@ to it via TCP. Example configuration:
 
 ## Known Issues
 
-* Partial support for stdlib
 * Partial support for Rails
 * Documentation pages need better design/layout

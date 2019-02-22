@@ -1,5 +1,6 @@
 ## 0.19.4
 - Removed unused dependencies
+- Removed plugin documentation from README
 
 ## 0.19.3 - February 7, 2019
 - Display spinner while Solargraph is initializing
