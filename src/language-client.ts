@@ -6,11 +6,11 @@ import * as vscode from 'vscode';
 import Spinner from './spinner';
 
 const frame = new Spinner();
-const prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-prepareStatus.show();
 
 //export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
+	let prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+	prepareStatus.show();
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -38,13 +38,19 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 				});
 			});
 		},
+
 		resolveCompletionItem: (item, token, next) => {
 			return new Promise((resolve) => {
 				var promise = next(item, token);
 				// HACK: It's a promise, but TypeScript doesn't recognize it
 				promise['then']((item: vscode.CompletionItem) => {
+					// HACK: Documentation can either be String or MarkupContent
 					if (item.documentation) {
-						item.documentation = convertDocumentation(item.documentation.toString());
+						if (item.documentation['value']) {
+							item.documentation['value'] = convertDocumentation(item.documentation['value']);
+						} else {
+							item.documentation = convertDocumentation(item.documentation.toString());
+						}
 					}
 					resolve(item);
 				});

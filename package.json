@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "A Ruby language server featuring code completion, intellisense, and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.19.3",
+    "version": "0.19.4",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"

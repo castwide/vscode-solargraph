@@ -1,6 +1,7 @@
-## 0.19.4
+## 0.19.4 - April 3, 2019
 - Removed unused dependencies
 - Removed plugin documentation from README
+- Support MarkupContent in CompletionItem documentation
 
 ## 0.19.3 - February 7, 2019
 - Display spinner while Solargraph is initializing
