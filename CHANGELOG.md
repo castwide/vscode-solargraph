@@ -1,3 +1,6 @@
+## 0.19.5 - April 4, 2019
+- Fixed MarkupContent documentation conversion
+
 ## 0.19.4 - April 3, 2019
 - Removed unused dependencies
 - Removed plugin documentation from README

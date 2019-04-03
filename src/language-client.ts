@@ -47,7 +47,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 					// HACK: Documentation can either be String or MarkupContent
 					if (item.documentation) {
 						if (item.documentation['value']) {
-							item.documentation['value'] = convertDocumentation(item.documentation['value']);
+							item.documentation = convertDocumentation(item.documentation['value']);
 						} else {
 							item.documentation = convertDocumentation(item.documentation.toString());
 						}
