@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
 		languageClient = makeLanguageClient(solargraphConfiguration);
 		languageClient.onReady().then(() => {
 			languageClient.onNotification('$/solargraph/restart', (params) => {
-				console.log('I should restart!');
+				restartLanguageServer();
 			});
 		}).catch((err) => {
 			console.log('Error starting Solargraph socket provider', err);
