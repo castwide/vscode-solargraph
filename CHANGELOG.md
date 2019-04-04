@@ -1,6 +1,7 @@
 ## 0.19.6 - April 5, 2019
 - Removed debug output
 - Updating the gem restarts the language server
+- Handle empty MarkupContent values
 
 ## 0.19.5 - April 4, 2019
 - Fixed MarkupContent documentation conversion

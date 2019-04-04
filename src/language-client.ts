@@ -46,7 +46,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 				promise['then']((item: vscode.CompletionItem) => {
 					// HACK: Documentation can either be String or MarkupContent
 					if (item.documentation) {
-						if (item.documentation['value']) {
+						if (item.documentation['value'] || item.documentation['value'] === '') {
 							item.documentation = convertDocumentation(item.documentation['value']);
 						} else {
 							item.documentation = convertDocumentation(item.documentation.toString());
