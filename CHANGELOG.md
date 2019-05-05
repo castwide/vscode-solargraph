@@ -1,3 +1,6 @@
+## 0.19.7
+- Updated vscode package
+
 ## 0.19.6 - April 5, 2019
 - Removed debug output
 - Updating the gem restarts the language server
