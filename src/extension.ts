@@ -7,6 +7,8 @@ import { LanguageClient, Disposable } from 'vscode-languageclient';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
 
+let languageClient: LanguageClient;
+
 export function activate(context: ExtensionContext) {
 
 	let applyConfiguration = function(config:solargraph.Configuration) {
@@ -21,7 +23,6 @@ export function activate(context: ExtensionContext) {
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
 	
-	let languageClient: LanguageClient;
 	let disposableClient: Disposable;
 	let webViewProvider: SolargraphWebviewProvider = new SolargraphWebviewProvider();
 
@@ -169,5 +170,7 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
-	// TODO: Any cleanup necessary?
+	if (languageClient) {
+		languageClient.stop();
+	}
 }
