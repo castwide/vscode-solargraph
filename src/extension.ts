@@ -110,31 +110,33 @@ export function activate(context: ExtensionContext) {
 	});
 	context.subscriptions.push(disposableCheckGemVersion);
 	
+	var doBuildGemDocs = function (rebuild: Boolean) {
+		let message = (rebuild ? 'Rebuilding all gem documentation...' : 'Building new gem documentation');
+		let prepareStatus = vscode.window.setStatusBarMessage(message);
+		try {
+			languageClient.sendRequest('$/solargraph/documentGems', { rebuild: rebuild }).then((response) => {
+				prepareStatus.dispose();
+				if (response['status'] == 'ok') {
+					vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
+				} else {
+					vscode.window.setStatusBarMessage('An error occurred building gem documentation.', 3000);
+				}
+			});
+		} catch (err) {
+			prepareStatus.dispose();
+			vscode.window.showErrorMessage('The language server is still initializing. Please try again shortly. (Error: ' + err.message + ')')
+		}
+	};
+
 	// Build gem documentation command
 	var disposableBuildGemDocs = vscode.commands.registerCommand('solargraph.buildGemDocs', () => {
-		let prepareStatus = vscode.window.setStatusBarMessage('Building new gem documentation...');
-		languageClient.sendRequest('$/solargraph/documentGems', { rebuild: false }).then((response) => {
-			prepareStatus.dispose();
-			if (response['status'] == 'ok') {
-				vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
-			} else {
-				vscode.window.setStatusBarMessage('An error occurred building gem documentation.', 3000);
-			}
-		});
+		doBuildGemDocs(false);
 	});
 	context.subscriptions.push(disposableBuildGemDocs);
 
 	// Rebuild gems documentation command
 	var disposableRebuildAllGemDocs = vscode.commands.registerCommand('solargraph.rebuildAllGemDocs', () => {
-		let prepareStatus = vscode.window.setStatusBarMessage('Rebuilding all gem documentation...');
-		languageClient.sendRequest('$/solargraph/documentGems', { rebuild: true }).then((response) => {
-			prepareStatus.dispose();
-			if (response['status'] == 'ok') {
-				vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
-			} else {
-				vscode.window.setStatusBarMessage('An error occurred rebuilding gem documentation.', 3000);
-			}
-		});
+		doBuildGemDocs(true);
 	});
 	context.subscriptions.push(disposableRebuildAllGemDocs);
 

@@ -1,6 +1,7 @@
 ## 0.19.7
 - Updated vscode package
 - Deactivation stops the language server
+- Friendlier error message for gem doc commands
 
 ## 0.19.6 - April 5, 2019
 - Removed debug output

@@ -36,7 +36,9 @@
         "onCommand:solargraph.search",
         "onCommand:solargraph.restart",
         "onCommand:solargraph.config",
-        "onCommand:solargraph.downloadCore"
+        "onCommand:solargraph.downloadCore",
+        "onCommand:solargraph.buildGemDocs",
+        "onCommand:solargraph.rebuildAllGemDocs"
     ],
     "contributes": {
         "configuration": {
