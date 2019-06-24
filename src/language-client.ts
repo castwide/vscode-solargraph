@@ -68,10 +68,10 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			fileEvents: vscode.workspace.createFileSystemWatcher('{**/*.rb,**/*.gemspec,**/Gemfile}')
 		},
 		middleware: middleware,
-		initializationOptions: {
+		initializationOptions: Object.assign({
 			enablePages: true,
 			viewsPath: vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views'
-		}
+		}, vscode.workspace.getConfiguration('solargraph'))
 	}
 
 	var selectClient = function(): ServerOptions {
