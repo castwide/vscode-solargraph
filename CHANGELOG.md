@@ -3,6 +3,7 @@
 - Deactivation stops the language server
 - Friendlier error message for gem doc commands
 - Add solargraph configuration to initializationOptions
+- Updated Mocha
 
 ## 0.19.6 - April 5, 2019
 - Removed debug output
