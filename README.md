@@ -2,7 +2,7 @@
 
 Solargraph is a language server that provides intellisense, code completion, and inline documentation for Ruby.
 
-![Screenshot](vscode-solargraph-0.16.0.gif)
+![Screenshot](vscode-solargraph-0.34.1.gif)
 
 ## Features
 
