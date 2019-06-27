@@ -3,7 +3,7 @@ import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
-import Spinner from './spinner';
+import Spinner from './Spinner';
 
 const frame = new Spinner();
 
