@@ -1,9 +1,10 @@
-## 0.20.0
+## 0.20.0 - July 5, 2019
 - Updated vscode package
 - Deactivation stops the language server
 - Friendlier error message for gem doc commands
 - Add solargraph configuration to initializationOptions
 - Updated Mocha
+- Improved support for rvm and rbenv
 
 ## 0.19.6 - April 5, 2019
 - Removed debug output

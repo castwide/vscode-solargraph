@@ -278,7 +278,7 @@
     },
     "dependencies": {
         "html2plaintext": "^1.1.0",
-        "solargraph-utils": "^0.8.2",
+        "solargraph-utils": "^1.0.1",
         "vscode-languageclient": "^5.0.1"
     }
 }
