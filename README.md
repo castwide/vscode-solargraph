@@ -90,7 +90,7 @@ Solargraph uses RuboCop for diagnostics by default. If your project has a .solar
     reporters:
     - rubocop
 
-See [Solargraph Tips](http://solargraph.org/tips) for more information about the .solargraph.yml file.
+See [the configuration guide](https://solargraph.org/guides/configuration) for more information about the .solargraph.yml file.
 
 Use a .rubocop.yml file in your project's root folder to customize the linting rules.
 
@@ -132,7 +132,7 @@ This extension contributes the following settings:
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 * `solargraph.bundlerPath`: Path to the bundle command.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
-* `solargraph.diagnostics`: Enable diagnostics reporting. See [Solargraph Tips](http://solargraph.org/tips) for diagnostics options.
+* `solargraph.diagnostics`: Enable diagnostics reporting. See [the configuration guide](https://solargraph.org/guides/configuration) for diagnostics options.
 * `solargraph.completion`: Enable autocompletion.
 * `solargraph.hover`: Enable tips on hover.
 * `solargraph.autoformat`: Enable automatic formatting while typing.
