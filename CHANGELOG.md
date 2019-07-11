@@ -1,3 +1,6 @@
+## 0.20.1
+- Update html2plaintext
+
 ## 0.20.0 - July 5, 2019
 - Updated vscode package
 - Deactivation stops the language server
