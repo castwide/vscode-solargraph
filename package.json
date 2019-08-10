@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "A Ruby language server featuring code completion, intellisense, and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.20.1",
+    "version": "0.21.0",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -29,8 +29,9 @@
         "language server"
     ],
     "engines": {
-        "vscode": "^1.25.0"
+        "vscode": "^1.31.0"
     },
+    "extensionKind": "workspace",
     "activationEvents": [
         "onLanguage:ruby",
         "onCommand:solargraph.search",
@@ -75,7 +76,8 @@
                 "solargraph.commandPath": {
                     "type": "string",
                     "default": "solargraph",
-                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions."
+                    "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
+                    "scope": "machine"
                 },
                 "solargraph.useBundler": {
                     "type": "boolean",
@@ -85,7 +87,8 @@
                 "solargraph.bundlerPath": {
                     "type": "string",
                     "description": "Path to the bundle executable, defaults to 'bundle'",
-                    "default": "bundle"
+                    "default": "bundle",
+                    "scope": "machine"
                 },
                 "solargraph.checkGemVersion": {
                     "type": "boolean",

@@ -1,5 +1,6 @@
-## 0.20.1
+## 0.21.0 - August 10, 2019
 - Update html2plaintext
+- Machine-scoped settings
 
 ## 0.20.0 - July 5, 2019
 - Updated vscode package
