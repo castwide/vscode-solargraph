@@ -3,7 +3,7 @@
     "displayName": "Ruby Solargraph",
     "description": "A Ruby language server featuring code completion, intellisense, and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.21.0",
+    "version": "0.21.1",
     "publisher": "castwide",
     "author": {
         "name": "Fred Snyder"
@@ -77,7 +77,7 @@
                     "type": "string",
                     "default": "solargraph",
                     "description": "Path to the solargraph command.  Set this to an absolute path to select from multiple installed Ruby versions.",
-                    "scope": "machine"
+                    "scope": "resource"
                 },
                 "solargraph.useBundler": {
                     "type": "boolean",
@@ -88,7 +88,7 @@
                     "type": "string",
                     "description": "Path to the bundle executable, defaults to 'bundle'",
                     "default": "bundle",
-                    "scope": "machine"
+                    "scope": "resource"
                 },
                 "solargraph.checkGemVersion": {
                     "type": "boolean",

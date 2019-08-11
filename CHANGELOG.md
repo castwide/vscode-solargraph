@@ -1,3 +1,6 @@
+## 0.21.1 - August 11, 2019
+- Adjusted scopes for path settings
+
 ## 0.21.0 - August 10, 2019
 - Update html2plaintext
 - Machine-scoped settings
