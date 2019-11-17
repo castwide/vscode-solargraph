@@ -1,3 +1,8 @@
+## 0.22.0 - November 17, 2019
+- Updated solargraph-utils (improved rvm/rbenv support)
+- Avoid using workspace.rootPath (#139)
+- Fix brackets in documentation
+
 ## 0.21.1 - August 11, 2019
 - Adjusted scopes for path settings
 
