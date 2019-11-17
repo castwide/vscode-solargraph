@@ -11,14 +11,19 @@ let languageClient: LanguageClient;
 
 export function activate(context: ExtensionContext) {
 
-	let applyConfiguration = function(config:solargraph.Configuration) {
+	let firstWorkspace = function () {
+		return (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]) ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+	}
+
+	let applyConfiguration = function (config: solargraph.Configuration) {
 		let vsconfig = vscode.workspace.getConfiguration('solargraph');
 		config.commandPath = vsconfig.commandPath || 'solargraph';
 		config.useBundler  = vsconfig.useBundler || false;
 		config.bundlerPath = vsconfig.bundlerPath || 'bundle';
 		config.viewsPath   = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
 		config.withSnippets = vsconfig.withSnippets || false;
-		config.workspace = vscode.workspace.rootPath || null;
+		// config.workspace = vscode.workspace.rootPath || null;
+		config.workspace = firstWorkspace();
 	}
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
