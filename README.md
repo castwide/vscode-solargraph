@@ -160,8 +160,8 @@ The `external` option is intended for cases where the project is hosted in a dif
 such as a docker container or a remote server. Users can opt to run a socket server in the remote environment and connect
 to it via TCP. Example configuration:
 
-    "socket.transport": "external",
-    "socket.externalServer": {
+    "solargraph.transport": "external",
+    "solargraph.externalServer": {
         "host": "localhost",
         "port": 7658
     }
