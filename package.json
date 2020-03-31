@@ -86,7 +86,7 @@
                 },
                 "solargraph.bundlerPath": {
                     "type": "string",
-                    "description": "Path to the bundle executable, defaults to 'bundle'",
+                    "description": "Path to the bundle executable, defaults to 'bundle'. Needs to be an absolute path for the 'bundle' exec/shim",
                     "default": "bundle",
                     "scope": "resource"
                 },
