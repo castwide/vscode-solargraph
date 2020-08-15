@@ -166,7 +166,11 @@ to it via TCP. Example configuration:
         "port": 7658
     }
 
+## More Information
+
+See the [Solargraph website](https://solargraph.org) for guides, tips, and updates.
+
 ## Known Issues
 
-* Partial support for Rails
+* Partial support for Rails (see [https://solargraph.org/guides/rails](https://solargraph.org/guides/rails))
 * Documentation pages need better design/layout
