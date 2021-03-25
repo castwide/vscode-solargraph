@@ -31,7 +31,9 @@
     "engines": {
         "vscode": "^1.31.0"
     },
-    "extensionKind": "workspace",
+    "extensionKind": [
+        "workspace"
+    ],
     "activationEvents": [
         "onLanguage:ruby",
         "onCommand:solargraph.search",
