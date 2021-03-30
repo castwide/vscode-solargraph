@@ -1,16 +1,20 @@
 'use strict';
 
-import { ExtensionContext } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import { LanguageClient, Disposable } from 'vscode-languageclient';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
-import isRelative from 'is-relative';
 
 let languageClient: LanguageClient;
 
-export function activate(context: ExtensionContext) {
+// Adapted from the is-relative package on npm, since trying to use `isRelative("/some/path")` after
+// doing a `import isRelative from 'is-relative';` resulted in a silent error for some reason.
+let isRelative = function (path: string) {
+	return !/^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/.test(path) && !/^([a-z]:)?[\\\/]/i.test(path);
+}
+
+export function activate(context: vscode.ExtensionContext) {
 	let haveWorkspace = function () {
 		return (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0])
 	}
