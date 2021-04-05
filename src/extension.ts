@@ -16,12 +16,21 @@ export function activate(context: vscode.ExtensionContext) {
 	let firstWorkspace = function () {
 		return haveWorkspace() ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
 	}
+	let isBare = function (str: String) {
+		return ((str.search(/\//) == -1) && (str.search(/\\/) == -1));
+	}
 
 	let applyConfiguration = function (config: solargraph.Configuration) {
 		let vsconfig = vscode.workspace.getConfiguration('solargraph');
 		if (!vsconfig.commandPath) {
-			// Default -- will be searched for in the shell environment since it is a relative path
+			// Given there is a default value for commandPath in package.json, this branch shouldn't
+			// be reachable.  Still, better safe than sorry...
+
+			// Search for 'solargraph' in the shell environment's PATH
 			config.commandPath = 'solargraph';
+		} else if (isBare(vsconfig.commandPath)) {
+			// Search for the binary name in the shell environment's PATH
+			config.commandPath = vsconfig.commandPath
 		} else if (isRelative(vsconfig.commandPath) && haveWorkspace()) {
 			// For portability, try to make any other relative path absolute with respect to the
 			// root of the vscode project, rather than letting solargraph-utils try to resolve it
