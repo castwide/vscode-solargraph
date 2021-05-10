@@ -1,4 +1,4 @@
-## 0.22.1
+## 0.22.1 - May 10, 2021
 - Update configuration title
 - Make the commandPath setting portable
 
