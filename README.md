@@ -81,6 +81,8 @@ Run `bundle install` and use `bundle exec yard gems` to generate the documentati
 
 In order to access intellisense for bundled gems, you'll need to start the language server with Bundler by setting the `solargraph.useBundler` option to `true`.
 
+> Note: solargraph.bundlerPath should be an absolute path to bundler executable.
+
 ### Diagnostics (Linting)
 
 To enable diagnostics, set the `solargraph.diagnostics` configuration to `true`.

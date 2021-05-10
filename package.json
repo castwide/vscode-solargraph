@@ -29,9 +29,11 @@
         "language server"
     ],
     "engines": {
-        "vscode": "^1.31.0"
+        "vscode": "^1.54.0"
     },
-    "extensionKind": "workspace",
+    "extensionKind": [
+        "workspace"
+    ],
     "activationEvents": [
         "onLanguage:ruby",
         "onCommand:solargraph.search",
@@ -86,7 +88,7 @@
                 },
                 "solargraph.bundlerPath": {
                     "type": "string",
-                    "description": "Path to the bundle executable, defaults to 'bundle'",
+                    "description": "Path to the bundle executable, defaults to 'bundle'. Needs to be an absolute path for the 'bundle' exec/shim",
                     "default": "bundle",
                     "scope": "resource"
                 },
@@ -265,23 +267,24 @@
             }
         ]
     },
-    "main": "./out/src/extension",
+    "main": "./out/src/extension.js",
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
         "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
         "mocha": "^6.1.4",
-        "typescript": "^2.0.3",
-        "vscode": "^1.1.33"
+        "typescript": "^4.2.3"
     },
     "dependencies": {
+        "@types/vscode": "^1.54.0",
         "html2plaintext": "^2.1.2",
+        "is-relative": "^1.0.0",
         "solargraph-utils": "^1.1.0",
-        "vscode-languageclient": "^5.0.1"
+        "vscode-languageclient": "^5.0.1",
+        "vscode-test": "^1.5.1"
     }
 }
