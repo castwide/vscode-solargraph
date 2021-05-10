@@ -1,3 +1,7 @@
+## 0.22.1
+- Update configuration title
+- Make the commandPath setting portable
+
 ## 0.22.0 - November 17, 2019
 - Updated solargraph-utils (improved rvm/rbenv support)
 - Avoid using workspace.rootPath (#139)
