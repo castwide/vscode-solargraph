@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, Disposable } from 'vscode-languageclient';
+import { LanguageClient, Disposable } from 'vscode-languageclient/node';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
 import * as isRelative from 'is-relative';
@@ -194,11 +194,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableSolargraphDownloadCore);
 
 	startLanguageServer();
-	languageClient.onReady().then(() => {
-		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-			languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
-		}
-	});
 }
 
 export function deactivate() {
