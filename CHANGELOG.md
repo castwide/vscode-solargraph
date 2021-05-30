@@ -1,3 +1,6 @@
+## 0.23.1
+- Remove unused dependency
+
 ## 0.23.0 - May 30, 2021
 - Update vscode-languageclient
 - Use LSP progress reporting
