@@ -13,8 +13,6 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			var commandUri = "(command:solargraph._openDocumentUrl?" + encodeURI(JSON.stringify("solargraph:" + match[1])) + ")";
 			adjusted = adjusted.replace(match[0], commandUri);
 		}
-		adjusted = adjusted.replace('<', '&lt;');
-		adjusted = adjusted.replace('>', '&gt;');
 		var md = new MarkdownString(adjusted);
 		md.isTrusted = true;
 		return md;

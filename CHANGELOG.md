@@ -1,6 +1,7 @@
 ## 0.23.0 - May 30, 2021
 - Update vscode-languageclient
 - Use LSP progress reporting
+- Stop converting brackets in documentation
 
 ## 0.22.1 - May 10, 2021
 - Update configuration title
