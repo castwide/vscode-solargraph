@@ -282,7 +282,7 @@
     "dependencies": {
         "@types/vscode": "^1.54.0",
         "is-relative": "^1.0.0",
-        "solargraph-utils": "^1.1.0",
+        "solargraph-utils": "^1.2.0",
         "vscode-languageclient": "^7.0.0",
         "vscode-test": "^1.5.1"
     }
