@@ -1,6 +1,7 @@
 ## 0.24.0
 - Remove unused dependency
 - Update solargraph-utils
+- Configure shell from automation settings
 
 ## 0.23.0 - May 30, 2021
 - Update vscode-languageclient
