@@ -5,20 +5,20 @@ import * as solargraph from 'solargraph-utils';
 import { LanguageClient, Disposable } from 'vscode-languageclient/node';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
-import * as isRelative from 'is-relative';
+const isRelative = require('is-relative');
 
 let languageClient: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
 	let haveWorkspace = function () {
-		return (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0])
-	}
+		return (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]);
+	};
 	let firstWorkspace = function () {
-		return haveWorkspace() ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
-	}
+		return haveWorkspace() ? vscode.workspace.workspaceFolders![0].uri.fsPath : null;
+	};
 	let isBare = function (str: String) {
 		return ((str.search(/\//) == -1) && (str.search(/\\/) == -1));
-	}
+	};
 
 	let applyConfiguration = function (config: solargraph.Configuration) {
 		let vsconfig = vscode.workspace.getConfiguration('solargraph');
@@ -30,14 +30,14 @@ export function activate(context: vscode.ExtensionContext) {
 			config.commandPath = 'solargraph';
 		} else if (isBare(vsconfig.commandPath)) {
 			// Search for the binary name in the shell environment's PATH
-			config.commandPath = vsconfig.commandPath
+			config.commandPath = vsconfig.commandPath;
 		} else if (isRelative(vsconfig.commandPath) && haveWorkspace()) {
 			// For portability, try to make any other relative path absolute with respect to the
 			// root of the vscode project, rather than letting solargraph-utils try to resolve it
 			// from whatever random directory VS Code chooses as its current working directory
-			// (often not even inside the project).  This makes it so that you can specify, 
+			// (often not even inside the project).  This makes it so that you can specify,
 			// e.g. "bin/solargraph" to use a version of solargraph shipped within the project.
-			config.commandPath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, vsconfig.commandPath).fsPath;
+            config.commandPath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders![0].uri, vsconfig.commandPath).fsPath;
 		} else {
 			// Either already an absolute path, or it is a relative path but we don't have a
 			// workspace to join it with to make it absolute.
@@ -46,10 +46,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config.useBundler = vsconfig.useBundler || false;
 		config.bundlerPath = vsconfig.bundlerPath || 'bundle';
-		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
-		config.withSnippets = vsconfig.withSnippets || false;
+		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph')!.extensionPath + '/views';
+        config.withSnippets = vsconfig.withSnippets || false;
+        // @ts-ignore TODO: This needs to be fixed in solargraph-utils
 		config.workspace = firstWorkspace();
-	}
+	};
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
 
@@ -68,10 +69,10 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showErrorMessage('Solargraph gem not found. Run `gem install solargraph` or update your Gemfile.', 'Install Now').then((item) => {
 					if (item == 'Install Now') {
 						solargraph.installGem(solargraphConfiguration).then(() => {
-							vscode.window.showInformationMessage('Successfully installed the Solargraph gem.')
+							vscode.window.showInformationMessage('Successfully installed the Solargraph gem.');
 							startLanguageServer();
 						}).catch(() => {
-							vscode.window.showErrorMessage('Failed to install the Solargraph gem.')
+							vscode.window.showErrorMessage('Failed to install the Solargraph gem.');
 						});
 					}
 				});
@@ -82,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 		disposableClient = languageClient.start();
 		webViewProvider.setLanguageClient(languageClient);
 		context.subscriptions.push(disposableClient);
-	}
+	};
 
 	var restartLanguageServer = function (): Promise<void> {
 		return new Promise((resolve) => {
@@ -97,7 +98,7 @@ export function activate(context: vscode.ExtensionContext) {
 				resolve();
 			}
 		});
-	}
+	};
 
 	// Open URL command (used internally for browsing documentation pages)
 	var disposableOpenUrl = vscode.commands.registerCommand('solargraph._openDocumentUrl', (uriString: string) => {
@@ -144,7 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
 		let message = (rebuild ? 'Rebuilding all gem documentation...' : 'Building new gem documentation');
 		let prepareStatus = vscode.window.setStatusBarMessage(message);
 		try {
-			languageClient.sendRequest('$/solargraph/documentGems', { rebuild: rebuild }).then((response) => {
+			languageClient.sendRequest('$/solargraph/documentGems', { rebuild: rebuild }).then((response: any) => {
 				prepareStatus.dispose();
 				if (response['status'] == 'ok') {
 					vscode.window.setStatusBarMessage('Gem documentation complete.', 3000);
@@ -152,9 +153,9 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.setStatusBarMessage('An error occurred building gem documentation.', 3000);
 				}
 			});
-		} catch (err) {
+		} catch (err: any) {
 			prepareStatus.dispose();
-			vscode.window.showErrorMessage('The language server is still initializing. Please try again shortly. (Error: ' + err.message + ')')
+			vscode.window.showErrorMessage('The language server is still initializing. Please try again shortly. (Error: ' + err.message + ')');
 		}
 	};
 
