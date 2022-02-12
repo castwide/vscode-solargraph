@@ -2,40 +2,45 @@ import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
 
 export default class SolargraphWebviewProvider {
-	private languageClient: LanguageClient;
+	private languageClient: LanguageClient | null;
 	private views: { [uriString: string]: vscode.WebviewPanel };
 
-	constructor() {
+    constructor() {
+        this.languageClient = null;
 		this.views = {};
 	}
 
 	private parseQuery(query: string): any {
-		var result = {};
+		var result: any = {};
 		var parts = query.split('&');
 		parts.forEach((part) => {
 			var frag = part.split('=');
 			result[decodeURIComponent(frag[0])] = decodeURIComponent(frag[1]);
-		})
+		});
 		return result;
 	}
 
-	public open(uri: vscode.Uri): void {
-		var uriString = uri.toString();
-		var method = '$/solargraph' + uri.path;
-		var query = this.parseQuery(uri.query.replace(/=/g, '%3D').replace(/\%$/, '%25').replace(/query\%3D/, 'query='));
-		if (!this.views[uriString]) {
-			this.views[uriString] = vscode.window.createWebviewPanel('solargraph', uriString, vscode.ViewColumn.Two, {enableCommandUris: true});
-			this.views[uriString].onDidDispose(() => {
-				delete this.views[uriString];
-			});
-			this.views[uriString].webview.html = 'Loading...'
-		}
-		this.languageClient.sendRequest(method, query).then((result: any) => {
-			if (this.views[uriString]) {
-				var converted = this.convertDocumentation(result.content);
-				this.views[uriString].webview.html = converted;
-			}
-		});
+    public open(uri: vscode.Uri): void {
+        if (this.languageClient) {
+            var uriString = uri.toString();
+            var method = '$/solargraph' + uri.path;
+            var query = this.parseQuery(uri.query.replace(/=/g, '%3D').replace(/\%$/, '%25').replace(/query\%3D/, 'query='));
+            if (!this.views[uriString]) {
+                this.views[uriString] = vscode.window.createWebviewPanel('solargraph', uriString, vscode.ViewColumn.Two, { enableCommandUris: true });
+                this.views[uriString].onDidDispose(() => {
+                    delete this.views[uriString];
+                });
+                this.views[uriString].webview.html = 'Loading...';
+            }
+            this.languageClient.sendRequest(method, query).then((result: any) => {
+                if (this.views[uriString]) {
+                    var converted = this.convertDocumentation(result.content);
+                    this.views[uriString].webview.html = converted;
+                }
+            });
+        } else {
+            // TODO: Maybe report an error when the language client is unavailable
+        }
 	}
 
 	public setLanguageClient(lc: LanguageClient) {
