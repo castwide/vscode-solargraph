@@ -1,16 +1,10 @@
-import { LanguageClient, LanguageClientOptions, ServerOptions, Middleware, } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions, Middleware } from 'vscode-languageclient/node';
 import * as net from 'net';
 import { Hover, MarkdownString } from 'vscode';
 import * as solargraph from 'solargraph-utils';
 import * as vscode from 'vscode';
-import Spinner from './Spinner';
 
-const frame = new Spinner();
-
-//export function makeLanguageClient(socketProvider: solargraph.SocketProvider): LanguageClient {
 export function makeLanguageClient(configuration: solargraph.Configuration): LanguageClient {
-	let prepareStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-	prepareStatus.show();
 	let convertDocumentation = function (text: string):MarkdownString {
 		var regexp = /\(solargraph\:(.*?)\)/g;
 		var match;
@@ -120,21 +114,10 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 	let serverOptions: ServerOptions = selectClient();
 
 	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
-	let interval = setInterval(() => {
-		prepareStatus.text = `Starting the Solargraph language server ${frame.spin()}`
-	}, 100);
 	client.onReady().then(() => {
-		clearInterval(interval);
-		prepareStatus.dispose();
-		vscode.window.setStatusBarMessage('Solargraph is ready.', 3000);
-		// if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-		// 	client.sendNotification('$/solargraph/checkGemVersion');
-		// }
-	}).catch(() => {
-		clearInterval(interval);
-		prepareStatus.dispose();
-		vscode.window.setStatusBarMessage('Solargraph failed to initialize.', 3000);
+		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
+			client.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
+		}
 	});
-
 	return client;
 }

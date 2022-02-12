@@ -1,9 +1,34 @@
-## 0.20.0
+## 0.23.1
+- Remove unused dependency
+
+## 0.23.0 - May 30, 2021
+- Update vscode-languageclient
+- Use LSP progress reporting
+- Stop converting brackets in documentation
+
+## 0.22.1 - May 10, 2021
+- Update configuration title
+- Make the commandPath setting portable
+
+## 0.22.0 - November 17, 2019
+- Updated solargraph-utils (improved rvm/rbenv support)
+- Avoid using workspace.rootPath (#139)
+- Fix brackets in documentation
+
+## 0.21.1 - August 11, 2019
+- Adjusted scopes for path settings
+
+## 0.21.0 - August 10, 2019
+- Update html2plaintext
+- Machine-scoped settings
+
+## 0.20.0 - July 5, 2019
 - Updated vscode package
 - Deactivation stops the language server
 - Friendlier error message for gem doc commands
 - Add solargraph configuration to initializationOptions
 - Updated Mocha
+- Improved support for rvm and rbenv
 
 ## 0.19.6 - April 5, 2019
 - Removed debug output

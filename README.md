@@ -81,6 +81,8 @@ Run `bundle install` and use `bundle exec yard gems` to generate the documentati
 
 In order to access intellisense for bundled gems, you'll need to start the language server with Bundler by setting the `solargraph.useBundler` option to `true`.
 
+> Note: solargraph.bundlerPath should be an absolute path to bundler executable.
+
 ### Diagnostics (Linting)
 
 To enable diagnostics, set the `solargraph.diagnostics` configuration to `true`.
@@ -90,7 +92,7 @@ Solargraph uses RuboCop for diagnostics by default. If your project has a .solar
     reporters:
     - rubocop
 
-See [Solargraph Tips](http://solargraph.org/tips) for more information about the .solargraph.yml file.
+See [the configuration guide](https://solargraph.org/guides/configuration) for more information about the .solargraph.yml file.
 
 Use a .rubocop.yml file in your project's root folder to customize the linting rules.
 
@@ -132,7 +134,7 @@ This extension contributes the following settings:
 * `solargraph.useBundler`: Use `bundle exec` to run solargraph. (If this is true, `solargraph.commandPath` is ignored.)
 * `solargraph.bundlerPath`: Path to the bundle command.
 * `solargraph.checkGemVersion`: Check if a new version of the Solargraph gem is available. Default is true (recommended).
-* `solargraph.diagnostics`: Enable diagnostics reporting. See [Solargraph Tips](http://solargraph.org/tips) for diagnostics options.
+* `solargraph.diagnostics`: Enable diagnostics reporting. See [the configuration guide](https://solargraph.org/guides/configuration) for diagnostics options.
 * `solargraph.completion`: Enable autocompletion.
 * `solargraph.hover`: Enable tips on hover.
 * `solargraph.autoformat`: Enable automatic formatting while typing.
@@ -160,13 +162,17 @@ The `external` option is intended for cases where the project is hosted in a dif
 such as a docker container or a remote server. Users can opt to run a socket server in the remote environment and connect
 to it via TCP. Example configuration:
 
-    "socket.transport": "external",
-    "socket.externalServer": {
+    "solargraph.transport": "external",
+    "solargraph.externalServer": {
         "host": "localhost",
         "port": 7658
     }
 
+## More Information
+
+See the [Solargraph website](https://solargraph.org) for guides, tips, and updates.
+
 ## Known Issues
 
-* Partial support for Rails
+* Partial support for Rails (see [https://solargraph.org/guides/rails](https://solargraph.org/guides/rails))
 * Documentation pages need better design/layout

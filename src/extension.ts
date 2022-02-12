@@ -1,32 +1,62 @@
 'use strict';
 
-import { ExtensionContext } from 'vscode';
 import * as vscode from 'vscode';
 import * as solargraph from 'solargraph-utils';
-import { LanguageClient, Disposable } from 'vscode-languageclient';
+import { LanguageClient, Disposable } from 'vscode-languageclient/node';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
+import * as isRelative from 'is-relative';
 
 let languageClient: LanguageClient;
 
-export function activate(context: ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
+	let haveWorkspace = function () {
+		return (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0])
+	}
+	let firstWorkspace = function () {
+		return haveWorkspace() ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+	}
+	let isBare = function (str: String) {
+		return ((str.search(/\//) == -1) && (str.search(/\\/) == -1));
+	}
 
-	let applyConfiguration = function(config:solargraph.Configuration) {
+	let applyConfiguration = function (config: solargraph.Configuration) {
 		let vsconfig = vscode.workspace.getConfiguration('solargraph');
-		config.commandPath = vsconfig.commandPath || 'solargraph';
-		config.useBundler  = vsconfig.useBundler || false;
+		if (!vsconfig.commandPath) {
+			// Given there is a default value for commandPath in package.json, this branch shouldn't
+			// be reachable.  Still, better safe than sorry...
+
+			// Search for 'solargraph' in the shell environment's PATH
+			config.commandPath = 'solargraph';
+		} else if (isBare(vsconfig.commandPath)) {
+			// Search for the binary name in the shell environment's PATH
+			config.commandPath = vsconfig.commandPath
+		} else if (isRelative(vsconfig.commandPath) && haveWorkspace()) {
+			// For portability, try to make any other relative path absolute with respect to the
+			// root of the vscode project, rather than letting solargraph-utils try to resolve it
+			// from whatever random directory VS Code chooses as its current working directory
+			// (often not even inside the project).  This makes it so that you can specify, 
+			// e.g. "bin/solargraph" to use a version of solargraph shipped within the project.
+			config.commandPath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, vsconfig.commandPath).fsPath;
+		} else {
+			// Either already an absolute path, or it is a relative path but we don't have a
+			// workspace to join it with to make it absolute.
+			config.commandPath = vsconfig.commandPath;
+		}
+
+		config.useBundler = vsconfig.useBundler || false;
 		config.bundlerPath = vsconfig.bundlerPath || 'bundle';
-		config.viewsPath   = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
+		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph').extensionPath + '/views';
 		config.withSnippets = vsconfig.withSnippets || false;
-		config.workspace = vscode.workspace.rootPath || null;
+		config.workspace = firstWorkspace();
 	}
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
-	
+
 	let disposableClient: Disposable;
 	let webViewProvider: SolargraphWebviewProvider = new SolargraphWebviewProvider();
 
-	var startLanguageServer = function() {
+	var startLanguageServer = function () {
 		languageClient = makeLanguageClient(solargraphConfiguration);
 		languageClient.onReady().then(() => {
 			languageClient.onNotification('$/solargraph/restart', (params) => {
@@ -88,7 +118,7 @@ export function activate(context: ExtensionContext) {
 
 	// Search command
 	var disposableSearch = vscode.commands.registerCommand('solargraph.search', () => {
-		vscode.window.showInputBox({prompt: 'Search Ruby documentation:'}).then(val => {
+		vscode.window.showInputBox({ prompt: 'Search Ruby documentation:' }).then(val => {
 			if (val) {
 				var uri = 'solargraph:/search?query=' + encodeURIComponent(val);
 				webViewProvider.open(vscode.Uri.parse(uri));
@@ -109,7 +139,7 @@ export function activate(context: ExtensionContext) {
 		languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: true });
 	});
 	context.subscriptions.push(disposableCheckGemVersion);
-	
+
 	var doBuildGemDocs = function (rebuild: Boolean) {
 		let message = (rebuild ? 'Rebuilding all gem documentation...' : 'Building new gem documentation');
 		let prepareStatus = vscode.window.setStatusBarMessage(message);
@@ -152,7 +182,7 @@ export function activate(context: ExtensionContext) {
 		});
 	});
 	context.subscriptions.push(disposableSolargraphConfig);
-	
+
 	// Solargraph download core command
 	var disposableSolargraphDownloadCore = vscode.commands.registerCommand('solargraph.downloadCore', () => {
 		if (languageClient) {
@@ -164,11 +194,6 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(disposableSolargraphDownloadCore);
 
 	startLanguageServer();
-	languageClient.onReady().then(() => {
-		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
-			languageClient.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
-		}
-	});
 }
 
 export function deactivate() {
