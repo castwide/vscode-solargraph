@@ -5,6 +5,7 @@ import * as solargraph from 'solargraph-utils';
 import { LanguageClient, Disposable } from 'vscode-languageclient/node';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
+import { configureShell } from './configure-shell';
 const isRelative = require('is-relative');
 
 let languageClient: LanguageClient;
@@ -19,7 +20,6 @@ export function activate(context: vscode.ExtensionContext) {
 	let isBare = function (str: String) {
 		return ((str.search(/\//) == -1) && (str.search(/\\/) == -1));
 	};
-
 	let applyConfiguration = function (config: solargraph.Configuration) {
 		let vsconfig = vscode.workspace.getConfiguration('solargraph');
 		if (!vsconfig.commandPath) {
@@ -49,7 +49,11 @@ export function activate(context: vscode.ExtensionContext) {
 		config.viewsPath = vscode.extensions.getExtension('castwide.solargraph')!.extensionPath + '/views';
         config.withSnippets = vsconfig.withSnippets || false;
         // @ts-ignore TODO: This needs to be fixed in solargraph-utils
-		config.workspace = firstWorkspace();
+        config.workspace = firstWorkspace();
+        // TODO: Temporary placeholder until shellArgs is supported in configuration
+        let args;
+        [config.shell, args] = configureShell();
+        
 	};
 	let solargraphConfiguration = new solargraph.Configuration();
 	applyConfiguration(solargraphConfiguration);
