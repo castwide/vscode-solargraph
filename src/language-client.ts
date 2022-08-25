@@ -101,11 +101,17 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 			};
 		} else {
 			return () => {
-				return new Promise((resolve) => {
+				return new Promise((resolve, reject) => {
 					let socket: net.Socket = net.createConnection({ host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: vscode.workspace.getConfiguration('solargraph').externalServer.port });
-					resolve({
-						reader: socket,
-						writer: socket
+					socket.addListener("connect", () => {
+					socket.removeAllListeners();
+						resolve({
+							reader: socket,
+							writer: socket
+						});
+					});
+					socket.addListener("error", (err) => {
+						reject(err);
 					});
 				});
 			};
