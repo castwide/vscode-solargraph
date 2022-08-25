@@ -89,19 +89,11 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(disposableClient);
 	};
 
-	var restartLanguageServer = function (): Promise<void> {
-		return new Promise((resolve) => {
-			if (languageClient) {
-				languageClient.stop().then(() => {
-					disposableClient.dispose();
-					startLanguageServer();
-					resolve();
-				});
-			} else {
-				startLanguageServer();
-				resolve();
-			}
-		});
+	var restartLanguageServer = function (): void {
+		if (disposableClient) {
+			disposableClient.dispose();
+		}
+		startLanguageServer();
 	};
 
 	// Open URL command (used internally for browsing documentation pages)
@@ -115,9 +107,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Restart command
 	var disposableRestart = vscode.commands.registerCommand('solargraph.restart', () => {
-		restartLanguageServer().then(() => {
-			vscode.window.showInformationMessage('Solargraph server restarted.');
-		});
+		restartLanguageServer();
+		vscode.window.showInformationMessage('Solargraph server restarted.');
 	});
 	context.subscriptions.push(disposableRestart);
 
