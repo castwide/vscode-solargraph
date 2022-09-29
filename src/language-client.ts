@@ -25,10 +25,12 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
                 // @ts-ignore HACK: It's a promise, but TypeScript doesn't recognize it
                 promise['then']((hover: Hover) => {
                     let contents: MarkdownString[] = [];
-                    hover.contents.forEach((orig) => {
-                        // @ts-ignore for some reason I can't determine
-                        contents.push(convertDocumentation(orig.value));
-                    });
+                    if (hover) {
+                        hover.contents.forEach((orig) => {
+                            // @ts-ignore for some reason I can't determine
+                            contents.push(convertDocumentation(orig.value));
+                        });
+                    }
                     resolve(new Hover(contents));
                 });
             });
