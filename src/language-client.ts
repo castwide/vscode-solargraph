@@ -102,7 +102,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 		} else {
 			var getSocket = function(): Promise<net.Socket> {
 				return new Promise((resolve, reject) => {
-					let socket: net.Socket = net.createConnection({ host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: vscode.workspace.getConfiguration('solargraph').externalServer.port });
+					let socket: net.Socket = net.createConnection({ host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: parseInt(vscode.workspace.getConfiguration('solargraph').externalServer.port) });
 					let errorHandler = function(err: Error) {
 						reject(err);
 					};
