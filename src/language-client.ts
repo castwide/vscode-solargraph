@@ -100,12 +100,43 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 				});
 			};
 		} else {
-			return () => {
-				return new Promise((resolve) => {
+			var getSocket = function(): Promise<net.Socket> {
+				return new Promise((resolve, reject) => {
 					let socket: net.Socket = net.createConnection({ host: vscode.workspace.getConfiguration('solargraph').externalServer.host, port: parseInt(vscode.workspace.getConfiguration('solargraph').externalServer.port) });
-					resolve({
-						reader: socket,
-						writer: socket
+					let errorHandler = function(err: Error) {
+						reject(err);
+					};
+					socket.addListener('connect', () => {
+						socket.removeListener('error', errorHandler);
+						resolve(socket);
+					});
+					socket.addListener('error', errorHandler);
+				});
+			};
+			var getSocketOrNotifyUser = function(): Promise<net.Socket> {
+				return new Promise((resolve, reject) => {
+					getSocket().then((socket) => {
+						resolve(socket);
+					}).catch((err) => {
+						vscode.window.showWarningMessage('Failed to connect to the external language client: ' + err.message, 'Try again').then((item) => {
+							if(item === 'Try again') {
+								resolve(getSocketOrNotifyUser());
+							} else {
+								reject(err);
+							}
+						});
+					});
+				});
+			};
+			return () => {
+				return new Promise((resolve, reject) => {
+					getSocketOrNotifyUser().then((socket) => {
+						resolve({
+							reader: socket,
+							writer: socket
+						});
+					}).catch((err) => {
+						reject(err);
 					});
 				});
 			};
