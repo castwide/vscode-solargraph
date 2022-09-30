@@ -1,7 +1,10 @@
-## 0.24.0
+## 0.24.0 - September 30, 2022
 - Remove unused dependency
 - Update solargraph-utils
 - Configure shell from automation settings
+- Enable String as Input for Port Config (#257)
+- A few external server/docker improvements (#255)
+- Handle null hover (#259)
 
 ## 0.23.0 - May 30, 2021
 - Update vscode-languageclient
