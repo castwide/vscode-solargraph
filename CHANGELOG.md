@@ -1,3 +1,6 @@
+## 0.24.1 - December 5. 2023
+- Logo/icon
+
 ## 0.24.0 - September 30, 2022
 - Remove unused dependency
 - Update solargraph-utils
