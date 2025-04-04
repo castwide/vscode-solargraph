@@ -67,7 +67,7 @@ To go to a method or variable's definition, right-click and select "Go to Defini
 
 Solargraph is capable of providing code completion and documentation for gems. When your code uses `require` to include a gem, its classes and methods become available in completion and intellisense.
 
-You can make sure your gems are available with the commands `Build new gem documentation` or `Rebuild all gem documentation` in the command palette.
+The language server will automatically cache documentation for your gems in the background. You can also build the caches with the commands `Build new gem documentation` or `Rebuild all gem documentation` in the command palette.
 
 ### Solargraph and Bundler
 
@@ -77,9 +77,7 @@ In the Gemfile:
 
     gem 'solargraph', group: :development
 
-Run `bundle install` and use `bundle exec yard gems` to generate the documentation. This process documents cached or vendored gems, or even gems that are installed from a local path.
-
-In order to access intellisense for bundled gems, you'll need to start the language server with Bundler by setting the `solargraph.useBundler` option to `true`.
+Start the language server with Bundler by setting the `solargraph.useBundler` option to `true`. The language server will automatically map your bundle's gems.
 
 > Note: solargraph.bundlerPath should be an absolute path to bundler executable.
 
