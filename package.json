@@ -4,7 +4,7 @@
     "displayName": "Ruby Solargraph",
     "description": "A Ruby language server featuring code completion, intellisense, and inline documentation",
     "icon": "solargraph.png",
-    "version": "0.24.1",
+    "version": "0.25.0",
     "categories": [
         "Programming Languages",
         "Linters",
@@ -275,21 +275,21 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@types/vscode": "^1.64.0",
         "@types/glob": "^7.2.0",
-        "@types/mocha": "^9.0.0",
+        "@types/mocha": "^10.0.10",
         "@types/node": "14.x",
+        "@types/vscode": "^1.64.0",
         "@typescript-eslint/eslint-plugin": "^5.11.0",
         "@typescript-eslint/parser": "^5.11.0",
+        "@vscode/test-electron": "^2.0.3",
         "eslint": "^8.9.0",
         "glob": "^7.2.0",
-        "mocha": "^9.1.3",
-        "typescript": "^4.5.4",
-        "@vscode/test-electron": "^2.0.3"
+        "mocha": "^11.1.0",
+        "typescript": "^4.5.4"
     },
     "dependencies": {
         "is-relative": "^1.0.0",
-        "solargraph-utils": "^1.2.0",
+        "solargraph-utils": "^1.3.0",
         "vscode-languageclient": "^7.0.0"
     }
 }

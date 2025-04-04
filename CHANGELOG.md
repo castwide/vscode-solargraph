@@ -1,3 +1,6 @@
+## 0.25.0 - April 4, 2025
+- Update dependencies
+
 ## 0.24.1 - December 5. 2023
 - Logo/icon
 
