@@ -1,3 +1,7 @@
+## 0.25.1 - June 27, 2025
+- Language client ID
+- Update dependencies
+
 ## 0.25.0 - April 4, 2025
 - Update dependencies
 - Update README
