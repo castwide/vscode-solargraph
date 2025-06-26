@@ -147,7 +147,7 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
 
 	let serverOptions: ServerOptions = selectClient();
 
-	let client = new LanguageClient('Ruby Language Server', serverOptions, clientOptions);
+	let client = new LanguageClient('solargraph', 'Ruby Language Server', serverOptions, clientOptions);
 	client.onReady().then(() => {
 		if (vscode.workspace.getConfiguration('solargraph').checkGemVersion) {
 			client.sendNotification('$/solargraph/checkGemVersion', { verbose: false });
