@@ -36,6 +36,18 @@ export function makeLanguageClient(configuration: solargraph.Configuration): Lan
             });
         },
 
+        // Each rspec run lens gets a sibling that runs the same target through the Test Explorer
+        provideCodeLenses: async (document, token, next) => {
+            const lenses = await next(document, token);
+            return lenses?.flatMap((lens) => {
+                if (lens.command?.command !== 'solargraph.runRspec') { return [lens]; }
+                return [
+                    new vscode.CodeLens(lens.range, { ...lens.command, title: '$(play) Run', command: 'solargraph.testRspec' }),
+                    new vscode.CodeLens(lens.range, { ...lens.command, title: '$(terminal) Run terminal' })
+                ];
+            });
+        },
+
         resolveCompletionItem: (item, token, next) => {
             return new Promise((resolve) => {
                 let promise = next(item, token);
