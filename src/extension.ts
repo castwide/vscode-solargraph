@@ -6,6 +6,7 @@ import { LanguageClient, Disposable } from 'vscode-languageclient/node';
 import { makeLanguageClient } from './language-client';
 import SolargraphWebviewProvider from './SolargraphWebviewProvider';
 import { configureShell } from './configure-shell';
+import { RspecCommand, SolargraphTestController } from './testController';
 const isRelative = require('is-relative');
 
 let languageClient: LanguageClient;
@@ -59,6 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 	applyConfiguration(solargraphConfiguration);
 
 	let disposableClient: Disposable;
+	let testController: SolargraphTestController | undefined;
 	let webViewProvider: SolargraphWebviewProvider = new SolargraphWebviewProvider();
 
 	var startLanguageServer = function () {
@@ -67,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 			languageClient.onNotification('$/solargraph/restart', (params) => {
 				restartLanguageServer();
 			});
+			if (testController) { testController.markClientReady(); }
 		}).catch((err) => {
 			console.log('Error starting Solargraph socket provider', err);
 			if (err.toString().includes('ENOENT') || err.toString().includes('command not found')) {
@@ -103,6 +106,27 @@ export function activate(context: vscode.ExtensionContext) {
 		webViewProvider.open(uri);
 	});
 	context.subscriptions.push(disposableOpenUrl);
+
+	// Register solargraph.runRspec command — triggered by the LSP code action proxy
+	var disposableRunRspec = vscode.commands.registerCommand('solargraph.runRspec',
+		(args: { command: string }) => {
+			if (testController && args?.command) {
+				const folder = vscode.workspace.workspaceFolders?.[0];
+				testController.runRspecCommand(args.command, folder);
+			}
+		}
+	);
+	context.subscriptions.push(disposableRunRspec);
+
+	// Same lens target as solargraph.runRspec, but reported in the Test Explorer
+	var disposableTestRspec = vscode.commands.registerCommand('solargraph.testRspec',
+		(args: RspecCommand) => {
+			if (testController && args?.target) {
+				testController.runRspecTarget(args);
+			}
+		}
+	);
+	context.subscriptions.push(disposableTestRspec);
 
 
 	// Restart command
@@ -188,6 +212,10 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(disposableSolargraphDownloadCore);
+
+	if (haveWorkspace()) {
+		testController = new SolargraphTestController(context, () => languageClient);
+	}
 
 	startLanguageServer();
 }
